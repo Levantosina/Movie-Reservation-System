@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/users
+    username: levantos
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+      boot:
+        allow_jdbc_metadata_access: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+
+
+
