@@ -1,0 +1,41 @@
+package com.movie.resrvation.user.roles;
+
+import com.movie.resrvation.user.users.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * @author DMITRII LEVKIN on 23/09/2024
+ * @project MovieReservationSystem
+ */
+@Service
+public class RoleService {
+
+    private  final  RoleDAO roleDAO;
+    private final RoleDTOMapper roleDTOMapper;
+
+
+    public RoleService(@Qualifier("jdbcRole") RoleDAO roleDAO, RoleDTOMapper roleDTOMapper) {
+        this.roleDAO = roleDAO;
+        this.roleDTOMapper = roleDTOMapper;
+
+    }
+
+    public List<RoleDTO>getAllRoles(){
+        return roleDAO.selectAllRoles()
+                .stream()
+                .map(roleDTOMapper)
+                .collect(Collectors.toList());
+    }
+    public RoleDTO getRole(Integer roleId){
+        return  roleDAO.selectRoleById(roleId)
+                .map(roleDTOMapper)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Role with id [%s] not found".
+                                        formatted(roleId)));
+    }
+}
