@@ -1,7 +1,6 @@
-package com.movie.resrvation.user;
+package com.movie.resrvation.user.users;
 
-import com.movie.resrvation.user.User;
-import com.movie.resrvation.user.UserDTO;
+
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;

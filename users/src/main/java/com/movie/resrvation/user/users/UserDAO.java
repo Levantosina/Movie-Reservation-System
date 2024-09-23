@@ -1,6 +1,6 @@
-package com.movie.resrvation.user;
+package com.movie.resrvation.user.users;
 
-import com.movie.resrvation.user.User;
+import com.movie.resrvation.user.users.User;
 
 import java.util.List;
 import java.util.Optional;

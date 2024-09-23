@@ -1,4 +1,4 @@
-package com.movie.resrvation.user;
+package com.movie.resrvation.user.users;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping(path = "api/v1/users")
 public class UserController {
 
-    private  final  UserService userService;
+    private  final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping
-    public void registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest){
-        log.info("new customer registration {}", userRegistrationRequest);
+    public void registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest) {
+        log.info("New customer registration: {}", userRegistrationRequest);
         userService.registerUser(userRegistrationRequest);
     }
 }

@@ -1,5 +1,6 @@
-package com.movie.resrvation.user;
+package com.movie.resrvation.user.users;
 
+import com.movie.resrvation.user.roles.Role;
 import jakarta.persistence.*;
 import lombok.*;
 /**
@@ -27,4 +28,7 @@ public class User {
     private String lastName;
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 }

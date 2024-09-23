@@ -1,5 +1,6 @@
-package com.movie.resrvation.user;
+package com.movie.resrvation.user.users;
 
+import com.movie.resrvation.user.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

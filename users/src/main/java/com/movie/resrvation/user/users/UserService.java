@@ -1,9 +1,8 @@
-package com.movie.resrvation.user;
+package com.movie.resrvation.user.users;
 
-import com.movie.resrvation.exception.ResourceNotFoundException;
-import com.movie.resrvation.user.UserDAO;
-import com.movie.resrvation.user.UserDTO;
-import com.movie.resrvation.user.UserDTOMapper;
+import com.movie.resrvation.user.roles.Role;
+import com.movie.resrvation.user.roles.RoleRepository;
+import com.movie.resrvation.user.users.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +21,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper, UserRepository userRepository) {
+    private final RoleRepository roleRepository;
+
+    public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper, UserRepository userRepository, RoleRepository roleRepository) {
         this.userDAO = userDAO;
         this.userDTOMapper = userDTOMapper;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -44,12 +46,17 @@ public class UserService {
                                         formatted(id)));
     }
     public void registerUser(UserRegistrationRequest userRegistrationRequest){
-        User user= User.builder()
-                .firstName(userRegistrationRequest.firstName())
-                .lastName(userRegistrationRequest.lastName())
-                .email(userRegistrationRequest.email())
-                .build();
-        userRepository.saveAndFlush(user);
+
+        Role role = roleRepository.findById(userRegistrationRequest.roleId())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        User user = new User();
+        user.setFirstName(userRegistrationRequest.firstName());
+        user.setLastName(userRegistrationRequest.lastName());
+        user.setEmail(userRegistrationRequest.email());
+        user.setRole(role); // Set the fetched role
+
+        userRepository.save(user);
 
     }
 }
