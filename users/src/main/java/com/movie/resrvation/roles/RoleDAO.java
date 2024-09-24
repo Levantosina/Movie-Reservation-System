@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface RoleDAO {
 
     List<Role> selectAllRoles();
-    Optional<Role> selectRoleById(Integer id);
+    Optional<Role> selectRoleById(Long id);
 }

@@ -1,11 +1,11 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
 /**
  * @author DMITRII LEVKIN on 23/09/2024
  * @project MovieReservationSystem
  */
 public record RoleDTO (
-        Integer roleId,
+        Long roleId,
         String roleName,
         String description ){
 }

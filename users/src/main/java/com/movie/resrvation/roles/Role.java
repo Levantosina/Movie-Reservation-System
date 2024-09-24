@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +24,7 @@ public class Role {
     @GeneratedValue (
             strategy = GenerationType.SEQUENCE,
              generator = "role_id_sequence")
-    private Integer roleId;
+    private Long roleId;
     private String roleName;
     private String description;
 }

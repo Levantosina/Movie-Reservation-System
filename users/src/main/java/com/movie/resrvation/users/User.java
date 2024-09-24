@@ -1,6 +1,6 @@
-package com.movie.resrvation.user.users;
+package com.movie.resrvation.users;
 
-import com.movie.resrvation.user.roles.Role;
+import com.movie.resrvation.roles.Role;
 import jakarta.persistence.*;
 import lombok.*;
 /**
@@ -17,14 +17,10 @@ import lombok.*;
 @Builder
 public class User {
     @Id
-    @SequenceGenerator(
-            name = "user_id_sequence",
-            sequenceName = "user_id_sequence")
-    @GeneratedValue( strategy = GenerationType.SEQUENCE,
-            generator = "user_id_sequence")
-    private Integer userId;
-    private String firstName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
+    private String firstName;
     private String lastName;
     private String email;
 

@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.users;
+package com.movie.resrvation.users;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,14 +25,17 @@ public class UserAccessService implements UserDAO {
     @Override
     public List<User> selectAllUsers() {
        var sql = """
-               SELECT user_id, first_name,last_name,email
-               FROM users
+              
+               SELECT u.user_id, u.first_name, u.last_name, u.email,
+                                 r.role_id, r.role_name, r.description
+                          FROM users u
+                          JOIN roles r ON u.role_id = r.role_id
                """;
        return jdbcTemplate.query(sql,userRowMapper);
     }
 
     @Override
-    public Optional<User> selectUserById(Integer id) {
+    public Optional<User> selectUserById(Long id) {
 
         var sql = """
                SELECT user_id, first_name,last_name,email
@@ -55,17 +58,21 @@ public class UserAccessService implements UserDAO {
     }
 
     @Override
-    public boolean existUserWithId(Integer id) {
+    public boolean existUserWithId(Long id) {
         return false;
     }
 
     @Override
     public void insertUser(User user) {
 
+        var sql = """
+    INSERT INTO users (first_name, last_name, email, role_id)
+    VALUES (?, ?, ?, ?)""";
+        jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole().getRoleId());
     }
 
     @Override
-    public void deleteUserById(Integer userId) {
+    public void deleteUserById(Long userId) {
 
     }
 

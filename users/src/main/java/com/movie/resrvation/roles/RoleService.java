@@ -1,6 +1,6 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
-import com.movie.resrvation.user.users.exception.ResourceNotFoundException;
+import com.movie.resrvation.users.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class RoleService {
                 .map(roleDTOMapper)
                 .collect(Collectors.toList());
     }
-    public RoleDTO getRole(Integer roleId){
+    public RoleDTO getRole(Long roleId){
         return  roleDAO.selectRoleById(roleId)
                 .map(roleDTOMapper)
                 .orElseThrow(

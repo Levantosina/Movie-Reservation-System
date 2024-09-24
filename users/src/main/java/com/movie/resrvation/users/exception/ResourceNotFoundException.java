@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.users.exception;
+package com.movie.resrvation.users.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

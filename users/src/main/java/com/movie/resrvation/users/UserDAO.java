@@ -1,6 +1,4 @@
-package com.movie.resrvation.user.users;
-
-import com.movie.resrvation.user.users.User;
+package com.movie.resrvation.users;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,12 +9,12 @@ import java.util.Optional;
 public interface UserDAO {
 
     List<User>selectAllUsers();
-    Optional<User> selectUserById(Integer id);
+    Optional<User> selectUserById(Long id);
     Optional<User> selectUserByEmail(String email);
     boolean existPersonWithEmail(String email);
-    boolean existUserWithId(Integer id);
+    boolean existUserWithId(Long id);
     void insertUser(User user);
-    void deleteUserById(Integer userId);
+    void deleteUserById(Long userId);
     void updateUser(User updateUser);
 
 }

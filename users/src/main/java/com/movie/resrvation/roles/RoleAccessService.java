@@ -1,7 +1,6 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
-import com.movie.resrvation.user.users.User;
-import com.movie.resrvation.user.users.UserRowMapper;
+import com.movie.resrvation.users.UserRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -33,7 +32,7 @@ public class RoleAccessService implements RoleDAO {
     }
 
     @Override
-    public Optional<Role> selectRoleById(Integer role_id) {
+    public Optional<Role> selectRoleById(Long role_id) {
         var sql = """
                SELECT role_id, role_name, description
                FROM roles where role_id=?

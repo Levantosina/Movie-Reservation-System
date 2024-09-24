@@ -1,6 +1,5 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
-import com.movie.resrvation.user.users.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,7 @@ public class RoleController {
         return roleService.getAllRoles();
     }
     @GetMapping("{roleId}")
-    public RoleDTO getRole(@PathVariable ("roleId")Integer roleId){
+    public RoleDTO getRole(@PathVariable ("roleId")Long roleId){
         return roleService.getRole(roleId);
     }
 }

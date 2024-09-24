@@ -23,6 +23,7 @@
 	</developers>
     <modules>
         <module>users</module>
+        <module>theaters</module>
     </modules>
     <scm>
 		<connection/>

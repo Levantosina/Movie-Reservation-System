@@ -1,8 +1,10 @@
-package com.movie.resrvation.user.users;
+package com.movie.resrvation.users;
 
-import com.movie.resrvation.user.roles.Role;
-import com.movie.resrvation.user.roles.RoleRepository;
-import com.movie.resrvation.user.users.exception.ResourceNotFoundException;
+import com.movie.resrvation.roles.Role;
+
+import com.movie.resrvation.roles.RoleDAO;
+import com.movie.resrvation.users.exception.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +21,15 @@ public class UserService {
     private final UserDAO userDAO;
     private final UserDTOMapper userDTOMapper;
 
-    private final UserRepository userRepository;
+    private final RoleDAO roleDAO;
 
-    private final RoleRepository roleRepository;
 
-    public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper, UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
+                       RoleDAO roleDAO) {
         this.userDAO = userDAO;
         this.userDTOMapper = userDTOMapper;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+
+        this.roleDAO = roleDAO;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -37,7 +39,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getUser(Integer id) {
+    public UserDTO getUser(Long id) {
         return userDAO.selectUserById(id)
                 .map(userDTOMapper)
                 .orElseThrow(
@@ -45,18 +47,19 @@ public class UserService {
                                 "Customer with id [%s] not found".
                                         formatted(id)));
     }
+
     public void registerUser(UserRegistrationRequest userRegistrationRequest){
 
-        Role role = roleRepository.findById(userRegistrationRequest.roleId())
+        Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         User user = new User();
         user.setFirstName(userRegistrationRequest.firstName());
         user.setLastName(userRegistrationRequest.lastName());
         user.setEmail(userRegistrationRequest.email());
-        user.setRole(role); // Set the fetched role
+        user.setRole(role);
 
-        userRepository.save(user);
+        userDAO.insertUser(user);
 
     }
 }

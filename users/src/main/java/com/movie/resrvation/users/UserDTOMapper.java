@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.users;
+package com.movie.resrvation.users;
 
 
 import org.springframework.stereotype.Service;

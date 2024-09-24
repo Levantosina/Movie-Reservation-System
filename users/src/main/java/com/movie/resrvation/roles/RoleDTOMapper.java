@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
 import org.springframework.stereotype.Service;
 

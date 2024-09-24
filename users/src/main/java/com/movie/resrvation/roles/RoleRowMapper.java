@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ public class RoleRowMapper implements RowMapper<Role> {
     @Override
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Role(
-                rs.getInt("role_id"),
+                rs.getLong("role_id"),
                 rs.getString("role_name"),
                 rs.getString("description")
         );

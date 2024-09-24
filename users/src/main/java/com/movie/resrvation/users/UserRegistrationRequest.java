@@ -1,6 +1,4 @@
-package com.movie.resrvation.user.users;
-
-import java.math.BigInteger;
+package com.movie.resrvation.users;
 
 /**
  * @author DMITRII LEVKIN on 22/09/2024
@@ -10,7 +8,7 @@ public record UserRegistrationRequest(
         String firstName,
         String lastName,
         String email,
-        Integer roleId
+        Long roleId
 
         ) {
 }

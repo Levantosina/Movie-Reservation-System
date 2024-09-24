@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.users;
+package com.movie.resrvation.users;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class UserController {
         return userService.getAllUsers();
     }
     @GetMapping("{userId}")
-    public UserDTO getCustomer(@PathVariable("userId")Integer userId){
+    public UserDTO getCustomer(@PathVariable("userId")Long userId){
         return userService.getUser(userId);
     }
 

@@ -1,7 +1,6 @@
-package com.movie.resrvation.user.users;
+package com.movie.resrvation.users;
 
-import com.movie.resrvation.user.roles.Role;
-import com.movie.resrvation.user.users.User;
+import com.movie.resrvation.roles.Role;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +16,13 @@ public class UserRowMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
        Role role= new Role(
-               rs.getInt("role_id"),
+               rs.getLong("role_id"),
                rs.getString("role_name"),
                rs.getString("description")
        );
 
         return User.builder()
-                .userId(rs.getInt("user_id"))
+                .userId(rs.getLong("user_id"))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))
                 .email(rs.getString("email"))

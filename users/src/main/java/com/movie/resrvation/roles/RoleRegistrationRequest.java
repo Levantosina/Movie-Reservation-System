@@ -1,4 +1,4 @@
-package com.movie.resrvation.user.roles;
+package com.movie.resrvation.roles;
 
 /**
  * @author DMITRII LEVKIN on 23/09/2024
