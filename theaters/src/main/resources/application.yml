@@ -1,0 +1,30 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: theater
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/theaters
+    username: levantos
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+      boot:
+        allow_jdbc_metadata_access: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+
+
