@@ -25,6 +25,8 @@
         <module>users</module>
         <module>theaters</module>
         <module>eureka-server</module>
+		<module>seats</module>
+        <module>api-gateway</module>
     </modules>
     <scm>
 		<connection/>
