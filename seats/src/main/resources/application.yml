@@ -1,0 +1,49 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: seat
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/seats
+    username: levantos
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+      boot:
+        allow_jdbc_metadata_access: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/v2
+    fetch-registry: true
+    register-with-eureka: true
+    enabled: true
+  instance:
+    prefer-ip-address: true
+
+
+
+
