@@ -11,10 +11,10 @@ spring:
           uri: lb://USER
           predicates:
             - Path=/api/v1/users/**
-        - id: theater
-          uri: lb://THEATER
+        - id: cinema
+          uri: lb://CINEMA
           predicates:
-            - Path=/api/v1/theaters/**
+            - Path=/api/v1/cinemas/**
 
 management:
   tracing:
