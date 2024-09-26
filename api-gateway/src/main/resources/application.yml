@@ -8,9 +8,13 @@ spring:
     gateway:
       routes:
         - id: user
-          uri: lb://USERS
+          uri: lb://USER
           predicates:
             - Path=/api/v1/users/**
+        - id: theater
+          uri: lb://THEATER
+          predicates:
+            - Path=/api/v1/theaters/**
 
 management:
   tracing:

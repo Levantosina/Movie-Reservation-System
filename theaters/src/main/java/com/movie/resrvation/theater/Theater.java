@@ -3,7 +3,6 @@ package com.movie.resrvation.theater;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serial;
 
 /**
  * @author DMITRII LEVKIN on 24/09/2024

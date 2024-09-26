@@ -1,4 +1,4 @@
-package com.movie.resrvation;
+package com.movie.resrvation.seat;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,7 +25,5 @@ public class Seat {
     private String row;
 
     private String type;
-
-
 
 }
