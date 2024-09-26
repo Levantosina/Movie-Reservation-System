@@ -7,7 +7,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>theaters</artifactId>
+    <artifactId>cinemas</artifactId>
     <packaging>jar</packaging>
 
     <name>theaters</name>

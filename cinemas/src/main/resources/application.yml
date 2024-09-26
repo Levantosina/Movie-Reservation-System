@@ -2,12 +2,12 @@ server:
   port: 8081
 spring:
   application:
-    name: theater
+    name: cinema
   main:
     allow-bean-definition-overriding: true
   datasource:
     password: password
-    url: jdbc:postgresql://localhost:5432/theaters
+    url: jdbc:postgresql://localhost:5432/cinemas
     username: levantos
     driver-class-name: org.postgresql.Driver
   jpa:

@@ -1,4 +1,4 @@
-package com.movie.resrvation.theater;
+package com.movie.resrvation.cinema;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,18 +10,18 @@ import lombok.*;
  */
 
 @Entity
-@Table(name = "theaters")
+@Table(name = "cinemas")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Theater {
+public class Cinema {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private Long theaterId;
-    private String theaterName;
-    private String theaterLocation;
+    private Long cinemaId;
+    private String cinemaName;
+    private String cinemaLocation;
 }
