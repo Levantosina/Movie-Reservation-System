@@ -26,4 +26,6 @@ public class Seat {
 
     private String type;
 
+    private Long cinemaId;
+
 }

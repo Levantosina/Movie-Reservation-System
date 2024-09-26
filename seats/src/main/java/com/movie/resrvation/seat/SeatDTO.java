@@ -8,5 +8,6 @@ public record SeatDTO(
         Long seatId,
         String seatNumber,
         String row,
-        String type
+        String type,
+        Long cinemaId
 ) { }

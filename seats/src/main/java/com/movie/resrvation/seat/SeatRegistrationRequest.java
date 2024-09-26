@@ -7,6 +7,7 @@ package com.movie.resrvation.seat;
 public record SeatRegistrationRequest(
         String seatNumber,
         String row,
-        String type
+        String type,
+        Long cinemaId
 ) {
 }

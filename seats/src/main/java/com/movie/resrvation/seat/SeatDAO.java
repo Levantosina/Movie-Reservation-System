@@ -13,7 +13,11 @@ public interface SeatDAO {
 
     void insertSeat(Seat seat);
 
+
+
     boolean ifSeatOccupied(String name);
 
     void  updateSeat(Seat updateSeat);
+
+    List<Seat> selectSeatsByCinemaId(Long cinemaId);
 }

@@ -44,7 +44,14 @@ public class SeatService {
         seat.setSeatNumber(seatRegistrationRequest.seatNumber());
         seat.setRow(seatRegistrationRequest.row());
         seat.setType(seatRegistrationRequest.type());
+        seat.setCinemaId(seatRegistrationRequest.cinemaId());
 
         seatDAO.insertSeat(seat);
+    }
+    public List<SeatDTO> getSeatsByCinema(Long cinemaId) {
+       return seatDAO.selectSeatsByCinemaId(cinemaId)
+                .stream()
+                .map(seatDTOMapper)
+                .collect(Collectors.toList());
     }
 }

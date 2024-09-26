@@ -19,6 +19,7 @@ public class SeatRowMapper implements RowMapper<Seat> {
                 .seatNumber(rs.getString("seat_number"))
                 .row(rs.getString("row"))
                 .type(rs.getString("type"))
+                .cinemaId(rs.getLong("cinema_id"))
                 .build();
     }
 }

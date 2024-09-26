@@ -33,6 +33,17 @@ public class SeatController {
 
         return seatService.getSeat(seatId);
     }
+    @GetMapping("/cinema/{cinemaId}")
+    public List<SeatDTO> getAllSeatsByCinemaId(@PathVariable Long cinemaId) {
+        log.info("Fetching seats for cinema ID: {}", cinemaId);
+        return seatService.getSeatsByCinema(cinemaId);
+    }
+
+    @PostMapping("/cinema")
+    public List<SeatDTO> getSeatsByCinema(@RequestParam Long cinemaId) {
+        log.info("Fetching seats for cinema ID: {}", cinemaId);
+        return seatService.getSeatsByCinema(cinemaId);
+    }
 
 
 }

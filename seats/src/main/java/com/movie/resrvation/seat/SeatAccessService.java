@@ -1,5 +1,6 @@
 package com.movie.resrvation.seat;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.Optional;
  * @author DMITRII LEVKIN on 26/09/2024
  * @project MovieReservationSystem
  */
+@Slf4j
 @Repository("seatJdbc")
 public class SeatAccessService implements SeatDAO{
 
@@ -27,7 +29,7 @@ public class SeatAccessService implements SeatDAO{
     public List<Seat> selectAllSeats() {
 
         var sql= """
-                SELECT seat_id,seat_number,row,type
+                SELECT seat_id,seat_number,row,type,cinema_id
                 FROM seats
                 
                 """;
@@ -37,7 +39,7 @@ public class SeatAccessService implements SeatDAO{
     @Override
     public Optional<Seat> selectSeatById(Long seatId) {
         var sql= """
-                SELECT seat_id,seat_number,row,type
+                SELECT seat_id,seat_number,row,type,cinema_id
                 FROM seats where seat_id=?
                 
                 """;
@@ -51,11 +53,24 @@ public class SeatAccessService implements SeatDAO{
     public void insertSeat(Seat seat) {
 
         var sql = """
-                INSERT INTO seats (seat_number,row,type) VALUES (?,?,?)
-                """;
-        jdbcTemplate.update(sql,seat.getSeatNumber(),seat.getRow(),seat.getType());
-
+            INSERT INTO seats (seat_number, row, type, cinema_id) VALUES (?, ?, ?, ?)
+            """;
+        jdbcTemplate.update(sql, seat.getSeatNumber(), seat.getRow(), seat.getType(), seat.getCinemaId());
+        log.info("Inserted seat: {}", seat);
     }
+
+    @Override
+    public List<Seat> selectSeatsByCinemaId(Long cinemaId) {
+        var sql = """
+                SELECT seat_id, seat_number, row, type,cinema_id
+                FROM seats
+                WHERE cinema_id = ?
+                """;
+        return jdbcTemplate.query(sql, seatRowMapper, cinemaId);
+    }
+
+
+
 
     @Override
     public boolean ifSeatOccupied(String name) {

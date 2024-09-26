@@ -10,7 +10,11 @@ spring:
         - id: user
           uri: lb://USER
           predicates:
-            - Path=/api/v1/users/**
+          - Path=/api/v1/users/**
+        - id: seat
+          uri: lb://SEAT
+          predicates:
+            - Path=/api/v1/seats/**
         - id: cinema
           uri: lb://CINEMA
           predicates:
