@@ -1,6 +1,6 @@
 package com.movie.resrvation.seat;
 
-import lombok.extern.slf4j.Slf4j;
+import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,6 @@ import java.util.Optional;
  * @author DMITRII LEVKIN on 26/09/2024
  * @project MovieReservationSystem
  */
-@Slf4j
 @Repository("seatJdbc")
 public class SeatAccessService implements SeatDAO{
 
@@ -51,15 +50,14 @@ public class SeatAccessService implements SeatDAO{
 
     @Override
     public void insertSeat(Seat seat) {
-
         var sql = """
             INSERT INTO seats (seat_number, row, type, cinema_id) VALUES (?, ?, ?, ?)
             """;
         jdbcTemplate.update(sql, seat.getSeatNumber(), seat.getRow(), seat.getType(), seat.getCinemaId());
-        log.info("Inserted seat: {}", seat);
     }
 
     @Override
+
     public List<Seat> selectSeatsByCinemaId(Long cinemaId) {
         var sql = """
                 SELECT seat_id, seat_number, row, type,cinema_id

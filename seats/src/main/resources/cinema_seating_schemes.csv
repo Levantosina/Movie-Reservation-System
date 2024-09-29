@@ -1,0 +1,6 @@
+Cinema,Rows,Details
+Amazonia,"['A', 'B', 'C', 'D', 'E', 'F']", "{'A': '8 seats', 'B': '8 seats', 'C': '8 seats', 'D': '6 seats (1 disabled)', 'E': '6 seats (2 VIP)', 'F': '6 seats'}"
+Riveria,"['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']", "{'A': '10 seats', 'B': '10 seats', 'C': '8 seats (1 disabled)', 'D': '8 seats (1 disabled)', 'E': '6 seats (2 VIP)', 'F': '6 seats', 'G': '6 seats (1 disabled)', 'H': '6 seats'}"
+Caribia,"['A', 'B', 'C', 'D', 'E', 'F', 'G']", "{'A': '8 seats', 'B': '8 seats', 'C': '8 seats', 'D': '8 seats (1 disabled)', 'E': '4 VIP seats', 'F': '6 seats (2 VIP)', 'G': '4 seats (disabled)'}"
+Atlantidia,"['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']", "{'A': '12 seats', 'B': '12 seats', 'C': '10 seats', 'D': '10 seats', 'E': '10 seats (4 VIP)', 'F': '8 seats', 'G': '8 seats', 'H': '8 seats', 'I': '6 seats', 'J': '6 seats'}"
+Atmosphere,"['A', 'B', 'C', 'D', 'E', 'F']", "{'A': '6 seats', 'B': '6 seats (2 VIP)', 'C': '5 seats', 'D': '5 seats (1 disabled)', 'E': '5 seats', 'F': '5 seats (1 disabled)'}"

@@ -25,7 +25,7 @@ public class Seat {
     private String row;
 
     private String type;
-
+    @Column(name = "cinema_id")
     private Long cinemaId;
 
 }

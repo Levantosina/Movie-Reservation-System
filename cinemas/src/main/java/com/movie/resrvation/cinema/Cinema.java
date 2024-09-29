@@ -22,6 +22,8 @@ public class Cinema {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     private Long cinemaId;
+    @Column(name = "cinema_name")
     private String cinemaName;
+    @Column(name = "cinema_location")
     private String cinemaLocation;
 }

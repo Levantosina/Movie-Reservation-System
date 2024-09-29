@@ -47,6 +47,20 @@ public class CinemaAccessService implements CinemaDAO{
     }
 
     @Override
+    public Optional<Cinema> selectCinemaByCinemaName(String cinemaName) {
+        var sql = """
+               SELECT cinema_id, cinema_name,cinema_location
+               FROM cinemas where cinema_name=?
+               """;
+
+
+        return jdbcTemplate.query(sql,cinemaRowMapper,cinemaName)
+                .stream()
+                .findFirst();
+    }
+
+
+    @Override
     public void insertCinema(Cinema cinema) {
         var sql = """
     INSERT INTO cinemas (cinema_name, cinema_location) 

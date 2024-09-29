@@ -27,7 +27,7 @@
         <module>eureka-server</module>
 		<module>seats</module>
         <module>api-gateway</module>
-    </modules>
+	</modules>
     <scm>
 		<connection/>
 		<developerConnection/>

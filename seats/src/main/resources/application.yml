@@ -44,6 +44,9 @@ eureka:
   instance:
     prefer-ip-address: true
 
+logging:
+  level:
+    org.hibernate: DEBUG
 
 
 

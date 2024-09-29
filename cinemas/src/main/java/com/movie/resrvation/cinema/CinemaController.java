@@ -25,10 +25,16 @@ public class CinemaController {
     public List<CinemaDTO> getAllCinemas(){
         return cinemaService.getAllCinemas();
     }
-    @GetMapping("{cinemaId}")
+    @GetMapping("/id/{cinemaId}")
     public CinemaDTO getCinema(@PathVariable("cinemaId")Long cinemaId){
 
         return cinemaService.getCinema(cinemaId);
+    }
+
+    @GetMapping("/name/{cinemaName}")
+    public CinemaDTO getCinema(@PathVariable("cinemaName")String cinemaName){
+
+        return cinemaService.getCinemaByName(cinemaName);
     }
 
     @PostMapping
