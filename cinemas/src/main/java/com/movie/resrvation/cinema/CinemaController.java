@@ -23,6 +23,7 @@ public class CinemaController {
 
     @GetMapping
     public List<CinemaDTO> getAllCinemas(){
+
         return cinemaService.getAllCinemas();
     }
     @GetMapping("/id/{cinemaId}")

@@ -27,6 +27,8 @@
         <module>eureka-server</module>
 		<module>seats</module>
         <module>api-gateway</module>
+		<module>movie</module>
+		<module>movieschedules</module>
 	</modules>
     <scm>
 		<connection/>

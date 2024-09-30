@@ -19,6 +19,11 @@ spring:
           uri: lb://CINEMA
           predicates:
             - Path=/api/v1/cinemas/**
+        - id: movie
+          uri: lb://MOVIE
+          predicates:
+            - Path=/api/v1/movies/**
+
 
 management:
   tracing:
