@@ -22,6 +22,7 @@ public class SeatController {
     }
 
     public SeatController(SeatService seatService) {
+
         this.seatService = seatService;
     }
     @GetMapping
@@ -35,7 +36,7 @@ public class SeatController {
     }
     @GetMapping("/cinema/{cinemaId}")
     public List<SeatDTO> getAllSeatsByCinemaId(@PathVariable Long cinemaId) {
-        log.info("Fetching seats for cinema ID: {}", cinemaId);
+        log.info("Fetching seats for cinema ID by cinemaId: {}", cinemaId);
         return seatService.getSeatsByCinema(cinemaId);
     }
 

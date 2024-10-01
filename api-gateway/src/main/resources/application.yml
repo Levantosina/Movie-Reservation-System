@@ -23,6 +23,11 @@ spring:
           uri: lb://MOVIE
           predicates:
             - Path=/api/v1/movies/**
+        - id: schedule
+          uri: lb://SCHEDULE
+          predicates:
+            - Path=/api/v1/schedule/**
+
 
 
 management:

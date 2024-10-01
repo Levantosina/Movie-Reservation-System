@@ -27,13 +27,13 @@ public class CinemaController {
         return cinemaService.getAllCinemas();
     }
     @GetMapping("/id/{cinemaId}")
-    public CinemaDTO getCinema(@PathVariable("cinemaId")Long cinemaId){
+    public CinemaDTO getCinemaById(@PathVariable("cinemaId")Long cinemaId){
 
         return cinemaService.getCinema(cinemaId);
     }
 
     @GetMapping("/name/{cinemaName}")
-    public CinemaDTO getCinema(@PathVariable("cinemaName")String cinemaName){
+    public CinemaDTO getCinemaByName(@PathVariable("cinemaName")String cinemaName){
 
         return cinemaService.getCinemaByName(cinemaName);
     }

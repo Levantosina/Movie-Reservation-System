@@ -4,6 +4,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +21,12 @@ public class SeatAccessService implements SeatDAO{
 
     private  final JdbcTemplate jdbcTemplate;
 
+    private final DataSource dataSource;
     private final SeatRowMapper seatRowMapper;
 
-    public SeatAccessService(JdbcTemplate jdbcTemplate, SeatRowMapper seatRowMapper) {
+    public SeatAccessService(JdbcTemplate jdbcTemplate, DataSource dataSource, SeatRowMapper seatRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.dataSource = dataSource;
         this.seatRowMapper = seatRowMapper;
     }
 
@@ -67,7 +74,28 @@ public class SeatAccessService implements SeatDAO{
         return jdbcTemplate.query(sql, seatRowMapper, cinemaId);
     }
 
+    @Override
+    public int countSeatsByCinemaId(Long cinemaId) {
+        var sql = """
+                SELECT COUNT(*) FROM seats WHERE cinema_id = ?
+                """;
 
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, cinemaId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return 0;
+
+    }
 
 
     @Override

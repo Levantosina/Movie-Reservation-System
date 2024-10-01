@@ -164,4 +164,7 @@ public class SeatService {
 
         return cinemaId;
     }
+    public int getTotalSeatsByCinemaId(Long cinemaId) {
+        return seatDAO.countSeatsByCinemaId(cinemaId);
+    }
 }

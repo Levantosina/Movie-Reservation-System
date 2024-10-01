@@ -20,4 +20,6 @@ public interface SeatDAO {
     void  updateSeat(Seat updateSeat);
 
     List<Seat> selectSeatsByCinemaId(Long cinemaId);
+
+    int countSeatsByCinemaId(Long cinemaId);
 }
