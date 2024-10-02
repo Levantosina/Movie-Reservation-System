@@ -20,7 +20,12 @@ import lombok.*;
 public class Cinema {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "cinemas_id_seq",
+            sequenceName = "cinemas_id_seq"
+    )
+    @GeneratedValue( strategy = GenerationType.SEQUENCE,
+    generator = "cinemas_id_seq")
     private Long cinemaId;
     @Column(name = "cinema_name")
     private String cinemaName;

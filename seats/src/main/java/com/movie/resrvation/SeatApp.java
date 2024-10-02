@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EntityScan(basePackages = "com.movie.resrvation.seat")
+@EntityScan(basePackages = "com.movie.resrvation.seat.entity")
 public class SeatApp
 {
     public static void main( String[] args )

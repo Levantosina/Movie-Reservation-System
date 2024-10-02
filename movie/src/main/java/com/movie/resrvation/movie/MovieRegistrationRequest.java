@@ -6,7 +6,7 @@ package com.movie.resrvation.movie;
  */
 public record MovieRegistrationRequest (
         String movieName,
-        Long year,
+        Integer year,
         String country,
         String genre,
         String description

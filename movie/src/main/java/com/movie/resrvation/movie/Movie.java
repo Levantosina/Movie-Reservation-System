@@ -19,10 +19,15 @@ import lombok.*;
 public class Movie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "movies_id_seq",
+            sequenceName = "movies_id_seq"
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+                    generator = "movies_id_seq")
     private Long movieId;
     private String movieName;
-    private Long year;
+    private Integer year;
     private String country;
     private String genre;
     private String description;

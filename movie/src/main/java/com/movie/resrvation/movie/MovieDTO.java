@@ -5,9 +5,9 @@ package com.movie.resrvation.movie;
  * @project MovieReservationSystem
  */
 public record MovieDTO(
-        Long movieId,
+
         String movieName,
-        Long year,
+        Integer year,
         String country,
          String genre,
          String description

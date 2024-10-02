@@ -24,12 +24,11 @@ public class MovieAccessService implements  MovieDAO {
 
     @Override
     public List<Movie> selectAllMovies() {
-
         var sql = """
-               SELECT movie_name,year,country,genre,description
-               FROM movies
-               """;
-        return jdbcTemplate.query(sql,movieRowMapper);
+           SELECT  movie_name, year, country, genre, description
+           FROM movies
+           """;
+        return jdbcTemplate.query(sql, movieRowMapper);
     }
 
     @Override

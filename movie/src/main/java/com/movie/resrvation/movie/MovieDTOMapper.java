@@ -13,7 +13,7 @@ public class MovieDTOMapper implements Function<Movie,MovieDTO> {
     @Override
     public MovieDTO apply(Movie movie) {
         return new MovieDTO(
-                movie.getMovieId(),
+
                 movie.getMovieName(),
                 movie.getYear(),
                 movie.getCountry(),
