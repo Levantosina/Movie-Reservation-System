@@ -11,11 +11,10 @@
     <packaging>jar</packaging>
 
     <name>movie</name>
-    <url>http://maven.apache.org</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+
+
+
 
     <dependencies>
 
@@ -65,5 +64,16 @@
             <artifactId>flyway-database-postgresql</artifactId>
             <version>10.14.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.movie.resrvation</groupId>
+            <artifactId>amqp</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 </project>

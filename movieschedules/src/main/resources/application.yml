@@ -1,6 +1,7 @@
 server:
   port: 8085
 spring:
+
   application:
     name: schedule
   main:
@@ -10,10 +11,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/schedules
     username: levantos
     driver-class-name: org.postgresql.Driver
+
+
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
       hibernate:
         jdbc:
@@ -25,7 +28,8 @@ spring:
   sql:
     init:
       mode: never
-
+  flyway:
+    locations: classpath:db/migration/schedule
 management:
   tracing:
     sampling:

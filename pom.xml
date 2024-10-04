@@ -29,7 +29,9 @@
         <module>api-gateway</module>
 		<module>movie</module>
 		<module>movieschedules</module>
-	</modules>
+        <module>amqp</module>
+        <module>client</module>
+    </modules>
     <scm>
 		<connection/>
 		<developerConnection/>
@@ -37,10 +39,15 @@
 		<url/>
 	</scm>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<java.version>21</java.version>
 		<spring.boot.dependencies.version>3.3.4</spring.boot.dependencies.version>
+		<spring.boot.maven.plugin.version>3.3.4</spring.boot.maven.plugin.version>
 		<spring.cloud.version>2023.0.3</spring.cloud.version>
 	</properties>
+
 
 
 	<dependencyManagement>
@@ -78,16 +85,41 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
 
 	</dependencies>
 
+
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot.maven.plugin.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<configuration>
+					<source>21</source>
+					<target>21</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

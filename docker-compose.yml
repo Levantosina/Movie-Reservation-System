@@ -32,6 +32,14 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+  rabbitmq:
+    image: rabbitmq:3.13.7-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - spring
 networks:
   postgres:
     driver: bridge

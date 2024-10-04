@@ -30,6 +30,8 @@ spring:
 
     locations: classpath:db/migration/seat
 
+#  rabbitmq:
+#    addresses: rabbitmq:5672
 
 management:
   tracing:
@@ -49,8 +51,5 @@ eureka:
   instance:
     prefer-ip-address: true
 
-logging:
-  level:
-    org.hibernate: DEBUG
-debug: true
+
 

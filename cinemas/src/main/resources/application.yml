@@ -31,6 +31,8 @@ spring:
     baseline-on-migrate: false
     locations: classpath:db/migration/cinema
 
+#  rabbitmq:
+#    addresses: localhost:5672
 
 management:
   tracing:
