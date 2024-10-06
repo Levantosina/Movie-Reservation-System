@@ -10,9 +10,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @project MovieReservationSystem
  */
 
-@SpringBootApplication(scanBasePackages ="com.movie.users" )
+@SpringBootApplication(scanBasePackages ={
+         "com.movie.users",
+        "com.movie.amqp"} )
 @EntityScan(basePackages = "com.movie.users.roles.entity")
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.movie.client")
 public class UserApp {
     public static void main(String[] args) {
 

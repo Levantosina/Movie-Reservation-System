@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS schedules;
 CREATE TABLE schedules (
                            schedule_id SERIAL PRIMARY KEY,
                            movie_id INT NOT NULL,

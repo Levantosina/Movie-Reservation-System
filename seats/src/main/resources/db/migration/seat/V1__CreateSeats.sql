@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS seats;
 CREATE TABLE seats (
                        seat_id SERIAL PRIMARY KEY,
                        seat_number VARCHAR(10),

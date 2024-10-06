@@ -20,23 +20,31 @@ import java.util.stream.Collectors;
     public class MovieScheduleService {
         private final MovieScheduleDAO movieScheduleDAO;
         private final MovieScheduleDTOMapper movieScheduleDTOMapper;
-        private final SeatClient seatClient;  // Use the SeatClient here
+        private final SeatClient seatClient;
 
-        public void createSchedule(MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
-            // Get the total number of seats from the Seat Service
-            int totalSeats = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
 
-            // Create the new MovieSchedule object
-            MovieSchedule movieSchedule = new MovieSchedule();
-            movieSchedule.setMovieId(movieScheduleRegistrationRequest.movieId());
-            movieSchedule.setCinemaId(movieScheduleRegistrationRequest.cinemaId());
-            movieSchedule.setStartTime(movieScheduleRegistrationRequest.startTime());
-            movieSchedule.setEndTime(movieScheduleRegistrationRequest.endTime());
-            movieSchedule.setDate(movieScheduleRegistrationRequest.date());
-            movieSchedule.setAvailableSeats(totalSeats);
+    public List<MovieScheduleDTO>getAllSchedules(){
+        return movieScheduleDAO.selectAllSchedules()
+                .stream()
+                .map(movieScheduleDTOMapper)
+                .collect(Collectors.toList());
+    }
 
-            movieScheduleDAO.createSchedule(movieSchedule);
-        }
+    public MovieSchedule createSchedule(MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
+        int totalSeats = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
+
+        MovieSchedule movieSchedule = new MovieSchedule();
+        movieSchedule.setMovieId(movieScheduleRegistrationRequest.movieId());
+        movieSchedule.setCinemaId(movieScheduleRegistrationRequest.cinemaId());
+        movieSchedule.setStartTime(movieScheduleRegistrationRequest.startTime());
+        movieSchedule.setEndTime(movieScheduleRegistrationRequest.endTime());
+        movieSchedule.setDate(movieScheduleRegistrationRequest.date());
+        movieSchedule.setAvailableSeats(totalSeats);
+
+
+        movieScheduleDAO.createSchedule(movieSchedule);
+        return movieSchedule;
+    }
 
         public List<MovieScheduleDTO> findByCinemaId(Long cinemaId) {
             return movieScheduleDAO.selectSchedulesByCinemaId(cinemaId)

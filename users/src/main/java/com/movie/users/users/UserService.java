@@ -1,5 +1,7 @@
 package com.movie.users.users;
 
+import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 
 import com.movie.users.roles.RoleDAO;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  * @project MovieReservationSystem
  */
 @Service
+
 public class UserService {
 
     private final UserDAO userDAO;
@@ -22,13 +25,17 @@ public class UserService {
 
     private final RoleDAO roleDAO;
 
+    private final RabbitMqMessageProducer rabbitMqMessageProducer;
+
 
     public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
-                       RoleDAO roleDAO) {
+                       RoleDAO roleDAO, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.userDAO = userDAO;
         this.userDTOMapper = userDTOMapper;
 
         this.roleDAO = roleDAO;
+
+        this.rabbitMqMessageProducer = rabbitMqMessageProducer;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -47,10 +54,10 @@ public class UserService {
                                         formatted(id)));
     }
 
-    public void registerUser(UserRegistrationRequest userRegistrationRequest){
-
+    public void registerUser(UserRegistrationRequest userRegistrationRequest) {
         Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
+
 
         User user = new User();
         user.setFirstName(userRegistrationRequest.firstName());
@@ -58,7 +65,26 @@ public class UserService {
         user.setEmail(userRegistrationRequest.email());
         user.setRole(role);
 
+
         userDAO.insertUser(user);
 
+
+        if (user.getUserId() == null) {
+            throw new IllegalStateException("User ID is not set after inserting user");
+        }
+
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                user.getUserId(),
+                user.getEmail(),
+                String.format("Hi %s, welcome to Levantos...", user.getFirstName())
+        );
+
+        // Send the notification
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 }

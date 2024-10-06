@@ -1,18 +1,14 @@
 server:
-  port: 8085
-spring:
+  port: 8086
 
+spring:
   application:
-    name: schedule
-  main:
-    allow-bean-definition-overriding: true
+    name: notification
   datasource:
     password: password
-    url: jdbc:postgresql://localhost:5432/schedules
+    url: jdbc:postgresql://localhost:5432/notification
     username: levantos
     driver-class-name: org.postgresql.Driver
-
-
   jpa:
     show-sql: true
     hibernate:
@@ -28,8 +24,10 @@ spring:
   sql:
     init:
       mode: never
+
   flyway:
-    locations: classpath:db/migration/schedule
+    locations: classpath:db/migration/notification
+    enabled: true
 
   rabbitmq:
     addresses: localhost:5672
@@ -48,7 +46,14 @@ eureka:
       defaultZone: http://localhost:8761/eureka/v2
     fetch-registry: true
     register-with-eureka: true
-    enabled: true
+    enabled: false
   instance:
     prefer-ip-address: true
 
+rabbitmq:
+  exchanges:
+    internal: internal.exchange
+  queues:
+    notification: notification.queue
+  routing-keys:
+    internal-notification: internal.notification.routing-key

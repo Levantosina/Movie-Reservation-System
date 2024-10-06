@@ -26,7 +26,7 @@ public class UserRowMapper implements RowMapper<User> {
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))
                 .email(rs.getString("email"))
-                .role(role)  // Assign the mapped Role object
+                .role(role)
                 .build();
     }
 }
