@@ -19,7 +19,6 @@ public class MovieScheduleRowMapper implements RowMapper<MovieSchedule> {
                 .date(rs.getDate("date").toLocalDate())
                 .startTime(rs.getTime("start_time").toLocalTime())
                 .endTime(rs.getTime("end_time").toLocalTime())
-
                 .cinemaId(rs.getLong("cinema_id"))
                 .movieId(rs.getLong("movie_id"))
                 .build();

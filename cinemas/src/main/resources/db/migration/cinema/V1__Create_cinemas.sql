@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS cinemas;
+
 CREATE TABLE cinemas(
             cinema_id SERIAL PRIMARY KEY,
             cinema_name TEXT NOT NULL,

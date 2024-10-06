@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS seats;
+DROP TABLE IF EXISTS users;
 CREATE TABLE roles (
                        role_id SERIAL PRIMARY KEY,
                        role_name VARCHAR(25) NOT NULL ,

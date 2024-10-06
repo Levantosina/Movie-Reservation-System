@@ -15,6 +15,7 @@ public class SeatRowMapper implements RowMapper<Seat> {
     @Override
     public Seat mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Seat.builder()
+
                 .seatId(rs.getLong("seat_id"))
                 .seatNumber(rs.getString("seat_number"))
                 .row(rs.getString("row"))

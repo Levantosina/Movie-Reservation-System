@@ -1,6 +1,7 @@
 package com.movie.schedules.movieschedules;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,10 +21,16 @@ public class MovieScheduleController {
         this.movieScheduleService = movieScheduleService;
     }
 
-    @PostMapping
-    public void createSchedule(@RequestBody MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
-        log.info("New schedule registration: {}", movieScheduleRegistrationRequest);
-        movieScheduleService.createSchedule(movieScheduleRegistrationRequest);
+    @GetMapping
+    public List<MovieScheduleDTO>getAllMovie(){
+
+        return movieScheduleService.getAllSchedules();
+    }
+    @PostMapping("/schedules")
+    public ResponseEntity<MovieSchedule> createSchedule(@RequestBody MovieScheduleRegistrationRequest request) {
+        System.out.println("Received request: " + request);
+        MovieSchedule movieSchedule = movieScheduleService.createSchedule(request);
+        return ResponseEntity.ok(movieSchedule);
     }
 
     @PutMapping("{scheduleId}")

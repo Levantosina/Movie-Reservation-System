@@ -10,13 +10,14 @@ import java.util.Optional;
  */
 public interface MovieScheduleDAO {
 
-
+    List<MovieSchedule>selectAllSchedules();
 
     void createSchedule(MovieSchedule movieSchedule);
 
     void upDateSchedule(MovieSchedule movieSchedule);
 
     Optional<MovieSchedule>selectScheduleById(Long scheduleId);
+
 
     List<MovieSchedule> findByDate(LocalDate date);
     //void insertSchedule(MovieSchedule movieSchedule);

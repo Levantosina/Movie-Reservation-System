@@ -29,9 +29,10 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
     @Override
     public void createSchedule(MovieSchedule movieSchedule) {
         String sql = """
-                INSERT INTO schedules (movie_id, cinema_id, date, start_time, end_time, available_seats)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
+            INSERT INTO schedules (movie_id, cinema_id, date, start_time, end_time, available_seats)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """;
+        System.out.println("Executing SQL: " + sql);
         jdbcTemplate.update(sql,
                 movieSchedule.getMovieId(),
                 movieSchedule.getCinemaId(),
@@ -39,6 +40,13 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
                 movieSchedule.getStartTime(),
                 movieSchedule.getEndTime(),
                 movieSchedule.getAvailableSeats());
+    }
+    @Override
+    public List<MovieSchedule> selectAllSchedules() {
+        String sql = """
+            SELECT schedule_id,movie_id, cinema_id, date, start_time, end_time, available_seats FROM schedules
+          """;
+        return jdbcTemplate.query(sql,movieScheduleRowMapper);
     }
 
     @Override
