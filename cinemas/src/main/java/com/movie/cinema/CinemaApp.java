@@ -7,9 +7,12 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+
+        "com.movie.cinema"
+})
 @EnableDiscoveryClient
-@EntityScan(basePackages = "com.movie.resrvation.cinema.entity")
+@EntityScan(basePackages = "com.movie.cinema.cinema.entity")
 public class CinemaApp
 {
     public static void main( String[] args )

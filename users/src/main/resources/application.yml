@@ -13,7 +13,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
       hibernate:
         jdbc:
@@ -22,10 +22,13 @@ spring:
       boot:
         allow_jdbc_metadata_access: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   sql:
     init:
-      mode: never
-
+      mode: always
+  flyway:
+    locations: classpath:db/migration
+    enabled: true
 management:
   tracing:
     sampling:
@@ -44,3 +47,6 @@ eureka:
   instance:
     prefer-ip-address: true
 
+logging:
+  level:
+    org.flywaydb: DEBUG

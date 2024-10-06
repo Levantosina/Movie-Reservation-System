@@ -22,15 +22,15 @@
 		<developer/>
 	</developers>
     <modules>
-        <module>users</module>
-        <module>cinemas</module>
-        <module>eureka-server</module>
-		<module>seats</module>
-        <module>api-gateway</module>
+		<module>eureka-server</module>
+		<module>api-gateway</module>
+		<module>amqp</module>
+		<module>users</module>
+		<module>cinemas</module>
 		<module>movie</module>
+		<module>seats</module>
 		<module>movieschedules</module>
-        <module>amqp</module>
-        <module>client</module>
+		<module>client</module>
     </modules>
     <scm>
 		<connection/>

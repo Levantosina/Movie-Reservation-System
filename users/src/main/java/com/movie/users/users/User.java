@@ -17,9 +17,11 @@ import lombok.*;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="user_id_seq",
+    sequenceName = "user_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    generator = "user_id_seq")
     private Long userId;
-
     private String firstName;
     private String lastName;
     private String email;
