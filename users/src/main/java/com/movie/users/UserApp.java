@@ -13,6 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages ={
          "com.movie.users",
         "com.movie.amqp"} )
+
 @EntityScan(basePackages = "com.movie.users.roles.entity")
 @EnableFeignClients(basePackages = "com.movie.client")
 public class UserApp {

@@ -34,6 +34,8 @@ public class UserAccessService implements UserDAO {
        return jdbcTemplate.query(sql,userRowMapper);
     }
 
+
+
     @Override
     public Optional<User> selectUserById(Long id) {
 
@@ -63,18 +65,23 @@ public class UserAccessService implements UserDAO {
     }
 
     @Override
-    public void insertUser(User user) {
-
+    public Long insertUser(User user) {
         var sql = """
-    INSERT INTO users (first_name, last_name, email, role_id)
-    VALUES (?, ?, ?, ?)""";
-        jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole().getRoleId());
+        INSERT INTO users (first_name, last_name, email, role_id)
+        VALUES (?, ?, ?, ?) RETURNING user_id""";
+        System.out.println(user.getUserId());
+
+        return jdbcTemplate.queryForObject(sql, Long.class,
+                user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole().getRoleId());
     }
+
 
     @Override
     public void deleteUserById(Long userId) {
 
     }
+
+
 
     @Override
     public void updateUser(User updateUser) {

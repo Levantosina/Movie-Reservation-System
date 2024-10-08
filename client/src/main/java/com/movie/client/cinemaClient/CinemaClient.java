@@ -1,4 +1,4 @@
-package com.movie.client;
+package com.movie.client.cinemaClient;
 
 import com.movie.cinema.cinema.CinemaDTO;
 import org.springframework.cloud.openfeign.FeignClient;

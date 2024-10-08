@@ -1,11 +1,9 @@
 package com.movie.schedules.movieschedules;
 
-import com.movie.client.SeatClient;
+import com.movie.client.seatClient.SeatClient;
 import com.movie.schedules.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.List;

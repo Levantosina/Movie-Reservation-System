@@ -18,6 +18,9 @@ public class NotificationService {
 
 
     public void send(NotificationRequest notificationRequest) {
+
+        System.out.println("Sending notification to user ID: " + notificationRequest.toUserId());
+
         notificationRepository.save(
                 Notification.builder()
                         .toUserId(notificationRequest.toUserId())

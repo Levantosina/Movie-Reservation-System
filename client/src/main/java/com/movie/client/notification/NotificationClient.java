@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @FeignClient(
         name="notification",
-        url= "${client.notification.url}"
+        url= "http://localhost:8086"
 )
 
 public interface NotificationClient {

@@ -1,6 +1,7 @@
 package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.cinema.cinema.CinemaDTO;
 import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 
@@ -9,7 +10,9 @@ import com.movie.users.users.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -17,7 +20,6 @@ import java.util.stream.Collectors;
  * @project MovieReservationSystem
  */
 @Service
-
 public class UserService {
 
     private final UserDAO userDAO;
@@ -28,6 +30,9 @@ public class UserService {
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
 
+    private final Map<String, Long> cinemaMap = new HashMap<>();
+
+
     public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
                        RoleDAO roleDAO, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.userDAO = userDAO;
@@ -36,6 +41,7 @@ public class UserService {
         this.roleDAO = roleDAO;
 
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
+
     }
 
     public List<UserDTO> getAllUsers() {
@@ -58,29 +64,22 @@ public class UserService {
         Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
-
         User user = new User();
         user.setFirstName(userRegistrationRequest.firstName());
         user.setLastName(userRegistrationRequest.lastName());
         user.setEmail(userRegistrationRequest.email());
         user.setRole(role);
 
+        Long generatedUserId = userDAO.insertUser(user);
+        user.setUserId(generatedUserId);
 
-        userDAO.insertUser(user);
-
-
-        if (user.getUserId() == null) {
-            throw new IllegalStateException("User ID is not set after inserting user");
-        }
-
+        System.out.println(user);
 
         NotificationRequest notificationRequest = new NotificationRequest(
                 user.getUserId(),
                 user.getEmail(),
                 String.format("Hi %s, welcome to Levantos...", user.getFirstName())
         );
-
-        // Send the notification
         rabbitMqMessageProducer.publish(
                 notificationRequest,
                 "internal.exchange",
@@ -88,3 +87,4 @@ public class UserService {
         );
     }
 }
+
