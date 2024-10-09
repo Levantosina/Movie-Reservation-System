@@ -9,7 +9,8 @@ CREATE TABLE users(
                       user_id SERIAL PRIMARY KEY ,
                       first_name varchar(25) NOT NULL ,
                       last_name varchar(25)NOT NULL,
-                      email varchar (50)NOT NULL,
+                      email varchar (50)NOT NULL UNIQUE ,
+                    password varchar NOT NULL,
                       role_id SERIAL NOT NULL ,
                       CONSTRAINT fk_role FOREIGN KEY (role_id)
                           REFERENCES roles (role_id)
