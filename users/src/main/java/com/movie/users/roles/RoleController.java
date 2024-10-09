@@ -22,10 +22,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-   @GetMapping
-    public List<RoleDTO> getAllRoles(){
-        return roleService.getAllRoles();
-    }
+
     @GetMapping("{roleId}")
     public RoleDTO getRole(@PathVariable ("roleId")Long roleId){
         return roleService.getRole(roleId);

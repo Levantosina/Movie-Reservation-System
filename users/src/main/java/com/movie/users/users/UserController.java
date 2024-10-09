@@ -1,6 +1,9 @@
 package com.movie.users.users;
 
+import com.movie.users.jwt.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +18,11 @@ import java.util.List;
 public class UserController {
 
     private  final UserService userService;
+    private final JWTUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JWTUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
     @GetMapping
     public List<UserDTO> getUsers(){
@@ -30,8 +35,14 @@ public class UserController {
     }
 
     @PostMapping
-    public void registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest) {
+
         log.info("New customer registration: {}", userRegistrationRequest);
         userService.registerUser(userRegistrationRequest);
+       String jwtToken= jwtUtil.issueToken(userRegistrationRequest.email(),"ROLE_USER");
+
+      return ResponseEntity.ok()
+               .header(HttpHeaders.AUTHORIZATION,jwtToken)
+              .build();
     }
 }

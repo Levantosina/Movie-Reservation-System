@@ -7,12 +7,15 @@ import com.movie.users.roles.Role;
 
 import com.movie.users.roles.RoleDAO;
 import com.movie.users.users.exception.ResourceNotFoundException;
+import io.jsonwebtoken.security.Password;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -29,12 +32,15 @@ public class UserService {
 
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
+    private final PasswordEncoder passwordEncoder;
 
-    private final Map<String, Long> cinemaMap = new HashMap<>();
 
 
-    public UserService(@Qualifier("jdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
-                       RoleDAO roleDAO, RabbitMqMessageProducer rabbitMqMessageProducer) {
+
+
+
+    public UserService(@Qualifier("userJdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
+                       RoleDAO roleDAO, RabbitMqMessageProducer rabbitMqMessageProducer, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
         this.userDTOMapper = userDTOMapper;
 
@@ -42,6 +48,8 @@ public class UserService {
 
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
 
+
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -68,18 +76,26 @@ public class UserService {
         user.setFirstName(userRegistrationRequest.firstName());
         user.setLastName(userRegistrationRequest.lastName());
         user.setEmail(userRegistrationRequest.email());
+
+        // Ensure the password is encoded and set
+        String encodedPassword = passwordEncoder.encode(userRegistrationRequest.password());
+        user.setPassword(encodedPassword);
+
         user.setRole(role);
 
-        Long generatedUserId = userDAO.insertUser(user);
-        user.setUserId(generatedUserId);
+        userDAO.insertUser(user);
 
-        System.out.println(user);
+        Optional<User> savedUser = userDAO.selectUserByEmail(user.getEmail());
+        if (savedUser.isPresent()) {
+            user.setUserId(savedUser.get().getUserId());
+        }
 
         NotificationRequest notificationRequest = new NotificationRequest(
                 user.getUserId(),
                 user.getEmail(),
                 String.format("Hi %s, welcome to Levantos...", user.getFirstName())
         );
+
         rabbitMqMessageProducer.publish(
                 notificationRequest,
                 "internal.exchange",

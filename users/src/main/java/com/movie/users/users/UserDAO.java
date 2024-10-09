@@ -13,7 +13,7 @@ public interface UserDAO {
     Optional<User> selectUserByEmail(String email);
     boolean existPersonWithEmail(String email);
     boolean existUserWithId(Long id);
-    Long insertUser(User user);
+    void insertUser(User user);
     void deleteUserById(Long userId);
     void updateUser(User updateUser);
 

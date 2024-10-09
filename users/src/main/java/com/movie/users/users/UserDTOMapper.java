@@ -1,9 +1,11 @@
 package com.movie.users.users;
 
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author DMITRII LEVKIN on 22/09/2024
