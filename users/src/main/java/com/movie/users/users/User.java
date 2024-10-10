@@ -17,8 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-        @UniqueConstraint(name = "user_email_unique",
-        columnNames = "email")
+                @UniqueConstraint(name = "user_email_unique",
+                        columnNames = "email")
         })
 @Getter
 @Setter
@@ -29,9 +29,9 @@ import java.util.List;
 public class User implements UserDetails  {
     @Id
     @SequenceGenerator(name="user_id_seq",
-    sequenceName = "user_id_seq")
+            sequenceName = "user_id_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY,
-    generator = "user_id_seq")
+            generator = "user_id_seq")
     @Column(
             nullable = false
     )
@@ -89,6 +89,3 @@ public class User implements UserDetails  {
         return true;
     }
 }
-
-
-

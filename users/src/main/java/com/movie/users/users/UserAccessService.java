@@ -24,14 +24,14 @@ public class UserAccessService implements UserDAO {
 
     @Override
     public List<User> selectAllUsers() {
-       var sql = """
+        var sql = """
               
                SELECT u.user_id, u.first_name, u.last_name, u.email,u.password,
                                  r.role_id, r.role_name, r.description
                           FROM users u
                           JOIN roles r ON u.role_id = r.role_id
                """;
-       return jdbcTemplate.query(sql,userRowMapper);
+        return jdbcTemplate.query(sql,userRowMapper);
     }
 
 
@@ -40,8 +40,10 @@ public class UserAccessService implements UserDAO {
     public Optional<User> selectUserById(Long id) {
 
         var sql = """
-               SELECT user_id, first_name,last_name,email,password
-               FROM users where user_id=?
+                SELECT u.user_id, u.first_name, u.last_name, u.email,u.password,
+                                 r.role_id, r.role_name, r.description
+                          FROM users u
+                          JOIN roles r ON u.role_id = r.role_id where user_id=?
                """;
 
         return jdbcTemplate.query(sql,userRowMapper,id)

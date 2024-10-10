@@ -39,10 +39,10 @@ public class UserController {
 
         log.info("New customer registration: {}", userRegistrationRequest);
         userService.registerUser(userRegistrationRequest);
-       String jwtToken= jwtUtil.issueToken(userRegistrationRequest.email(),userRegistrationRequest.roleId());
+        String jwtToken= jwtUtil.issueToken(userRegistrationRequest.email(),userRegistrationRequest.roleId());
 
-      return ResponseEntity.ok()
-               .header(HttpHeaders.AUTHORIZATION,jwtToken)
-              .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION,jwtToken)
+                .build();
     }
 }

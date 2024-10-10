@@ -23,7 +23,7 @@ public class Role {
     )
     @GeneratedValue (
             strategy = GenerationType.SEQUENCE,
-             generator = "role_id_sequence")
+            generator = "role_id_sequence")
     private Long roleId;
     private String roleName;
     private String description;

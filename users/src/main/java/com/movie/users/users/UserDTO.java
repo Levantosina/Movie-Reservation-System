@@ -10,7 +10,9 @@ public record UserDTO(
         Long userId,
         String firstName,
         String lastName,
-        String email
+        String email,
+
+        String roleName
 
 
 ) {

@@ -15,11 +15,11 @@ import java.sql.SQLException;
 public class UserRowMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-       Role role= new Role(
-               rs.getLong("role_id"),
-               rs.getString("role_name"),
-               rs.getString("description")
-       );
+        Role role= new Role(
+                rs.getLong("role_id"),
+                rs.getString("role_name"),
+                rs.getString("description")
+        );
 
         return User.builder()
                 .userId(rs.getLong("user_id"))

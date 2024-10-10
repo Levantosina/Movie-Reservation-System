@@ -12,5 +12,5 @@ public record UserRegistrationRequest(
         Long roleId
 
 
-        ) {
+) {
 }
