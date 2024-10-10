@@ -26,7 +26,7 @@ public class UserAccessService implements UserDAO {
     public List<User> selectAllUsers() {
        var sql = """
               
-               SELECT u.user_id, u.first_name, u.last_name, u.email,u.password
+               SELECT u.user_id, u.first_name, u.last_name, u.email,u.password,
                                  r.role_id, r.role_name, r.description
                           FROM users u
                           JOIN roles r ON u.role_id = r.role_id
