@@ -7,10 +7,16 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.movie.amqp</groupId>
     <artifactId>amqp</artifactId>
     <packaging>jar</packaging>
 
     <name>amqp</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>

@@ -1,7 +1,7 @@
 package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
-import com.movie.cinema.cinema.CinemaDTO;
+
 import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 

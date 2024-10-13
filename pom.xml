@@ -24,7 +24,6 @@
     <modules>
 		<module>eureka-server</module>
 		<module>api-gateway</module>
-		<module>amqp</module>
 		<module>users</module>
 		<module>cinemas</module>
 		<module>movie</module>
@@ -32,7 +31,8 @@
 		<module>movieschedules</module>
 		<module>client</module>
         <module>notification</module>
-    </modules>
+		<module>amqp</module>
+	</modules>
     <scm>
 		<connection/>
 		<developerConnection/>
