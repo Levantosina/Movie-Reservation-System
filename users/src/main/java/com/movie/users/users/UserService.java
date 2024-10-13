@@ -64,7 +64,7 @@ public class UserService {
                 .map(userDTOMapper)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
-                                "Customer with id [%s] not found".
+                                "User with id [%s] not found".
                                         formatted(id)));
     }
 

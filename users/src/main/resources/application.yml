@@ -1,6 +1,14 @@
 server:
   port: 8080
+
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+
 spring:
+
   application:
     name: user
   main:
