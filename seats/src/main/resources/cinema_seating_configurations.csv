@@ -1,6 +1,0 @@
-Cinema,Rows,Details,Total Seats
-Amazonia,"A, B, C, D, E, F","A: 8, B: 8, C: 8, D: 6 (1 disabled), E: 6 (2 VIP), F: 6",44
-Riveria,"A, B, C, D, E, F, G, H","A: 10, B: 10, C: 8 (1 disabled), D: 8 (1 disabled), E: 6 (2 VIP), F: 6, G: 6 (1 disabled), H: 6",70
-Caribia,"A, B, C, D, E, F, G","A: 8, B: 8, C: 8, D: 8 (1 disabled), E: 4 (VIP), F: 6 (2 VIP), G: 4 (disabled)",54
-Atlantidia,"A, B, C, D, E, F, G, H, I, J","A: 12, B: 12, C: 10, D: 10, E: 10 (4 VIP), F: 8, G: 8, H: 8, I: 6, J: 6",82
-Atmosphere,"A, B, C, D, E, F","A: 6, B: 6 (2 VIP), C: 5, D: 5 (1 disabled), E: 5, F: 5 (1 disabled)",32
