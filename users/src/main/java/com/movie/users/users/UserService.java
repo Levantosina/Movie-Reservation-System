@@ -6,6 +6,8 @@ import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 
 import com.movie.users.roles.RoleDAO;
+import com.movie.users.users.exception.DuplicateResourceException;
+import com.movie.users.users.exception.RequestValidationException;
 import com.movie.users.users.exception.ResourceNotFoundException;
 import io.jsonwebtoken.security.Password;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,10 +35,6 @@ public class UserService {
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
     private final PasswordEncoder passwordEncoder;
-
-
-
-
 
 
     public UserService(@Qualifier("userJdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
@@ -101,5 +99,43 @@ public class UserService {
                 "internal.exchange",
                 "internal.notification.routing-key"
         );
+    }
+
+    public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+        User user = userDAO.selectUserById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User with [%s] not found"
+                                .formatted(userId)));
+
+        boolean changes = false;
+
+        if (userUpdateRequest.firstName() != null && !userUpdateRequest.firstName().equals(user.getFirstName())) {
+            user.setFirstName(userUpdateRequest.firstName());
+            changes = true;
+        }
+        if (userUpdateRequest.lastName() != null && !userUpdateRequest.lastName().equals(user.getLastName())) {
+            user.setLastName(userUpdateRequest.lastName());
+            changes = true;
+        }
+        if (userUpdateRequest.email() != null && !userUpdateRequest.email().equals(user.getEmail())) {
+            if (userDAO.existPersonWithEmail(userUpdateRequest.email())) {
+                throw new DuplicateResourceException("email already taken");
+            }
+            user.setEmail(userUpdateRequest.email());
+            changes = true;
+        }
+        if (!changes) {
+            throw new RequestValidationException("No changes detected");
+        }
+        userDAO.updateUser(user);
+    }
+
+    public void deleteUserById(Long userId) {
+        if (!userDAO.existUserWithId(userId)) {
+            throw new ResourceNotFoundException(
+                    "User with id [%s] not found".
+                            formatted(userId));
+        }
+        userDAO.deleteUserById(userId);
     }
 }

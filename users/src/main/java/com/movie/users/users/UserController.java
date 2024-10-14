@@ -45,4 +45,15 @@ public class UserController {
                 .header(HttpHeaders.AUTHORIZATION,jwtToken)
                 .build();
     }
+    @PutMapping("{userId}")
+    public void updateUser(@PathVariable("userId") Long userId,@RequestBody UserUpdateRequest userUpdateRequest){
+        userService.updateUser(userId,userUpdateRequest);
+    }
+
+    @DeleteMapping("{userId}")
+    public  void  deleteUser(@PathVariable("userId")Long userId){
+        userService.deleteUserById(userId);
+    }
+
+
 }

@@ -106,16 +106,55 @@ public class UserAccessService implements UserDAO {
         user.setUserId(userId);
     }
 
+    @Override
+    public void updateUser(User updateUser) {
+
+        if(updateUser.getFirstName()!=null){
+            var sql = """
+                    UPDATE users SET first_name=? where user_id=?
+                    """;
+             jdbcTemplate.update(
+                    sql,
+                    updateUser.getFirstName(),
+                    updateUser.getUserId()
+            );
+
+        }
+
+        if(updateUser.getLastName()!=null){
+            var sql = """
+                    UPDATE users SET last_name=? where user_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateUser.getLastName(),
+                    updateUser.getUserId()
+            );
+
+        }
+
+        if(updateUser.getEmail()!=null){
+            var sql = """
+                    UPDATE users SET email=? where user_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateUser.getEmail(),
+                    updateUser.getUserId()
+            );
+
+        }
+
+    }
 
     @Override
     public void deleteUserById(Long userId) {
 
-    }
+            var sql = """
+                    DELETE FROM users where user_id = ?
+                    """;
 
-
-
-    @Override
-    public void updateUser(User updateUser) {
-
+            int result= jdbcTemplate.update(sql,userId);
+        System.out.println(" Deleted = " + result);
     }
 }
