@@ -20,7 +20,7 @@ public interface MovieScheduleDAO {
 
 
     List<MovieSchedule> findByDate(LocalDate date);
-    //void insertSchedule(MovieSchedule movieSchedule);
+
 
     List<MovieSchedule> findByCinemaIdAndMovieId(Long cinemaId, Long movieId);
 
