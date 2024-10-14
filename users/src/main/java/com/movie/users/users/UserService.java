@@ -68,6 +68,11 @@ public class UserService {
     public void registerUser(UserRegistrationRequest userRegistrationRequest) {
 
 
+        Optional<User> existingUser = userDAO.selectUserByEmail(userRegistrationRequest.email());
+        if (existingUser.isPresent()) {
+            throw new DuplicateResourceException("Email is already taken");
+        }
+
 //        Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
 //                .orElseThrow(() -> new RuntimeException("Role not found"));
 

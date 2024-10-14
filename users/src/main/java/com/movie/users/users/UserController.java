@@ -1,6 +1,7 @@
 package com.movie.users.users;
 
 import com.movie.users.jwt.JWTUtil;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class UserController {
         return userService.getUserById(userId);
     }
     @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
 
         log.info("New customer registration: {}", userRegistrationRequest);
         userService.registerUser(userRegistrationRequest);
@@ -46,11 +47,13 @@ public class UserController {
     }
     @PutMapping("{userId}")
     public void updateUser(@PathVariable("userId") Long userId,@RequestBody UserUpdateRequest userUpdateRequest){
+        log.info(" Updated user: {}",userUpdateRequest);
         userService.updateUser(userId,userUpdateRequest);
     }
 
     @DeleteMapping("{userId}")
     public  void  deleteUser(@PathVariable("userId")Long userId){
+        log.info("Deleted user: {}", userId);
         userService.deleteUserById(userId);
     }
 
