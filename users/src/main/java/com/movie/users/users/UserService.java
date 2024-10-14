@@ -55,7 +55,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getUser(Long id) {
+    public UserDTO getUserById(Long id) {
         return userDAO.selectUserById(id)
                 .map(userDTOMapper)
                 .orElseThrow(
@@ -73,7 +73,6 @@ public class UserService {
         user.setLastName(userRegistrationRequest.lastName());
         user.setEmail(userRegistrationRequest.email());
 
-        // Ensure the password is encoded and set
         String encodedPassword = passwordEncoder.encode(userRegistrationRequest.password());
         user.setPassword(encodedPassword);
 

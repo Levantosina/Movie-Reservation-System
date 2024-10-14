@@ -30,10 +30,9 @@ public class UserController {
         return userService.getAllUsers();
     }
     @GetMapping("{userId}")
-    public UserDTO getCustomer(@PathVariable("userId")Long userId){
-        return userService.getUser(userId);
+    public UserDTO getCustomerById(@PathVariable("userId")Long userId){
+        return userService.getUserById(userId);
     }
-
     @PostMapping
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest userRegistrationRequest) {
 
