@@ -2,7 +2,6 @@ package com.movie.users.users;
 
 import com.movie.users.roles.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

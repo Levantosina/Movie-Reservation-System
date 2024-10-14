@@ -25,6 +25,8 @@ public class Role {
             strategy = GenerationType.SEQUENCE,
             generator = "role_id_sequence")
     private Long roleId;
+    @Column(nullable = false)
     private String roleName;
+    @Column(nullable = false)
     private String description;
 }
