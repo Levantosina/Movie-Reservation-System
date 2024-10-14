@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,7 +66,17 @@ public class UserService {
     }
 
     public void registerUser(UserRegistrationRequest userRegistrationRequest) {
-        Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
+
+
+//        Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
+//                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        String roleName = userRegistrationRequest.roleName();
+        if (!"ROLE_USER".equals(roleName)) {
+            throw new RuntimeException("Invalid role. Only regular users can register.");
+        }
+
+        Role role = roleDAO.selectRoleByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         User user = new User();
@@ -96,6 +107,21 @@ public class UserService {
                 "internal.exchange",
                 "internal.notification.routing-key"
         );
+    }
+
+    public void assignRoleToUser(Long userId, String roleName, User adminUser) {
+        if (!adminUser.getRole().getRoleName().equals("ROLE_ADMIN")) {
+            throw new RuntimeException("Only admins can assign roles");
+        }
+
+        User user = userDAO.selectUserById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Role role = roleDAO.selectRoleByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        user.setRole(role);
+        userDAO.updateUser(user);
     }
 
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {

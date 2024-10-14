@@ -18,5 +18,5 @@ CREATE TABLE users(
 );
 
 
-INSERT INTO ROLES(role_id,role_name,description)VALUES (1,'admin','admin');
-INSERT INTO ROLES(role_id,role_name,description)VALUES (2,'customer','customer');
+INSERT INTO ROLES(role_id,role_name,description)VALUES (1,'ROLE_ADMIN','admin');
+INSERT INTO ROLES(role_id,role_name,description)VALUES (2,'ROLE_USER','user');

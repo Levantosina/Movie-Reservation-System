@@ -9,7 +9,8 @@ public record UserRegistrationRequest(
         String lastName,
         String email,
         String password,
-        Long roleId
+
+        String roleName
 
 
 ) {

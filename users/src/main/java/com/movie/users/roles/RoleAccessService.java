@@ -42,4 +42,17 @@ public class RoleAccessService implements RoleDAO {
                 .stream()
                 .findFirst();
     }
+
+    @Override
+    public Optional<Role> selectRoleByName(String roleName) {
+        var sql = """
+               SELECT role_id, role_name, description
+               FROM roles where role_name=?
+               """;
+
+        return jdbcTemplate.query(sql,roleRowMapper,roleName)
+                .stream()
+                .findFirst();
+    }
+
 }

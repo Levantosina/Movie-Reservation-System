@@ -11,4 +11,5 @@ public interface RoleDAO {
 
     List<Role> selectAllRoles();
     Optional<Role> selectRoleById(Long id);
+    Optional<Role>selectRoleByName(String name);
 }
