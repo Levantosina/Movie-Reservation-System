@@ -1,6 +1,6 @@
 package com.movie.users.roles;
 
-import com.movie.users.users.exception.ResourceNotFoundException;
+import com.movie.cinema.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 

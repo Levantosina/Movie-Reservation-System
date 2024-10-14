@@ -2,6 +2,7 @@ package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
 
+
 import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 
@@ -9,14 +10,11 @@ import com.movie.users.roles.RoleDAO;
 import com.movie.users.users.exception.DuplicateResourceException;
 import com.movie.users.users.exception.RequestValidationException;
 import com.movie.users.users.exception.ResourceNotFoundException;
-import io.jsonwebtoken.security.Password;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

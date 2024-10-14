@@ -1,7 +1,8 @@
 package com.movie.users.users.exception;
 
+
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,12 +21,11 @@ public class DefaultExceptionHandler {
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> handlerException (ResourceNotFoundException e, HttpServletRequest request,
-                                                      HttpServletResponse response){
+    public ResponseEntity<ApiError> handlerException (ResourceNotFoundException e, HttpServletRequest request){
     ApiError apiError =  new ApiError(
                 request.getRequestURI(),
                 e.getMessage(),
-               HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.value(),
                 LocalDateTime.now()
         );
 
@@ -34,8 +34,7 @@ public class DefaultExceptionHandler {
 
 
     @ExceptionHandler(InsufficientAuthenticationException.class)
-    public ResponseEntity<ApiError> handlerException (InsufficientAuthenticationException e, HttpServletRequest request,
-                                                      HttpServletResponse response){
+    public ResponseEntity<ApiError> handlerException (InsufficientAuthenticationException e, HttpServletRequest request){
         ApiError apiError =  new ApiError(
                 request.getRequestURI(),
                 e.getMessage(),
@@ -47,8 +46,7 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handlerException (Exception e, HttpServletRequest request,
-                                                      HttpServletResponse response){
+    public ResponseEntity<ApiError> handlerException (Exception e, HttpServletRequest request){
         ApiError apiError =  new ApiError(
                 request.getRequestURI(),
                 e.getMessage(),
@@ -60,8 +58,7 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> handlerException (BadCredentialsException e, HttpServletRequest request,
-                                                      HttpServletResponse response){
+    public ResponseEntity<ApiError> handlerException (BadCredentialsException e, HttpServletRequest request){
         ApiError apiError =  new ApiError(
                 request.getRequestURI(),
                 e.getMessage(),
@@ -71,6 +68,8 @@ public class DefaultExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
+
+
 
     ///ADD NEW!!!!!!!!!!!!!!!!!!!!
 
