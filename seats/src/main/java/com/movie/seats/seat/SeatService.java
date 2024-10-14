@@ -16,11 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import java.util.List;
@@ -77,6 +78,7 @@ public class SeatService {
 
     @PostConstruct
     public void loadSeatsFromCSV() {
+
         String csvFilePath = "cinema_seating_schemes.csv";
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(
                 Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(csvFilePath))))) {
@@ -85,7 +87,7 @@ public class SeatService {
 
             while ((values = csvReader.readNext()) != null) {
                 if (!headerSkipped) {
-                    headerSkipped = true; // Skip header row
+                    headerSkipped = true;
                     continue;
                 }
 
@@ -97,20 +99,10 @@ public class SeatService {
                 if (cinemaId != null) {
                     for (String row : rows) {
                         String seatDetails = details.getString(row);
-                        int seatCount = parseSeatCount(seatDetails);
-
-                        for (int i = 1; i <= seatCount; i++) {
-                            Seat seat = new Seat();
-                            seat.setRow(row);
-                            seat.setSeatNumber(String.valueOf(i));
-                            seat.setCinemaId(cinemaId);
-                            seat.setType(parseSeatType(seatDetails));
-
-                            seatDAO.insertSeat(seat);
-                        }
+                        processSeats(row, seatDetails, cinemaId);
                     }
                 } else {
-                    System.out.println("No cinema ID found for " + cinemaName);
+                    System.out.println("No cinema Id found for " + cinemaName);
                 }
             }
         } catch (IOException | CsvValidationException e) {
@@ -124,19 +116,54 @@ public class SeatService {
         return Arrays.asList(rowsString.replace("[", "").replace("]", "").replace("'", "").split(", "));
     }
 
-    private int parseSeatCount(String seatDetails) {
-        String[] parts = seatDetails.split(" ");
-        return Integer.parseInt(parts[0]);
+
+    private void processSeats(String row, String seatDetails, Long cinemaId) {
+
+        int seatCount = parseSeatCount(seatDetails); ////  6 seats to 6)
+
+
+        int vipCount = extractSeatCount(seatDetails, "VIP");
+        int disabledCount = extractSeatCount(seatDetails, "disabled");
+
+
+        for (int i = 1; i <= seatCount; i++) {
+            Seat seat = new Seat();
+            seat.setRow(row);
+            seat.setSeatNumber(String.valueOf(i));
+            seat.setCinemaId(cinemaId);
+
+
+            if (disabledCount > 0) {
+                seat.setType("disabled");
+                disabledCount--;
+            } else if (vipCount > 0) {
+                seat.setType("VIP");
+                vipCount--;
+            } else {
+                seat.setType("standard");
+            }
+
+            seatDAO.insertSeat(seat);
+        }
     }
 
-    private String parseSeatType(String seatDetails) {
-        if (seatDetails.contains("VIP")) {
-            return "VIP";
-        } else if (seatDetails.contains("disabled")) {
-            return "disabled";
-        } else {
-            return "standard";
+
+    private int extractSeatCount(String seatDetails, String seatType) {  //// extract seat for vip,disable
+
+        String pattern = "\\((\\d+) " + seatType + "\\)";
+        Pattern regex = Pattern.compile(pattern);
+        Matcher matcher = regex.matcher(seatDetails);
+
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
         }
+        return 0;
+    }
+
+    private int parseSeatCount(String seatDetails) {  ///parse 1 seat to 1
+
+        String[] parts = seatDetails.split(" ");
+        return Integer.parseInt(parts[0]);
     }
 
     private Long getCinemaId(String cinemaName) {
@@ -157,7 +184,6 @@ public class SeatService {
     }
 
     public int getTotalSeatsByCinemaId(Long cinemaId) {
-
         return seatDAO.countSeatsByCinemaId(cinemaId);
     }
 }
