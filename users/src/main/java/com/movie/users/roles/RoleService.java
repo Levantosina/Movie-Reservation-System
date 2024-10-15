@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,4 +39,22 @@ public class RoleService {
                                 "Role with id [%s] not found".
                                         formatted(roleId)));
     }
+
+    public Set<String> validateRoles(Set<String> roleNames) {
+        return roleNames.stream()
+                .filter(roleName -> roleDAO.selectRoleByName(roleName).isPresent())
+                .collect(Collectors.toSet());
+    }
+
+
+    public RoleDTO getRoleByRoleName(String roleName){
+        return  roleDAO.selectRoleByName(roleName)
+                .map(roleDTOMapper)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Role with id [%s] not found".
+                                        formatted(roleName)));
+    }
+
 }
+
