@@ -112,21 +112,6 @@ public class UserService {
         );
     }
 
-    public void assignRoleToUser(Long userId, String roleName, User adminUser) {
-        if (!adminUser.getRole().getRoleName().equals("ROLE_ADMIN")) {
-            throw new RuntimeException("Only admins can assign roles");
-        }
-
-        User user = userDAO.selectUserById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Role role = roleDAO.selectRoleByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
-        user.setRole(role);
-        userDAO.updateUser(user);
-    }
-
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = userDAO.selectUserById(userId)
                 .orElseThrow(() ->
