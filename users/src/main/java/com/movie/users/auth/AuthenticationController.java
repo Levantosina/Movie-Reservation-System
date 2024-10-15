@@ -1,5 +1,7 @@
 package com.movie.users.auth;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,16 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("api/v1/auth")
+@Slf4j
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
-@PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request){
+    @PostMapping("login")
+    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequest request){
       AuthenticationResponse response = authenticationService.login(request);
-
+      log.info("Authenticating user: {}", request.username());
       return ResponseEntity.ok()
               .header(HttpHeaders.AUTHORIZATION,response.token())
               .body(response);
