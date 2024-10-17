@@ -21,7 +21,7 @@
 	<developers>
 		<developer/>
 	</developers>
-    <modules>
+	<modules>
 		<module>eureka-server</module>
 		<module>api-gateway</module>
 		<module>users</module>
@@ -30,10 +30,12 @@
 		<module>seats</module>
 		<module>movieschedules</module>
 		<module>client</module>
-        <module>notification</module>
+		<module>notification</module>
 		<module>amqp</module>
+		<module>jwt</module>
+		<module>common</module>
 	</modules>
-    <scm>
+	<scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>

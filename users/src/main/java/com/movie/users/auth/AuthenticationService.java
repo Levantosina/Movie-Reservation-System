@@ -1,8 +1,10 @@
 package com.movie.users.auth;
 
-import com.movie.users.jwt.JWTUtil;
+import com.movie.common.AuthenticationRequest;
+import com.movie.common.AuthenticationResponse;
+import com.movie.common.UserDTO;
+import com.movie.jwt.jwt.JWTUtil;
 import com.movie.users.users.User;
-import com.movie.users.users.UserDTO;
 import com.movie.users.users.UserDTOMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,4 +41,3 @@ public class AuthenticationService {
         return  new AuthenticationResponse(token,userDTO);
     }
 }
-

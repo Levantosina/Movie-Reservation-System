@@ -1,6 +1,9 @@
 package com.movie.users.users;
 
-import com.movie.users.jwt.JWTUtil;
+
+
+import com.movie.common.UserDTO;
+import com.movie.jwt.jwt.JWTUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

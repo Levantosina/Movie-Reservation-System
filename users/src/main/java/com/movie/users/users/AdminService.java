@@ -1,8 +1,11 @@
 package com.movie.users.users;
 
+import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 import com.movie.users.roles.RoleDAO;
 import com.movie.users.users.exception.DuplicateResourceException;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,12 +26,15 @@ public class AdminService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
 
-    public AdminService(UserDAO userDAO, RoleDAO roleDAO, PasswordEncoder passwordEncoder) {
+
+    public AdminService(UserDAO userDAO, RoleDAO roleDAO, PasswordEncoder passwordEncoder, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.userDAO = userDAO;
         this.roleDAO = roleDAO;
         this.passwordEncoder = passwordEncoder;
+        this.rabbitMqMessageProducer = rabbitMqMessageProducer;
     }
 
 
@@ -83,5 +89,17 @@ public class AdminService {
         System.out.println("Hashed password: " + hashedPassword);
         admin.setPassword(hashedPassword);
         userDAO.updateUser(admin);
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                admin.getUserId(),
+                admin.getEmail(),
+                String.format("Your password has been successfully changed...", admin.getFirstName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 }

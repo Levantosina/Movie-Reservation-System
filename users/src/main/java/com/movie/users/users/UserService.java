@@ -4,6 +4,7 @@ import com.movie.amqp.RabbitMqMessageProducer;
 
 
 import com.movie.client.notification.NotificationRequest;
+import com.movie.common.UserDTO;
 import com.movie.users.roles.Role;
 
 import com.movie.users.roles.RoleDAO;

@@ -1,7 +1,8 @@
 package com.movie.users.security;
 
 
-import com.movie.users.jwt.JWTAuthenticationFilter;
+
+import com.movie.jwt.jwt.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

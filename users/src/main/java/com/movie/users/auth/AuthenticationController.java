@@ -1,5 +1,8 @@
 package com.movie.users.auth;
 
+
+import com.movie.common.AuthenticationRequest;
+import com.movie.common.AuthenticationResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -24,10 +27,10 @@ public class AuthenticationController {
     }
     @PostMapping("login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequest request){
-      AuthenticationResponse response = authenticationService.login(request);
-      log.info("Authenticating user: {}", request.username());
-      return ResponseEntity.ok()
-              .header(HttpHeaders.AUTHORIZATION,response.token())
-              .body(response);
+        AuthenticationResponse response = authenticationService.login(request);
+        log.info("Authenticating user: {}", request.username());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION,response.token())
+                .body(response);
     }
 }
