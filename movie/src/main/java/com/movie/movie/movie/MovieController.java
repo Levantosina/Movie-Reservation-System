@@ -1,6 +1,10 @@
 package com.movie.movie.movie;
 
+
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,27 +18,30 @@ import java.util.List;
 @RequestMapping(path = "api/v1/movies")
 public class MovieController {
 
-    private  final  MovieService movieService;
+    private final MovieService movieService;
 
     public MovieController(MovieService movieService) {
-
         this.movieService = movieService;
+
     }
+
 
     @GetMapping
-    public List<MovieDTO>getAllMovie(){
-
-        return movieService.getAllMovies();
+    public ResponseEntity<?> getMovies() {
+            return ResponseEntity.ok( movieService.getAllMovies());
     }
 
+
     @GetMapping("{movieId}")
-    public MovieDTO getMovie(@PathVariable("movieId") Long movieId){
-        return movieService.getMovie(movieId);
+    public ResponseEntity<?> getMovie(@PathVariable("movieId") Long movieId) {
+
+        return ResponseEntity.ok(movieService.getMovie(movieId));
     }
 
     @PostMapping
-    public void registerMovie(@RequestBody MovieRegistrationRequest movieRegistrationRequest){
+    public ResponseEntity<?> registerMovie(@RequestBody MovieRegistrationRequest movieRegistrationRequest) {
         log.info("New movie registration: {}", movieRegistrationRequest);
         movieService.registerNewMovie(movieRegistrationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

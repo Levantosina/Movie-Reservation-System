@@ -40,4 +40,17 @@ public class AuthenticationService {
         String token= jwtUtil.issueToken(userDTO.email(),userDTO.roleName());
         return  new AuthenticationResponse(token,userDTO);
     }
+
+    public boolean validateToken(String token) {
+        try {
+            // Extract email (or username) from token
+            String email = jwtUtil.getSubject(token);
+
+            // Check if the token is valid
+            return jwtUtil.isTokenValid(token, email);
+        } catch (Exception e) {
+            // Log the exception and return false if token is invalid
+            return false;
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.movie.client.cinemaClient;
 
+
 import com.movie.cinema.cinema.CinemaDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
