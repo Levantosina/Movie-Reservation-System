@@ -1,7 +1,6 @@
 package com.movie.users.users;
 
 
-import com.movie.jwt.jwt.UserDetailsLoader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +12,11 @@ import org.springframework.stereotype.Service;
  * @project MovieReservationSystem
  */
 @Service
-public class UsersDetailsService implements UserDetailsService, UserDetailsLoader {
+public class OwnUsersDetailsService implements UserDetailsService {
     private final UserDAO userDAO;
 
-    public UsersDetailsService(@Qualifier("userJdbc") UserDAO userDAO) {
+    public OwnUsersDetailsService(@Qualifier("userJdbc") UserDAO userDAO) {
+
         this.userDAO = userDAO;
     }
 

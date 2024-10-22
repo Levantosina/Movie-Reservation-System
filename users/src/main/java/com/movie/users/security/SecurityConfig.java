@@ -4,7 +4,7 @@ package com.movie.users.security;
 
 
 
-import com.movie.users.users.UsersDetailsService;
+import com.movie.users.users.OwnUsersDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider(
-            UsersDetailsService userDetailsService,
+            OwnUsersDetailsService userDetailsService,
             PasswordEncoder passwordEncoder
     ) {
         DaoAuthenticationProvider daoAuthenticationProvider =
