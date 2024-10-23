@@ -10,7 +10,7 @@
     <artifactId>cinemas</artifactId>
     <packaging>jar</packaging>
 
-    <name>theaters</name>
+    <name>cinemas</name>
 
 
     <properties>
@@ -73,8 +73,23 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-
-
+        <dependency>
+            <groupId>com.movie.resrvation</groupId>
+            <artifactId>amqp</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.movie.jwt</groupId>
+            <artifactId>jwt</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.movie.resrvation</groupId>
+            <artifactId>users</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 </project>
