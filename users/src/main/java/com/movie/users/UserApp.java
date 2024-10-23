@@ -16,7 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
         "com.movie.jwt"} )
 
 @EntityScan(basePackages = "com.movie.users.roles.entity")
-@EnableFeignClients(basePackages = "com.movie.client")
+
 public class UserApp {
     public static void main(String[] args) {
 
