@@ -1,6 +1,6 @@
 package com.movie.notification;
 
-import com.movie.client.notification.NotificationRequest;
+import com.movie.users.users.NotificationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

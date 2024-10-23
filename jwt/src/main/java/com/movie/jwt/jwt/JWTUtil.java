@@ -22,7 +22,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class JWTUtil {
-    private static final String SECRET_KEY = "foobar_123456789_foobar_123456789_foobar_123456789";
+    private static final String SECRET_KEY = "INwJBaTWR1RhFkAeSihaFRp2jCT5CKYcsvQqXfxlP3E=";
 
 
     public String issueToken(String subject, String... scopes) {

@@ -29,7 +29,13 @@ import java.util.stream.Collectors;
     }
 
     public MovieSchedule createSchedule(MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
-        int totalSeats = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
+
+        int totalSeats;
+        if (movieScheduleRegistrationRequest.availableSeats() == null) {
+            totalSeats = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
+        } else {
+            totalSeats = movieScheduleRegistrationRequest.availableSeats();
+        }
 
         MovieSchedule movieSchedule = new MovieSchedule();
         movieSchedule.setMovieId(movieScheduleRegistrationRequest.movieId());
@@ -37,8 +43,7 @@ import java.util.stream.Collectors;
         movieSchedule.setStartTime(movieScheduleRegistrationRequest.startTime());
         movieSchedule.setEndTime(movieScheduleRegistrationRequest.endTime());
         movieSchedule.setDate(movieScheduleRegistrationRequest.date());
-        movieSchedule.setAvailableSeats(totalSeats);
-
+        movieSchedule.setAvailableSeats(totalSeats); // Set available seats
 
         movieScheduleDAO.createSchedule(movieSchedule);
         return movieSchedule;

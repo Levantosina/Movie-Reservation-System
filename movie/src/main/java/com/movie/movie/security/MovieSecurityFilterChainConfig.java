@@ -1,9 +1,10 @@
 package com.movie.movie.security;
 
 
-import com.movie.jwt.jwt.MovieJWTAuthenticationFilter;
+import com.movie.jwt.jwt.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,15 +23,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class MovieSecurityFilterChainConfig {
 
     private final AuthenticationProvider authenticationProvider;
-    private final MovieJWTAuthenticationFilter movieJWTAuthenticationFilter;
+    private final JWTAuthenticationFilter JWTAuthenticationFilter;
 
 
     private  final AuthenticationEntryPoint authenticationEntryPoint;
 
 
-    public MovieSecurityFilterChainConfig(AuthenticationProvider authenticationProvider, MovieJWTAuthenticationFilter movieJWTAuthenticationFilter, AuthenticationEntryPoint authenticationEntryPoint) {
+    public MovieSecurityFilterChainConfig(AuthenticationProvider authenticationProvider, JWTAuthenticationFilter JWTAuthenticationFilter, AuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationProvider = authenticationProvider;
-        this.movieJWTAuthenticationFilter = movieJWTAuthenticationFilter;
+        this.JWTAuthenticationFilter = JWTAuthenticationFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
@@ -39,14 +40,18 @@ public class MovieSecurityFilterChainConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/movies/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/movies/**")
+                .permitAll()
+                .requestMatchers("/api/v1/auth/**")
+                .permitAll()
+                .anyRequest().
+                authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(movieJWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(JWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
         return http.build();

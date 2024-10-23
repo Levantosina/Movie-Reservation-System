@@ -1,5 +1,6 @@
 package com.movie.schedules.movieschedules;
 
+import com.movie.seats.seat.SeatService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,9 +19,14 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
 
     private final MovieScheduleRowMapper movieScheduleRowMapper;
 
+  //  private final SeatService seatService;
+
+
+
     public MovieMovieScheduleAccessService(JdbcTemplate jdbcTemplate, MovieScheduleRowMapper movieScheduleRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.movieScheduleRowMapper = movieScheduleRowMapper;
+
     }
 
 
@@ -28,11 +34,10 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
 
     @Override
     public void createSchedule(MovieSchedule movieSchedule) {
-        String sql = """
-            INSERT INTO schedules (movie_id, cinema_id, date, start_time, end_time, available_seats)
+       String sql = """
+            INSERT INTO schedules (movie_id, cinema_id, date, start_time, end_time,available_seats)
             VALUES (?, ?, ?, ?, ?, ?)
             """;
-        System.out.println("Executing SQL: " + sql);
         jdbcTemplate.update(sql,
                 movieSchedule.getMovieId(),
                 movieSchedule.getCinemaId(),
@@ -85,7 +90,8 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
 
     @Override
     public List<MovieSchedule> selectSchedulesByCinemaId(Long cinemaId) {
-        String sql = "SELECT * FROM schedules WHERE cinema_id = ?";
+        String sql = " SELECT schedule_id, movie_id, cinema_id, date, start_time, end_time, available_seats \n" +
+                "        FROM schedules WHERE cinema_id = ?";
         return jdbcTemplate.query(sql, movieScheduleRowMapper, cinemaId);
     }
 
@@ -100,4 +106,5 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
         String sql = "DELETE FROM schedules WHERE schedule_id = ?";
         jdbcTemplate.update(sql, scheduleId);
     }
+
 }

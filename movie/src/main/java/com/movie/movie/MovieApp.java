@@ -14,7 +14,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
         "com.movie.movie",
-                    "com.movie.amqp",
+        "com.movie.amqp",
         "com.movie.users"
 }
 )

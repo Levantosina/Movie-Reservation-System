@@ -12,7 +12,8 @@ public record MovieScheduleRegistrationRequest(
         LocalTime startTime,
         LocalTime endTime,
         Long cinemaId,
-        Long movieId
+        Long movieId,
+        Integer availableSeats
 
 ) {
 }

@@ -10,7 +10,8 @@ import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication(scanBasePackages = {
         "com.movie.notification",
-        "com.movie.amqp"
+        "com.movie.amqp",
+        "com.movie.users"
 })
 @EnableDiscoveryClient
 @PropertySources({

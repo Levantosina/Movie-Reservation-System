@@ -16,11 +16,13 @@ public class MovieScheduleRowMapper implements RowMapper<MovieSchedule> {
     public MovieSchedule mapRow(ResultSet rs, int rowNum) throws SQLException {
         return MovieSchedule.builder()
                 .scheduleId(rs.getLong("schedule_id"))
+                .movieId(rs.getLong("movie_id"))
                 .date(rs.getDate("date").toLocalDate())
                 .startTime(rs.getTime("start_time").toLocalTime())
                 .endTime(rs.getTime("end_time").toLocalTime())
                 .cinemaId(rs.getLong("cinema_id"))
                 .movieId(rs.getLong("movie_id"))
+                .scheduleId(rs.getLong("available_seats"))
                 .build();
     }
 }

@@ -8,7 +8,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = {
         "com.movie.schedules",
-        "com.movie.client"})
+        "com.movie.client",
+    "com.movie.users",
+})
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.movie.client")
 @EntityScan(basePackages = "com.movie.schedules.movieschedules.entity")
