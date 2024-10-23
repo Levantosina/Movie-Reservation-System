@@ -1,4 +1,4 @@
-package com.movie.users.security;
+package com.movie.cinema.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +10,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * @author DMITRII LEVKIN on 13/10/2024
+ * @author DMITRII LEVKIN on 23/10/2024
  * @project MovieReservationSystem
  */
 @Configuration
-public class MvcConfig {
+public class CinemaMvcConfig {
     @Value("#{'${cors.allowed-origins}'.split(',')}")
     private List<String> allowedOrigins;
 
