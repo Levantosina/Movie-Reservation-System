@@ -2,7 +2,7 @@ package com.movie.users.security;
 
 
 
-import com.movie.jwt.jwt.JWTAuthenticationFilter;
+import com.movie.jwt.jwt.UserJWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,15 +23,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityFilterChainConfig {
     private final AuthenticationProvider authenticationProvider;
-    private final JWTAuthenticationFilter jwtAuthenticationFilter;
+    private final UserJWTAuthenticationFilter userJwtAuthenticationFilter;
 
 
     private  final AuthenticationEntryPoint authenticationEntryPoint;
 
 
-    public SecurityFilterChainConfig(AuthenticationProvider authenticationProvider, JWTAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPoint authenticationEntryPoint) {
+    public SecurityFilterChainConfig(AuthenticationProvider authenticationProvider, UserJWTAuthenticationFilter userJwtAuthenticationFilter, AuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationProvider = authenticationProvider;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userJwtAuthenticationFilter = userJwtAuthenticationFilter;
 
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
@@ -52,7 +52,7 @@ public class SecurityFilterChainConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(userJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
