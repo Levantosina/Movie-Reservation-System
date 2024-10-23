@@ -9,7 +9,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication(scanBasePackages = {
 
-        "com.movie.cinema"
+        "com.movie.cinema",
+        "com.movie.amqp",
+        "com.movie.users"
 })
 @EnableDiscoveryClient
 @EntityScan(basePackages = "com.movie.cinema.cinema.entity")
