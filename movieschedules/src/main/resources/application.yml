@@ -1,7 +1,14 @@
 server:
   port: 8085
-spring:
 
+
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+
+spring:
   application:
     name: schedule
   main:

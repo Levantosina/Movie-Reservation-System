@@ -1,5 +1,12 @@
 server:
   port: 8081
+
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+
 spring:
   application:
     name: cinema
@@ -13,7 +20,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         jdbc:
@@ -31,8 +38,8 @@ spring:
     baseline-on-migrate: false
     locations: classpath:db/migration/cinema
 
-#  rabbitmq:
-#    addresses: localhost:5672
+  rabbitmq:
+    addresses: localhost:5672
 
 management:
   tracing:
