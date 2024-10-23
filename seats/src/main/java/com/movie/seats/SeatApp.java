@@ -9,7 +9,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = {
 
-        "com.movie.seats"
+        "com.movie.seats",
+        "com.movie.users"
 })
 @EnableDiscoveryClient
 @EntityScan(basePackages = "com.movie.seats.seat.entity")
