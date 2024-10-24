@@ -12,7 +12,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         jdbc:
@@ -31,8 +31,7 @@ spring:
 
   rabbitmq:
     addresses: localhost:5672
-    username: guest
-    password: guest
+
 
 management:
   tracing:
@@ -59,8 +58,3 @@ rabbitmq:
     notification: notification.queue
   routing-keys:
     internal-notification: internal.notification.routing-key
-
-logging:
-  level:
-    org.springframework.amqp: DEBUG
-    com.movie.notification.rabbitmq: DEBUG
