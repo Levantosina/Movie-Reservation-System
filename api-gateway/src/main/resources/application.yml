@@ -26,7 +26,7 @@ spring:
         - id: schedule
           uri: lb://SCHEDULE
           predicates:
-            - Path=/api/v1/schedule/**
+            - Path=/api/v1/schedules/**
 
 
 
