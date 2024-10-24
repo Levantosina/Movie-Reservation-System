@@ -13,6 +13,8 @@ public interface MovieDAO {
 
     Optional<Movie> selectMovieById(Long movieId);
 
+    Optional<Movie>selectMovieByName(String name);
+
     void insertMovie(Movie movie);
 
     void updateMovie(Movie updateMovie);
