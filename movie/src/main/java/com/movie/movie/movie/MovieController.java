@@ -44,4 +44,11 @@ public class MovieController {
         movieService.registerNewMovie(movieRegistrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PutMapping("{movieId}")
+    public ResponseEntity<?> updateMovieInfo(@PathVariable("movieId") Long movieId,@RequestBody MovieUpdateRequest movieUpdateRequest){
+        log.info("Update movie: {}",movieUpdateRequest);
+        movieService.updateMovie(movieId,movieUpdateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
