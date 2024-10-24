@@ -42,6 +42,10 @@ public class MovieSecurityFilterChainConfig {
                 .authorizeRequests()
                 .requestMatchers(HttpMethod.GET, "/api/v1/movies/**")
                 .permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/v1/movies/**")
+                .permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/movies/**")
+                .permitAll()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
                 .anyRequest().
