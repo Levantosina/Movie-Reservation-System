@@ -1,5 +1,6 @@
 package com.movie.movie.movie;
 
+import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -43,6 +44,17 @@ public class MovieAccessService implements  MovieDAO {
     }
 
     @Override
+    public Optional<Movie> selectMovieByName(String name) {
+        var sql = """
+                SELECT * FROM movies where movie_name = ?
+        
+                """;
+       return jdbcTemplate.query(sql,movieRowMapper,name)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
     public void insertMovie(Movie movie) {
         var sql= """
                 INSERT INTO movies(movie_name,year,country,genre,description)
@@ -53,8 +65,66 @@ public class MovieAccessService implements  MovieDAO {
 
     }
 
-    @Override
+    @Transactional
     public void updateMovie(Movie updateMovie) {
 
+        if(updateMovie.getMovieName()!=null){
+            var sql = """
+                    UPDATE movies SET movie_name=? where movie_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateMovie.getMovieName(),
+                    updateMovie.getMovieId()
+            );
+
+        }
+
+        if(updateMovie.getYear()!=null){
+            var sql = """
+                    UPDATE movies SET year=? where movie_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateMovie.getYear(),
+                    updateMovie.getMovieId()
+            );
+
+        }
+
+        if(updateMovie.getCountry()!=null){
+            var sql = """
+                    UPDATE movies SET country=? where movie_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateMovie.getCountry(),
+                    updateMovie.getMovieId()
+            );
+
+        }
+
+        if(updateMovie.getGenre()!=null){
+            var sql = """
+                    UPDATE movies SET genre=? where movie_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateMovie.getGenre(),
+                    updateMovie.getMovieId()
+            );
+
+        }
+
+        if(updateMovie.getDescription()!=null){
+            var sql = """
+                    UPDATE movies SET description=? where movie_id=?
+                    """;
+            jdbcTemplate.update(
+                    sql,
+                    updateMovie.getDescription(),
+                    updateMovie.getMovieId()
+            );
+        }
     }
 }
