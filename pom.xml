@@ -23,17 +23,21 @@
 	</developers>
 	<modules>
 		<module>eureka-server</module>
-		<module>api-gateway</module>
 		<module>users</module>
-		<module>cinemas</module>
-		<module>movie</module>
-		<module>seats</module>
-		<module>movieschedules</module>
-		<module>client</module>
-		<module>notification</module>
-		<module>amqp</module>
-		<module>jwt</module>
+
+		<module>api-gateway</module>
 		<module>common</module>
+		<module>jwt</module>
+
+		<module>amqp</module>
+		<module>notification</module>
+		<module>movie</module>
+
+		<module>seats</module>
+		<module>cinemas</module>
+		<module>client</module>
+		<module>movieschedules</module>
+
 	</modules>
 	<scm>
 		<connection/>
@@ -42,13 +46,13 @@
 		<url/>
 	</scm>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<java.version>21</java.version>
 		<spring.boot.dependencies.version>3.3.4</spring.boot.dependencies.version>
 		<spring.boot.maven.plugin.version>3.3.4</spring.boot.maven.plugin.version>
 		<spring.cloud.version>2023.0.3</spring.cloud.version>
+		<image>levantosina/${project.artifactId}:${project.version}</image>
 	</properties>
 
 
@@ -82,6 +86,8 @@
 	</dependencyManagement>
 
 
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -89,11 +95,17 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-
 	</dependencies>
+
+
+
 
 
 	<build>
@@ -111,8 +123,47 @@
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>jib-maven-plugin</artifactId>
+					<version>3.4.3</version>
+					<configuration>
+						<from>
+							<image>eclipse-temurin:21@sha256:5ad4efff3364b06c61578b267138359bcba92acc20dfd533f35b75c709a6f10b</image>
+							<platforms>
+								<platform>
+									<architecture>amd64</architecture>
+									<os>windows</os>
+								</platform>
+								<platform>
+									<architecture>arm64</architecture>
+									<os>linux</os>
+								</platform>
+								<platform>
+									<architecture>amd64</architecture>
+									<os>linux</os>
+								</platform>
+							</platforms>
+						</from>
+						<to>
+							<tags>
+								<tag>latest</tag>
+							</tags>
+						</to>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>build</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

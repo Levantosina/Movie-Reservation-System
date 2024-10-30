@@ -13,9 +13,45 @@
     <name>cinemas</name>
 
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.movie.cinema.CinemaApp</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <to>
+                        <image>your-docker-image-name:latest</image> <!-- Specify your Docker image name -->
+                    </to>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>build-docker-image</id>
+            <activation>
+                <activeByDefault>false</activeByDefault> <!-- Optional: activates this profile only when explicitly used -->
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -73,6 +109,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.movie.resrvation</groupId>
+            <artifactId>users</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>com.movie.resrvation</groupId>
             <artifactId>amqp</artifactId>
@@ -84,11 +127,11 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.movie.resrvation</groupId>
-            <artifactId>users</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>com.levantos</groupId>
+            <artifactId>clients</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

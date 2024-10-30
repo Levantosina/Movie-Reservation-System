@@ -1,4 +1,4 @@
-package com.movie.users.users;
+package com.movie.client.notification;
 
 /**
  * @author DMITRII LEVKIN on 07/10/2024

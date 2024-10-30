@@ -1,6 +1,6 @@
 package com.movie.schedules.movieschedules;
 
-import com.movie.seats.seat.SeatService;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

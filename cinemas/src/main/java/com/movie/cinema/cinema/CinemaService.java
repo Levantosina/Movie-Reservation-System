@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +53,10 @@ public class CinemaService {
                                 "Customer with name [%s] not found".
                                         formatted(name)));
     }
+    public Long getCinemaIdByName(String cinemaName) {
+        Optional<Cinema> cinemaOpt = cinemaDAO.selectCinemaByCinemaName(cinemaName);
+        return cinemaOpt.map(Cinema::getCinemaId).orElse(null);
+    }
 
     public void registerCinema(CinemaRegistrationRequest cinemaRegistrationRequest){
 
@@ -66,7 +67,6 @@ public class CinemaService {
         cinemaDAO.insertCinema(cinema);
 
     }
-
     @PostConstruct
     public void loadCinemasFromCSV() {
         String csvFilePath = "cinemas.csv";

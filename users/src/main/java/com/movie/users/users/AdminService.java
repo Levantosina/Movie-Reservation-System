@@ -2,6 +2,8 @@ package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
 
+
+import com.movie.client.notification.NotificationRequest;
 import com.movie.users.roles.Role;
 import com.movie.users.roles.RoleDAO;
 import com.movie.users.users.exception.DuplicateResourceException;

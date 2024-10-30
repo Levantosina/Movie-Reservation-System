@@ -10,6 +10,7 @@ cors:
 spring:
   application:
     name: seat
+
   main:
     allow-bean-definition-overriding: true
   datasource:
@@ -20,7 +21,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
@@ -29,6 +30,7 @@ spring:
       boot:
         allow_jdbc_metadata_access: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   sql:
     init:
       mode: never
@@ -37,8 +39,7 @@ spring:
 
     locations: classpath:db/migration/seat
 
-#  rabbitmq:
-#    addresses: rabbitmq:5672
+
 
 management:
   tracing:
@@ -58,5 +59,12 @@ eureka:
   instance:
     prefer-ip-address: true
 
+
+
+
+#logging:
+#  level:
+#    org:
+#      springframework: DEBUG
 
 

@@ -4,16 +4,18 @@ package com.movie.seats.seat;
 
 
 
-import com.movie.cinema.cinema.CinemaDTO;
+
+import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.client.cinemaClient.CinemaClient;
+import com.movie.client.notification.NotificationRequest;
 import com.movie.seats.exception.ResourceNotFoundException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.annotation.PostConstruct;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
 
 
 
@@ -36,12 +38,18 @@ public class SeatService {
     private final SeatDAO seatDAO;
     private final SeatDTOMapper seatDTOMapper;
     private final Map<String, Long> cinemaMap = new HashMap<>();
-    private final RestTemplate restTemplate;
 
-    public SeatService(@Qualifier("seatJdbc") SeatDAO seatDAO, SeatDTOMapper seatDTOMapper, RestTemplate restTemplate) {
+    private final CinemaClient cinemaClient;
+
+    private final RabbitMqMessageProducer rabbitMqMessageProducer;
+
+
+    public SeatService(@Qualifier("seatJdbc") SeatDAO seatDAO, SeatDTOMapper seatDTOMapper, CinemaClient cinemaClient, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.seatDAO = seatDAO;
         this.seatDTOMapper = seatDTOMapper;
-        this.restTemplate = restTemplate;
+
+        this.cinemaClient = cinemaClient;
+        this.rabbitMqMessageProducer = rabbitMqMessageProducer;
     }
 
     public List<SeatDTO> getAllSeats() {
@@ -67,6 +75,17 @@ public class SeatService {
         seat.setCinemaId(seatRegistrationRequest.cinemaId());
 
         seatDAO.insertSeat(seat);
+
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                seat.getCinemaId(), "New seats created", "The cinema has been created."
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 
     public List<SeatDTO> getSeatsByCinema(Long cinemaId) {
@@ -171,19 +190,16 @@ public class SeatService {
             return cinemaMap.get(cinemaName);
         }
 
-        String url = "http://localhost:8081/api/v1/cinemas/name/{cinemaName}";
-        CinemaDTO cinemaDTO = restTemplate.getForObject(url, CinemaDTO.class, cinemaName);
-        Long cinemaId = (cinemaDTO != null) ? cinemaDTO.cinemaId() : null;
-        System.out.println("Retrieved cinema ID for " + cinemaName + ": " + cinemaId);
-
+        Long cinemaId = cinemaClient.getCinemaIdByName(cinemaName);
         if (cinemaId != null) {
             cinemaMap.put(cinemaName, cinemaId);
         }
-
         return cinemaId;
     }
 
     public int getTotalSeatsByCinemaId(Long cinemaId) {
         return seatDAO.countSeatsByCinemaId(cinemaId);
     }
+
+
 }

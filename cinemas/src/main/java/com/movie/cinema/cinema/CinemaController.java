@@ -1,6 +1,7 @@
 package com.movie.cinema.cinema;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,19 +23,19 @@ public class CinemaController {
     }
 
     @GetMapping
-    public List<CinemaDTO> getAllCinemas(){
+    public List<CinemaDTO> getAllCinemas() {
 
         return cinemaService.getAllCinemas();
     }
+
     @GetMapping("/cinemaId/{cinemaId}")
-    public CinemaDTO getCinemaById(@PathVariable("cinemaId")Long cinemaId){
+    public CinemaDTO getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
 
         return cinemaService.getCinema(cinemaId);
     }
 
     @GetMapping("/name/{cinemaName}")
-    public CinemaDTO getCinemaByName(@PathVariable("cinemaName")String cinemaName){
-
+    public CinemaDTO getCinemaByName(@PathVariable("cinemaName") String cinemaName) {
         return cinemaService.getCinemaByName(cinemaName);
     }
 
@@ -42,5 +43,11 @@ public class CinemaController {
     public void registerCinema(@RequestBody CinemaRegistrationRequest cinemaRegistrationRequest) {
         log.info("New customer registration: {}", cinemaRegistrationRequest);
         cinemaService.registerCinema(cinemaRegistrationRequest);
+    }
+
+    @GetMapping("/id-by-name/{cinemaName}")
+    public ResponseEntity<Long> getCinemaIdByName(@PathVariable String cinemaName) {
+        Long cinemaId = cinemaService.getCinemaIdByName(cinemaName);
+        return ResponseEntity.ok(cinemaId);
     }
 }

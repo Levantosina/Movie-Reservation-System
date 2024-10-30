@@ -1,8 +1,9 @@
 package com.movie.notification.rabbitmq;
 
 
+import com.movie.client.notification.NotificationRequest;
 import com.movie.notification.NotificationService;
-import com.movie.users.users.NotificationRequest;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

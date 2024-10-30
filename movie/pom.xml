@@ -12,12 +12,31 @@
 
     <name>movie</name>
 
-    <properties>
-        <jsonWebToken.version>0.12.6</jsonWebToken.version>
-    </properties>
 
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
+
+    <profiles>
+        <profile>
+            <id>build-docker-image</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 
     <dependencies>
@@ -84,7 +103,12 @@
         </dependency>
 
 
-
+        <dependency>
+            <groupId>com.movie.resrvation</groupId>
+            <artifactId>users</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>com.movie.resrvation</groupId>
             <artifactId>amqp</artifactId>
@@ -96,12 +120,7 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.movie.resrvation</groupId>
-            <artifactId>users</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
 
     </dependencies>
 </project>

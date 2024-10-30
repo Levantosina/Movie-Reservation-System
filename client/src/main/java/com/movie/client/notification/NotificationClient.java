@@ -1,6 +1,6 @@
 package com.movie.client.notification;
 
-import com.movie.users.users.NotificationRequest;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 

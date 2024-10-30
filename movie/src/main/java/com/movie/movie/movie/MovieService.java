@@ -1,19 +1,18 @@
 package com.movie.movie.movie;
 
 import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.client.notification.NotificationRequest;
 import com.movie.movie.exception.DuplicateResourceException;
-import com.movie.movie.exception.ResourceNotFoundException;
-import com.movie.users.users.NotificationRequest;
-import com.movie.users.users.User;
-import com.movie.users.users.UserDAO;
 
-import com.movie.users.users.exception.RequestValidationException;
+
+import com.movie.movie.exception.MovieRequestValidationException;
+
+import com.movie.movie.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -27,13 +26,13 @@ public class MovieService {
     private final MovieDAO movieDAO;
     private final MovieDTOMapper movieDTOMapper;
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
-    private final UserDAO userDAO;
 
-    public MovieService(@Qualifier("movieJdbc")MovieDAO movieDAO, MovieDTOMapper movieDTOMapper, RabbitMqMessageProducer rabbitMqMessageProducer, UserDAO userDAO) {
+
+    public MovieService(@Qualifier("movieJdbc")MovieDAO movieDAO, MovieDTOMapper movieDTOMapper, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.movieDAO = movieDAO;
         this.movieDTOMapper = movieDTOMapper;
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
-        this.userDAO = userDAO;
+
     }
 
     public List<MovieDTO>getAllMovies(){
@@ -47,7 +46,7 @@ public class MovieService {
         return  movieDAO.selectMovieById(movieId)
                 .map(movieDTOMapper)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException(
+                        () -> new MovieRequestValidationException(
                                 "Movie with id [%s] not found".
                                         formatted(movieId)));
 
@@ -88,7 +87,7 @@ public class MovieService {
     public void updateMovie(Long movieId,MovieUpdateRequest movieUpdateRequest) {
         Movie movie = movieDAO.selectMovieById(movieId)
                 .orElseThrow(() ->
-                        new com.movie.users.users.exception.ResourceNotFoundException("Movie with [%s] not found"
+                        new ResourceNotFoundException("Movie with [%s] not found"
                                 .formatted(movieId))); /// isolate exception!!!!!!
 
         movie.setMovieId(movieId);
@@ -123,7 +122,7 @@ public class MovieService {
         }
 
         if(!changes){
-            throw  new RequestValidationException("No changes detected");
+            throw  new MovieRequestValidationException("No changes detected");
         }
         log.info("Updating movie: {}", movie);
 
