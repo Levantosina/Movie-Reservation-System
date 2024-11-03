@@ -39,7 +39,8 @@ spring:
 
     locations: classpath:db/migration/seat
 
-
+  rabbitmq:
+    addresses: localhost:5672
 
 management:
   tracing:

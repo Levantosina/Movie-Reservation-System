@@ -63,8 +63,4 @@ eureka:
   instance:
     prefer-ip-address: true
 
-logging:
-  level:
-    org:
-      springframework: DEBUG
 
