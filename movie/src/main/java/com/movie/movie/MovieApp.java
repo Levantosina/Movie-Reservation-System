@@ -11,12 +11,13 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *
  */
 @SpringBootApplication(scanBasePackages = {
-
-
         "com.movie.movie",
         "com.movie.amqp",
-        "com.movie.users"
-}
+        "com.movie.users",
+        "com.movie.jwt.jwt",
+        "com.movie.client"
+
+    }
 )
 
 @EnableDiscoveryClient
