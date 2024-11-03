@@ -1,0 +1,49 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user
+          uri: lb://USER
+          predicates:
+            - Path=/api/v1/users/**
+        - id: seat
+          uri: lb://SEAT
+          predicates:
+            - Path=/api/v1/seats/**
+        - id: cinema
+          uri: lb://CINEMA
+          predicates:
+            - Path=/api/v1/cinemas/**
+        - id: movie
+          uri: lb://MOVIE
+          predicates:
+            - Path=/api/v1/movies/**
+        - id: schedule
+          uri: lb://SCHEDULE
+          predicates:
+            - Path=/api/v1/schedules/**
+
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/v2
+    fetch-registry: true
+    register-with-eureka: true
+
+  instance:
+    prefer-ip-address: true
