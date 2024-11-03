@@ -19,8 +19,6 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
 
     private final MovieScheduleRowMapper movieScheduleRowMapper;
 
-  //  private final SeatService seatService;
-
 
 
     public MovieMovieScheduleAccessService(JdbcTemplate jdbcTemplate, MovieScheduleRowMapper movieScheduleRowMapper) {
