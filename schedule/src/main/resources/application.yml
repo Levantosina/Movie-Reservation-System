@@ -23,7 +23,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+       ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
@@ -40,6 +40,12 @@ spring:
 
   rabbitmq:
     addresses: localhost:5672
+  cloud:
+    openfeign:
+      client:
+        config:
+          seat:
+            url: http://localhost:8082
 
 management:
   tracing:
@@ -58,4 +64,3 @@ eureka:
     enabled: true
   instance:
     prefer-ip-address: true
-
