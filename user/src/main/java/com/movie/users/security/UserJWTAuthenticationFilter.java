@@ -1,10 +1,14 @@
-package com.movie.jwt.jwt;
+package com.movie.users.security;
 
 
+import com.movie.client.MovieUsersDetailsService;
+import com.movie.jwt.jwt.JWTUtil;
+import com.movie.users.users.OwnUsersDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,14 +28,11 @@ import java.io.IOException;
 public class UserJWTAuthenticationFilter extends OncePerRequestFilter {
 
     private  final JWTUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
+    private final OwnUsersDetailsService ownUsersDetailsService;
 
-    public UserJWTAuthenticationFilter(JWTUtil jwtUtil, UserDetailsService userDetailsService) {
+    public UserJWTAuthenticationFilter(JWTUtil jwtUtil, OwnUsersDetailsService ownUsersDetailsService) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-
-
-
+        this.ownUsersDetailsService = ownUsersDetailsService;
     }
 
 
@@ -51,7 +52,7 @@ public class UserJWTAuthenticationFilter extends OncePerRequestFilter {
         String subject=jwtUtil.getSubject(jwt);
 
         if(subject != null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails= userDetailsService.loadUserByUsername(subject);
+            UserDetails userDetails= ownUsersDetailsService.loadUserByUsername(subject);
 
             if(jwtUtil.isTokenValid(jwt,userDetails.getUsername())){
                 UsernamePasswordAuthenticationToken authenticationToken=
