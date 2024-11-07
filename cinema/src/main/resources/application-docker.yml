@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8081
 
 cors:
   allowed-origins: "*"
@@ -9,21 +9,18 @@ cors:
 
 spring:
   application:
-    name: schedule
+    name: cinema
   main:
     allow-bean-definition-overriding: true
   datasource:
     password: password
-    url: jdbc:postgresql://postgres:5432/schedules
+    url: jdbc:postgresql://postgres:5432/cinemas
     username: levantos
     driver-class-name: org.postgresql.Driver
-
-
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-
     properties:
       hibernate:
         jdbc:
@@ -35,19 +32,14 @@ spring:
   sql:
     init:
       mode: never
+
   flyway:
-    locations: classpath:db/migration/schedule
+    enabled: true
+    baseline-on-migrate: false
+    locations: classpath:db/migration/cinema
 
   rabbitmq:
     addresses: rabbitmq:5672
-
-  cloud:
-    openfeign:
-      client:
-        config:
-          seat:
-            url: http://seat:8082
-
 
 management:
   tracing:
@@ -66,4 +58,7 @@ eureka:
     enabled: true
   instance:
     prefer-ip-address: true
+
+
+
 

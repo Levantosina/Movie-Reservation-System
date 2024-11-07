@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8080
 
 cors:
   allowed-origins: "*"
@@ -8,22 +8,21 @@ cors:
   exposed-headers: "*"
 
 spring:
+
   application:
-    name: schedule
+    name: user
   main:
     allow-bean-definition-overriding: true
   datasource:
     password: password
-    url: jdbc:postgresql://postgres:5432/schedules
+    url: jdbc:postgresql://postgres:5432/users
     username: levantos
     driver-class-name: org.postgresql.Driver
-
 
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-
     properties:
       hibernate:
         jdbc:
@@ -32,22 +31,20 @@ spring:
       boot:
         allow_jdbc_metadata_access: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   sql:
     init:
-      mode: never
+      mode: always
+
   flyway:
-    locations: classpath:db/migration/schedule
+    locations: classpath:db/migration/user
+    enabled: true
+    baseline-on-migrate: true
 
   rabbitmq:
     addresses: rabbitmq:5672
-
-  cloud:
-    openfeign:
-      client:
-        config:
-          seat:
-            url: http://seat:8082
-
+    username: guest
+    password: guest
 
 management:
   tracing:

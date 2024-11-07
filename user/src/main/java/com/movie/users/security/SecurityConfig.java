@@ -1,32 +1,28 @@
-package com.movie.movie.security;
+package com.movie.users.security;
 
 
 
 
 
-import com.movie.client.MovieUsersDetailsService;
+
+import com.movie.users.users.OwnUsersDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
 /**
- * @author DMITRII LEVKIN on 22/10/2024
+ * @author DMITRII LEVKIN on 09/10/2024
  * @project MovieReservationSystem
  */
 @Configuration
-public class MovieSecurityConfig {
-
-    private final MovieUsersDetailsService userDetailsService;
-
-    public MovieSecurityConfig(MovieUsersDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
+public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,15 +30,22 @@ public class MovieSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration
+    ) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+    public AuthenticationProvider authenticationProvider(OwnUsersDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder)
+    {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        return daoAuthenticationProvider;
     }
+
+
+
 }

@@ -23,7 +23,7 @@
 	</developers>
 	<modules>
 		<module>eureka-server</module>
-		<module>users</module>
+		<module>user</module>
 
 		<module>api-gateway</module>
 		<module>common</module>
@@ -33,10 +33,10 @@
 		<module>notification</module>
 		<module>movie</module>
 
-		<module>seats</module>
-		<module>cinemas</module>
+		<module>seat</module>
+		<module>cinema</module>
 		<module>client</module>
-		<module>movieschedules</module>
+		<module>schedule</module>
 
 	</modules>
 	<scm>
@@ -101,6 +101,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
+
 		</dependency>
 	</dependencies>
 

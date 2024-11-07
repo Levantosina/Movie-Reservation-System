@@ -7,10 +7,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>movie</artifactId>
+    <artifactId>cinema</artifactId>
     <packaging>jar</packaging>
 
-    <name>movie</name>
+    <name>cinema</name>
+
 
 
 
@@ -27,6 +28,9 @@
     <profiles>
         <profile>
             <id>build-docker-image</id>
+            <activation>
+                <activeByDefault>false</activeByDefault> <!-- Optional: activates this profile only when explicitly used -->
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -38,9 +42,7 @@
         </profile>
     </profiles>
 
-
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -76,6 +78,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.9</version>
+        </dependency>
 
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -87,27 +94,17 @@
             <artifactId>flyway-database-postgresql</artifactId>
             <version>10.14.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.movie.resrvation</groupId>
             <artifactId>user</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.movie.resrvation</groupId>
             <artifactId>amqp</artifactId>
@@ -117,14 +114,14 @@
             <groupId>com.movie.jwt</groupId>
             <artifactId>jwt</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.movie.resrvation</groupId>
             <artifactId>client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-
-
     </dependencies>
 </project>

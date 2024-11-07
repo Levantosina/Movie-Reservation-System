@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8082
 
 cors:
   allowed-origins: "*"
@@ -9,21 +9,19 @@ cors:
 
 spring:
   application:
-    name: schedule
+    name: seat
+
   main:
     allow-bean-definition-overriding: true
   datasource:
     password: password
-    url: jdbc:postgresql://postgres:5432/schedules
+    url: jdbc:postgresql://localhost:5432/seats
     username: levantos
     driver-class-name: org.postgresql.Driver
-
-
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
-
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
@@ -32,38 +30,47 @@ spring:
       boot:
         allow_jdbc_metadata_access: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   sql:
     init:
       mode: never
   flyway:
-    locations: classpath:db/migration/schedule
+    enabled: true
+
+    locations: classpath:db/migration/seat
 
   rabbitmq:
-    addresses: rabbitmq:5672
+    addresses: localhost:5672
 
   cloud:
     openfeign:
       client:
         config:
-          seat:
-            url: http://seat:8082
+          cinema:
+            url: http://localhost:8081
 
 
 management:
   tracing:
     sampling:
       probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: http://zipkin:9411/
 
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
     enabled: true
   instance:
     prefer-ip-address: true
+
+
+
+
+#logging:
+#  level:
+#    org:
+#      springframework: DEBUG
+
 

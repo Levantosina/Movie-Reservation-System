@@ -1,7 +1,4 @@
-package com.movie.movie.security;
-
-
-
+package com.movie.schedules.security;
 
 
 import com.movie.client.MovieUsersDetailsService;
@@ -13,20 +10,21 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 
 /**
- * @author DMITRII LEVKIN on 22/10/2024
+ * @author DMITRII LEVKIN on 23/10/2024
  * @project MovieReservationSystem
  */
 @Configuration
-public class MovieSecurityConfig {
+public class ScheduleSecurityConfig {
 
     private final MovieUsersDetailsService userDetailsService;
 
-    public MovieSecurityConfig(MovieUsersDetailsService userDetailsService) {
+    public ScheduleSecurityConfig(MovieUsersDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,5 +42,10 @@ public class MovieSecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new Http403ForbiddenEntryPoint();
     }
 }

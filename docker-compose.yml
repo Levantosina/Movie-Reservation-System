@@ -52,7 +52,7 @@ services:
       -  "8761:8761"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
-      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
     networks:
       - spring
     depends_on:
@@ -65,16 +65,16 @@ services:
       - "8083:8083"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
-      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
     networks:
      - spring
     depends_on:
       - zipkin
       - eureka-server
 
-  users:
-    image: levantosina/users:latest
-    container_name: users
+  user:
+    image: levantosina/user:latest
+    container_name: user
     ports:
       - "8080:8080"
     environment:
@@ -88,7 +88,7 @@ services:
       - postgres
       - rabbitmq
 
-  movies:
+  movie:
     image: levantosina/movie:latest
     container_name: movie
     ports:
@@ -105,7 +105,7 @@ services:
       - rabbitmq
 
   cinema:
-    image: levantosina/cinemas:latest
+    image: levantosina/cinema:latest
     container_name: cinema
     ports:
       - "8081:8081"
@@ -119,16 +119,15 @@ services:
       - zipkin
       - postgres
       - rabbitmq
-      - movies
 
   seat:
-    image: levantosina/seats:latest
+    image: levantosina/seat:latest
     container_name: seat
     ports:
       - "8082:8082"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
-      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
     networks:
       - spring
       - postgres
@@ -139,8 +138,8 @@ services:
       - cinema
 
   schedule:
-    image: levantosina/movieschedules:latest
-    container_name: movieSchedules
+    image: levantosina/schedule:latest
+    container_name: schedule
     ports:
       - "8085:8085"
     environment:
@@ -154,6 +153,8 @@ services:
       - postgres
       - rabbitmq
       - seat
+      - movie
+      - cinema
 
   notification:
     image: levantosina/notification:latest

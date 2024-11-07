@@ -54,9 +54,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 if (roles != null) {
                     for (String role : roles) {
                         if (role != null && !role.trim().isEmpty()) {
-                            authorities.add(new SimpleGrantedAuthority(role));
+                            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
                         } else {
-                            logger.warn("Role is null or empty: {}");
+                            logger.warn("Role is null or empty: {}"+ role);
                         }
                     }
                 }
