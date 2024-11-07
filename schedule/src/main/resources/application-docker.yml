@@ -1,7 +1,6 @@
 server:
   port: 8085
 
-
 cors:
   allowed-origins: "*"
   allowed-methods: "*"
@@ -41,6 +40,14 @@ spring:
 
   rabbitmq:
     addresses: rabbitmq:5672
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          seat:
+            url: http://seat:8082
+
 
 management:
   tracing:
