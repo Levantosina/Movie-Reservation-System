@@ -19,8 +19,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
     }
 )
-
 @EnableDiscoveryClient
+@EnableFeignClients(
+        basePackages = "com.movie.client"
+)
 @EntityScan(basePackages = "com.movie.movies.movie.entity")
 public class MovieApp
 {
