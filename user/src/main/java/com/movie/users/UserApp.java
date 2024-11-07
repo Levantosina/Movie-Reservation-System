@@ -13,7 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(scanBasePackages ={
         "com.movie.users",
         "com.movie.amqp",
-        "com.movie.jwt"} )
+        "com.movie.jwt",
+"com.movie.client"} )
 @EnableFeignClients(
         basePackages = "com.movie.client"
 )
