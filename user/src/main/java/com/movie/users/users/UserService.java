@@ -5,9 +5,7 @@ import com.movie.amqp.RabbitMqMessageProducer;
 
 import com.movie.client.notification.NotificationRequest;
 import com.movie.common.UserDTO;
-import com.movie.users.roles.Role;
 
-import com.movie.users.roles.RoleDAO;
 import com.movie.users.users.exception.DuplicateResourceException;
 import com.movie.users.users.exception.RequestValidationException;
 import com.movie.users.users.exception.ResourceNotFoundException;
@@ -28,7 +26,7 @@ public class UserService {
     private final UserDAO userDAO;
     private final UserDTOMapper userDTOMapper;
 
-    private final RoleDAO roleDAO;
+
 
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
@@ -36,15 +34,10 @@ public class UserService {
 
 
     public UserService(@Qualifier("userJdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
-                       RoleDAO roleDAO, RabbitMqMessageProducer rabbitMqMessageProducer, PasswordEncoder passwordEncoder) {
+                        RabbitMqMessageProducer rabbitMqMessageProducer, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
         this.userDTOMapper = userDTOMapper;
-
-        this.roleDAO = roleDAO;
-
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
-
-
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -71,17 +64,18 @@ public class UserService {
         if (existingUser.isPresent()) {
             throw new DuplicateResourceException("Email is already taken");
         }
-
-//        Role role = roleDAO.selectRoleById(userRegistrationRequest.roleId())
-//                .orElseThrow(() -> new RuntimeException("Role not found"));
-
-        String roleName = userRegistrationRequest.roleName();
-        if (!"ROLE_USER".equals(roleName)) {
+        String  roleName = userRegistrationRequest.roleName();
+        Role role;
+        try {
+            role = Role.valueOf(roleName);
+        } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid role. Only regular users can register.");
         }
 
-        Role role = roleDAO.selectRoleByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        if (!"ROLE_USER".equals(roleName)) {
+            throw new RuntimeException("Invalid role. Only regular users can register.");
+        }
 
         User user = new User();
         user.setFirstName(userRegistrationRequest.firstName());

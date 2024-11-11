@@ -23,7 +23,7 @@ public class UserDTOMapper implements Function<User, UserDTO> {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getRole().getRoleName()
+                user.getRole().name()
 
         );
     }

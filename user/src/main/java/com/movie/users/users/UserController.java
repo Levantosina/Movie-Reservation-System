@@ -42,7 +42,7 @@ public class UserController {
 
         log.info("New customer registration: {}", userRegistrationRequest);
         userService.registerUser(userRegistrationRequest);
-        String jwtToken= jwtUtil.issueToken(userRegistrationRequest.email(),userRegistrationRequest.roleName());
+        String jwtToken = jwtUtil.issueToken(userRegistrationRequest.email(),userRegistrationRequest.roleName().toString());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION,jwtToken)

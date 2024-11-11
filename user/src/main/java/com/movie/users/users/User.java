@@ -1,6 +1,6 @@
 package com.movie.users.users;
 
-import com.movie.users.roles.Role;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -53,14 +53,12 @@ public class User implements UserDetails  {
     )
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getRoleName()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
 
