@@ -23,7 +23,7 @@ public record AdminRegistrationRequest (
         @NotBlank(message = "Password is required")
         String password,
 
-        @NotBlank(message = "Role name is required")
+
         String roleName
 ) {
 
