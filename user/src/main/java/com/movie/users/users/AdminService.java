@@ -4,8 +4,7 @@ import com.movie.amqp.RabbitMqMessageProducer;
 
 
 import com.movie.client.notification.NotificationRequest;
-import com.movie.users.roles.Role;
-import com.movie.users.roles.RoleDAO;
+
 import com.movie.users.users.exception.DuplicateResourceException;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,7 +23,7 @@ public class AdminService {
 
     private final UserDAO userDAO;
 
-    private final RoleDAO roleDAO;
+
 
     private final PasswordEncoder passwordEncoder;
 
@@ -32,9 +31,8 @@ public class AdminService {
 
 
 
-    public AdminService(UserDAO userDAO, RoleDAO roleDAO, PasswordEncoder passwordEncoder, RabbitMqMessageProducer rabbitMqMessageProducer) {
+    public AdminService(UserDAO userDAO, PasswordEncoder passwordEncoder, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.userDAO = userDAO;
-        this.roleDAO = roleDAO;
         this.passwordEncoder = passwordEncoder;
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
     }
@@ -43,7 +41,7 @@ public class AdminService {
     public void registerAdministrator(AdminRegistrationRequest adminRegistrationRequest,User currentAdmin){
 
 
-        if(!currentAdmin.getRole().getRoleName().equals("ROLE_ADMIN")){
+        if(!currentAdmin.getRole().equals(Role.ROLE_ADMIN)){
             throw new RuntimeException("Only admins");
         }
 
@@ -52,8 +50,6 @@ public class AdminService {
             throw new DuplicateResourceException("Email is already taken");
         }
 
-        Role role = roleDAO.selectRoleByName("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Admin role not found"));
 
         User admin = new User();
         admin.setFirstName(adminRegistrationRequest.firstName());
@@ -62,24 +58,26 @@ public class AdminService {
 
         String encodedPassword = passwordEncoder.encode(adminRegistrationRequest.password());
         admin.setPassword(encodedPassword);
-        admin.setRole(role);
+        admin.setRole(Role.ROLE_ADMIN);
 
         userDAO.insertUser(admin);
     }
 
     public void updateUserRoles(String username, Set<String> roles) {
-        User user = userDAO.selectUserByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
 
         if(roles.size()!=1){
             throw  new IllegalArgumentException("User can have one role");
         }
 
-        String roleName= roles.iterator().next();
-        Role role =roleDAO.selectRoleByName(roleName).orElseThrow(()->
-                new RuntimeException("Invalid role: "+ roleName));
+        User user = userDAO.selectUserByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        String roleName = roles.iterator().next();
+
+       Role role= Role.valueOf(roleName);
         user.setRole(role);
+
         userDAO.insertUser(user);
     }
 
