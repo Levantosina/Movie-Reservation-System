@@ -24,7 +24,7 @@ public abstract class AbstractDaoUnitTest {
 
     @BeforeAll
     static void beforeAll() {
-        Flyway flyway= Flyway.configure().dataSource(
+        Flyway flyway = Flyway.configure().dataSource(
                         postgreSQLContainer.getJdbcUrl(),
                         postgreSQLContainer.getUsername(),
                         postgreSQLContainer.getPassword())
@@ -35,12 +35,11 @@ public abstract class AbstractDaoUnitTest {
     }
 
     @Container
-    protected static final PostgreSQLContainer<?> postgreSQLContainer=
+    protected static final PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:16")
                     .withDatabaseName("levantos-dao-unit-test")
-                    .withUsername("Levantos")
+                    .withUsername("levantos")
                     .withPassword("password");
-
 
     @DynamicPropertySource
     private static void registerDataSourceProperties(DynamicPropertyRegistry registry){
