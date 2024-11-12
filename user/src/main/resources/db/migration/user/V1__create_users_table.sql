@@ -6,7 +6,7 @@ CREATE TABLE users
     user_id    SERIAL PRIMARY KEY,
     first_name varchar(25)  NOT NULL,
     last_name  varchar(25)  NOT NULL,
-    email      varchar(50)  NOT NULL UNIQUE,
+    email      varchar(100)  NOT NULL UNIQUE,
     password   varchar(100) NOT NULL,
     role_name VARCHAR(50)
 );
