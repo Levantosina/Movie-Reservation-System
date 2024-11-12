@@ -146,6 +146,13 @@ public class UserAccessService implements UserDAO {
 
         }
 
+        if (updateUser.getPassword() != null) {
+            var sql = """
+                UPDATE users SET password = ? WHERE user_id = ?
+                """;
+            jdbcTemplate.update(sql, updateUser.getPassword(), updateUser.getUserId());
+        }
+
         if (updateUser.getRole() != null) {
             var sql = """
                     UPDATE users SET role_name = ? WHERE user_id = ?
