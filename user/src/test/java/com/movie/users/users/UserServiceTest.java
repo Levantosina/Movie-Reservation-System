@@ -103,7 +103,7 @@ class UserServiceTest {
         );
         NotificationRequest capturedNotification = notificationCaptor.getValue();
         assertThat(capturedNotification.toUserEmail()).isEqualTo(email);
-        assertThat(capturedNotification.message()).contains("Welcome to Levantos");
+        assertThat(capturedNotification.message()).contains("Hi Abra, welcome to Levantos...");
     }
 
     @Test
