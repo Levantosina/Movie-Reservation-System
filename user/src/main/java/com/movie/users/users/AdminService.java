@@ -24,12 +24,9 @@ public class AdminService {
     private final UserDAO userDAO;
 
 
-
     private final PasswordEncoder passwordEncoder;
 
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
-
-
 
     public AdminService(UserDAO userDAO, PasswordEncoder passwordEncoder, RabbitMqMessageProducer rabbitMqMessageProducer) {
         this.userDAO = userDAO;
@@ -61,25 +58,39 @@ public class AdminService {
         admin.setRole(Role.ROLE_ADMIN);
 
         userDAO.insertUser(admin);
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                admin.getUserId(),
+                admin.getEmail(),
+                String.format("Hi %s, welcome to Admin...", admin.getFirstName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 
-    public void updateUserRoles(String username, Set<String> roles) {
+    public void updateUserRoles(String email, String newRole) {
+        Optional<User> userOpt = userDAO.selectUserByEmail(email);
 
-
-        if(roles.size()!=1){
-            throw  new IllegalArgumentException("User can have one role");
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if ("ROLE_ADMIN".equals(newRole)) {
+                user.setRole(Role.ROLE_ADMIN);
+            } else if ("ROLE_USER".equals(newRole)) {
+                user.setRole(Role.ROLE_USER);
+            } else {
+                throw new IllegalArgumentException("Invalid role: " + newRole);
+            }
+            userDAO.updateUser(user);
+        } else {
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
 
-        User user = userDAO.selectUserByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        String roleName = roles.iterator().next();
-
-       Role role= Role.valueOf(roleName);
-        user.setRole(role);
-
-        userDAO.insertUser(user);
     }
+
 
     public void resetAdminPassword(String userName, String newPlainPassword) {
 
