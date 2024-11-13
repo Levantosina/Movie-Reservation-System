@@ -1,0 +1,101 @@
+package com.movie.users.users;
+
+import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.client.notification.NotificationRequest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.Optional;
+
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+
+/**
+ * @author DMITRII LEVKIN on 13/11/2024
+ * @project Movie-Reservation-System
+ */
+@ExtendWith(MockitoExtension.class)
+class AdminServiceTest {
+    private AdminService underTest;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private  UserDAO userDAO;
+    @Mock
+    private RabbitMqMessageProducer rabbitMqMessageProducer;
+
+
+    @BeforeEach
+    void setUp() {
+        underTest=new AdminService(userDAO,passwordEncoder,rabbitMqMessageProducer);
+    }
+
+    @Test
+    void registerAdministrator() {
+
+        String email = "test@test.com";
+        when(userDAO.selectUserByEmail(email)).thenReturn(Optional.empty());
+
+        User admin = new User(1L,"Avada","kedavra","avadakedavra.test.com","password",Role.ROLE_ADMIN);
+
+        AdminRegistrationRequest request = new AdminRegistrationRequest(
+                "Abra",
+                "Kadabra",
+                email,
+                "password",
+                "ROLE_ADMIN"
+        );
+
+        String passwordHash = "2331234355";
+        when(passwordEncoder.encode(request.password())).thenReturn(passwordHash);
+
+
+        underTest.registerAdministrator(request,admin);
+
+
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userDAO).insertUser(userArgumentCaptor.capture());
+        User capturedUser = userArgumentCaptor.getValue();
+
+
+        assertThat(capturedUser.getUserId()).isNull();
+        assertThat(capturedUser.getFirstName()).isEqualTo(request.firstName());
+        assertThat(capturedUser.getLastName()).isEqualTo(request.lastName());
+        assertThat(capturedUser.getEmail()).isEqualTo(request.email());
+        assertThat(capturedUser.getPassword()).isEqualTo(passwordHash);
+        assertThat(capturedUser.getRole()).isEqualTo(Role.ROLE_ADMIN);
+
+
+        ArgumentCaptor<NotificationRequest> notificationCaptor = ArgumentCaptor.forClass(NotificationRequest.class);
+        verify(rabbitMqMessageProducer).publish(
+                notificationCaptor.capture(),
+                eq("internal.exchange"),
+                eq("internal.notification.routing-key")
+        );
+        NotificationRequest capturedNotification = notificationCaptor.getValue();
+        assertThat(capturedNotification.toUserEmail()).isEqualTo(email);
+        assertThat(capturedNotification.message()).contains("Hi Abra, welcome to Admin...");   }
+
+
+    @Test
+    void updateUserRoles() {
+        String username = "test@example.com";
+        User user = new User(1L, "Avada", "kedavra", username, "password", Role.ROLE_ADMIN);
+        when(userDAO.selectUserByEmail(username)).thenReturn(Optional.of(user));
+        underTest.updateUserRoles(username, "ROLE_USER");
+        assertEquals(Role.ROLE_USER, user.getRole(), "Role should be updated to ROLE_USER");
+        verify(userDAO, times(1)).updateUser(user);
+    }
+
+    @Test
+    void resetAdminPassword() {
+    }
+}
