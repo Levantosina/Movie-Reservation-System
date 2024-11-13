@@ -9,9 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+
 
 /**
  * @author DMITRII LEVKIN on 14/10/2024
@@ -52,16 +53,20 @@ public class AdminController { ///only admin
     }
 
 
-    @PostMapping("/users/{username}/roles")
-    public ResponseEntity<?> updateUserRoles(
-            @PathVariable String username,
-            @RequestBody Set<String> roles) {
-
-
-        adminService.updateUserRoles(username, roles);
-
-        return ResponseEntity.ok("User roles updated successfully");
+    @PostMapping("/users/{email}/roles")
+    public ResponseEntity<?> updateUserRoles(@PathVariable String email, @RequestBody RoleRequestDTO roleDto) {
+        try {
+            adminService.updateUserRoles(email, roleDto.roleName());
+            return ResponseEntity.ok("User role updated successfully");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user role");
+        }
     }
+
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetAdminPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
