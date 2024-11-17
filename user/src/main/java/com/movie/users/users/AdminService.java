@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
+
 
 /**
  * @author DMITRII LEVKIN on 15/10/2024
@@ -106,7 +106,6 @@ public class AdminService {
                 admin.getEmail(),
                 String.format("Your password has been successfully changed...", admin.getFirstName())
         );
-
         rabbitMqMessageProducer.publish(
                 notificationRequest,
                 "internal.exchange",
