@@ -97,5 +97,41 @@ class AdminServiceTest {
 
     @Test
     void resetAdminPassword() {
-    }
+        long id =1;
+        String email= "avadakedavra.test.com";
+        String firstName ="Avada";
+        String lastName ="kedavra";
+        String password= "password";
+        User admin = new User(id,firstName,lastName,email,password,Role.ROLE_ADMIN);
+        when(userDAO.selectUserByEmail(email)).thenReturn(Optional.of(admin));
+        String newPlainPassword ="expelliarmus";
+
+        AdminRegistrationRequest adminRegistrationRequest = new AdminRegistrationRequest (firstName,lastName,email,newPlainPassword,"ROLE_ADMIN");
+
+        when(passwordEncoder.encode(adminRegistrationRequest.password())).thenReturn(newPlainPassword);
+        underTest.resetAdminPassword(email,newPlainPassword);
+
+        ArgumentCaptor<User>userArgumentCaptor=
+                ArgumentCaptor.forClass(User.class);
+        verify(userDAO).updateUser(userArgumentCaptor.capture());
+
+        User capturedUser= userArgumentCaptor.getValue();
+
+        assertThat(capturedUser.getFirstName()).isEqualTo(adminRegistrationRequest.firstName());
+        assertThat(capturedUser.getLastName()).isEqualTo(adminRegistrationRequest.lastName());
+        assertThat(capturedUser.getEmail()).isEqualTo(adminRegistrationRequest.email());
+        assertThat(capturedUser.getPassword()).isEqualTo(adminRegistrationRequest.password());
+        assertThat(capturedUser.getRole()).isEqualTo(Role.ROLE_ADMIN);
+
+
+        ArgumentCaptor<NotificationRequest> notificationCaptor = ArgumentCaptor.forClass(NotificationRequest.class);
+        verify(rabbitMqMessageProducer).publish(
+                notificationCaptor.capture(),
+                eq("internal.exchange"),
+                eq("internal.notification.routing-key")
+        );
+        NotificationRequest capturedNotification = notificationCaptor.getValue();
+        assertThat(capturedNotification.toUserEmail()).isEqualTo(email);
+        assertThat(capturedNotification.message()).contains("Your password has been successfully changed...");   }
+
 }
