@@ -7,6 +7,7 @@ import com.movie.client.notification.NotificationRequest;
 import com.movie.common.UserDTO;
 
 import com.movie.users.users.exception.DuplicateResourceException;
+import com.movie.users.users.exception.InvalidRoleException;
 import com.movie.users.users.exception.RequestValidationException;
 import com.movie.users.users.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -58,23 +59,21 @@ public class UserService {
     }
 
     public void registerUser(UserRegistrationRequest userRegistrationRequest) {
-
-
         Optional<User> existingUser = userDAO.selectUserByEmail(userRegistrationRequest.email());
         if (existingUser.isPresent()) {
             throw new DuplicateResourceException("Email is already taken");
         }
-        String  roleName = userRegistrationRequest.roleName();
+
+        String roleName = userRegistrationRequest.roleName();
         Role role;
         try {
             role = Role.valueOf(roleName);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role. Only regular users can register.");
+            throw new InvalidRoleException("Invalid role. Only regular users can register.");
         }
 
-
         if (!"ROLE_USER".equals(roleName)) {
-            throw new RuntimeException("Invalid role. Only regular users can register.");
+            throw new InvalidRoleException("Invalid role. Only regular users can register.");
         }
 
         User user = new User();
