@@ -10,6 +10,7 @@ public interface UserDAO {
 
     List<User>selectAllUsers();
     Optional<User> selectUserById(Long id);
+    Optional<User> getAdminById(Long id);
     Optional<User> selectUserByEmail(String email);
     boolean existPersonWithEmail(String email);
     boolean existUserWithId(Long id);
