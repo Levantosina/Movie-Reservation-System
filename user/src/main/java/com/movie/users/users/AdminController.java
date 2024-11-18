@@ -2,7 +2,9 @@ package com.movie.users.users;
 
 
 
+import com.movie.common.UserDTO;
 import com.movie.jwt.jwt.JWTUtil;
+import com.movie.users.users.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 /**
@@ -33,6 +36,14 @@ public class AdminController { ///only admin
         this.jwtUtil = jwtUtil;
     }
 
+    @GetMapping
+    public ResponseEntity<?> getUsers(@AuthenticationPrincipal User currentAdmin) {
+        List<UserDTO> users = adminService.getAllUsers();
+        String jwtToken = jwtUtil.issueToken(currentAdmin.getUsername(), "ROLE_ADMIN");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .body(users);
+    }
 
     @PostMapping
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody AdminRegistrationRequest adminRegistrationRequest,
@@ -72,5 +83,17 @@ public class AdminController { ///only admin
     public ResponseEntity<?> resetAdminPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
         adminService.resetAdminPassword(passwordResetRequest.userName(), passwordResetRequest.newPassword());
         return ResponseEntity.ok("Password reset successfully");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAdminById(@PathVariable Long id) {
+        try {
+            UserDTO admin = adminService.getAdminById(id);
+            return ResponseEntity.ok(admin);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving admin");
+        }
     }
 }
