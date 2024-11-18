@@ -31,11 +31,13 @@ class AdminServiceTest {
     private  UserDAO userDAO;
     @Mock
     private RabbitMqMessageProducer rabbitMqMessageProducer;
+    @Mock
+    private UserDTOMapper userDTOMapper;
 
 
     @BeforeEach
     void setUp() {
-        underTest=new AdminService(userDAO,passwordEncoder,rabbitMqMessageProducer);
+        underTest=new AdminService(userDAO,passwordEncoder,rabbitMqMessageProducer,userDTOMapper);
     }
 
     @Test
