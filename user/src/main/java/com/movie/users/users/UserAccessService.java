@@ -1,5 +1,6 @@
 package com.movie.users.users;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -192,5 +193,18 @@ public class UserAccessService implements UserDAO {
 
             int result= jdbcTemplate.update(sql,userId);
         System.out.println(" Deleted = " + result);
+    }
+
+    @Override
+    public Optional<User> getAdminById(Long userId) {
+        var sql = """
+                SELECT u.user_id, u.first_name, u.last_name, u.email, u.password, u.role_name
+                FROM users u
+                WHERE user_id = ? AND role_name = 'ROLE_ADMIN'
+              """;
+
+        return jdbcTemplate.query(sql, userRowMapper, userId)
+                .stream()
+                .findFirst();
     }
 }
