@@ -5,13 +5,17 @@ import com.movie.amqp.RabbitMqMessageProducer;
 
 import com.movie.client.notification.NotificationRequest;
 
+import com.movie.common.UserDTO;
 import com.movie.users.users.exception.DuplicateResourceException;
 
+import com.movie.users.users.exception.ResourceNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -28,17 +32,26 @@ public class AdminService {
 
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
-    public AdminService(UserDAO userDAO, PasswordEncoder passwordEncoder, RabbitMqMessageProducer rabbitMqMessageProducer) {
+    private final UserDTOMapper userDTOMapper;
+
+    public AdminService(UserDAO userDAO, PasswordEncoder passwordEncoder, RabbitMqMessageProducer rabbitMqMessageProducer, UserDTOMapper userDTOMapper) {
         this.userDAO = userDAO;
         this.passwordEncoder = passwordEncoder;
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
+        this.userDTOMapper = userDTOMapper;
     }
 
+    public List<UserDTO> getAllUsers() {
+        return userDAO.selectAllUsers()
+                .stream()
+                .map(userDTOMapper)
+                .collect(Collectors.toList());
+    }
 
-    public void registerAdministrator(AdminRegistrationRequest adminRegistrationRequest,User currentAdmin){
+    public void registerAdministrator(AdminRegistrationRequest adminRegistrationRequest, User currentAdmin) {
 
 
-        if(!currentAdmin.getRole().equals(Role.ROLE_ADMIN)){
+        if (!currentAdmin.getRole().equals(Role.ROLE_ADMIN)) {
             throw new RuntimeException("Only admins");
         }
 
@@ -112,4 +125,14 @@ public class AdminService {
                 "internal.notification.routing-key"
         );
     }
+
+    public UserDTO getAdminById(Long id) {
+        Optional<User> user = userDAO.getAdminById(id);
+        if (user.isPresent()) {
+            return userDTOMapper.apply(user.get());
+        } else {
+            throw new ResourceNotFoundException("Admin not found with id " + id);
+        }
+    }
 }
+
