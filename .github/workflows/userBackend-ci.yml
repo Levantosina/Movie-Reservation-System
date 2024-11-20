@@ -13,7 +13,6 @@ jobs:
     defaults:
       run:
         working-directory: ./user
-
     services:
       postgres:
         image: postgres:16
