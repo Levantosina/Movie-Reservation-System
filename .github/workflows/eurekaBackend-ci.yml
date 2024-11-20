@@ -16,7 +16,6 @@ jobs:
         working-directory: ./eureka-server
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
 
