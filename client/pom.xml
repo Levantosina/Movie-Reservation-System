@@ -25,16 +25,12 @@
 <!--    </build>-->
    <dependencies>
 
-        <dependency>
-            <groupId>com.movie.jwt</groupId>
-            <artifactId>jwt</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.movie.common</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+
+       <dependency>
+           <groupId>com.movie.common</groupId>
+           <artifactId>common</artifactId>
+           <version>0.0.1-SNAPSHOT</version>
+           <scope>compile</scope>
+       </dependency>
+   </dependencies>
 </project>
