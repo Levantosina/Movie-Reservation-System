@@ -27,7 +27,7 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <configuration>
-                    <skip>false</skip>
+                    <skip>true</skip>
                     <to>
                         <image>levantosina/eureka-server</image>
                     </to>
@@ -35,7 +35,7 @@
                         <mainClass>${spring-boot.main-class}</mainClass>
                     </container>
                     <containerizingMode>packaged</containerizingMode>
-                    <skip>true</skip>
+
                 </configuration>
             </plugin>
         </plugins>
