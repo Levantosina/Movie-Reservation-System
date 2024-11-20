@@ -11,12 +11,11 @@
     <packaging>jar</packaging>
 
     <name>eureka-server</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
+        <spring-boot.main-class>com.movie.eureka.EurekaServerApplication</spring-boot.main-class>
+    </properties>
 
     <build>
         <plugins>
@@ -24,23 +23,20 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <to>
+                        <image>levantosina/eureka-server</image>
+                    </to>
+                    <container>
+                        <mainClass>${spring-boot.main-class}</mainClass>
+                    </container>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-
-    <profiles>
-        <profile>
-            <id>build-docker-image</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <dependencies>
         <dependency>
