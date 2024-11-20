@@ -20,18 +20,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - name: Compile, Test, and Verify
-        run: mvn clean verify -ntp -B
 
-      - name: Build Docker Image with Jib
-        run: mvn jib:build
-        env:
-          JIB_BASE_IMAGE_CREDENTIALS_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          JIB_BASE_IMAGE_CREDENTIALS_PASSWORD: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Compile the project
+        run: mvn clean compile
+
+      - name: Compile, Test, and Verify
+        run: mvn verify -ntp -B
