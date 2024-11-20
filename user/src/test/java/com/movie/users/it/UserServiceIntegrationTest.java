@@ -7,6 +7,7 @@ import com.movie.users.users.UserRegistrationRequest;
 import com.movie.users.users.UserUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
  * @author DMITRII LEVKIN on 17/11/2024
  * @project Movie-Reservation-System
  */
+@AutoConfigureWebTestClient(timeout = "PT36S")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
 
@@ -100,6 +102,7 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 .expectBody(new ParameterizedTypeReference<UserDTO>() {
                 })
                 .isEqualTo(expectedUser);
+
     }
 
     @Test
@@ -281,7 +284,40 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
 
     @Test
     void cannotGetNonExistentUser() {
+
+        Faker faker =new Faker();
+        String firstName = "Test";
+        String lastName = "Test";
+        String email= faker.name().lastName() + "-" + UUID.randomUUID() + "@gmail.com";
+        String role="ROLE_USER";
+
+        UserRegistrationRequest userRegistrationRequest= new UserRegistrationRequest(
+                firstName,
+                lastName,
+                email,
+                "password",
+                role
+        );
+
         long nonExistentUserId = 99L;
+
+
+        String jwtToken = webTestClient.post()
+                .uri(USER_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(userRegistrationRequest), UserRegistrationRequest.class)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .returnResult(Void.class)
+                .getResponseHeaders()
+                .get(AUTHORIZATION)
+                .get(0);
+
+
+        assertThat(jwtToken).isNotNull().isNotEmpty();
+
 
         webTestClient.get()
                 .uri(USER_PATH + "/{userId}", nonExistentUserId)
