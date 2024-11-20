@@ -18,6 +18,8 @@
         <docker.image.name>user</docker.image.name>
         <docker.image.tag/>
         <jsonWebToken.version>0.11.1</jsonWebToken.version>
+        <spring-boot.main-class>com.movie.users.UserApp</spring-boot.main-class>
+
     </properties>
 
 
@@ -31,6 +33,16 @@
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
+                        <configuration>
+                        <skip>true</skip>
+                        <to>
+                            <image>levantosina/user</image>
+                        </to>
+                        <container>
+                            <mainClass>${spring-boot.main-class}</mainClass>
+                        </container>
+                        <containerizingMode>packaged</containerizingMode>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
