@@ -4,13 +4,16 @@ package com.movie.users.users;
 
 import com.movie.common.UserDTO;
 import com.movie.jwt.jwt.JWTUtil;
+import com.movie.users.users.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author DMITRII LEVKIN on 22/09/2024
@@ -33,9 +36,14 @@ public class UserController {
 
         return userService.getAllUsers();
     }
-    @GetMapping("{userId}")
-    public UserDTO getCustomerById(@PathVariable("userId")Long userId){
-        return userService.getUserById(userId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable long userId) {
+        try {
+            UserDTO user = userService.getUserById(userId);
+            return ResponseEntity.ok(user);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     @PostMapping
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
