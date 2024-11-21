@@ -14,6 +14,10 @@
 
 
 
+    <properties>
+        <spring-boot.main-class>com.movie.cinema.CinemaApp</spring-boot.main-class>
+    </properties>
+
 
     <build>
         <plugins>
@@ -29,13 +33,23 @@
         <profile>
             <id>build-docker-image</id>
             <activation>
-                <activeByDefault>false</activeByDefault> <!-- Optional: activates this profile only when explicitly used -->
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <to>
+                                <image>levantosina/cinema</image>
+                            </to>
+                            <container>
+                                <mainClass>${spring-boot.main-class}</mainClass>
+                            </container>
+                            <containerizingMode>packaged</containerizingMode>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -14,7 +14,7 @@
 
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.main-class>com.movie.movie.MovieApp</spring-boot.main-class>
     </properties>
 
 
@@ -36,6 +36,16 @@
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <to>
+                                <image>levantosina/seat</image>
+                            </to>
+                            <container>
+                                <mainClass>${spring-boot.main-class}</mainClass>
+                            </container>
+                            <containerizingMode>packaged</containerizingMode>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -1,38 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.movie.jwt</groupId>
-  <artifactId>jwt</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <parent>
+        <groupId>com.movie.resrvation</groupId>
+        <artifactId>system</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-
-
-<parent>
-    <groupId>com.movie.resrvation</groupId>
-    <artifactId>system</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-</parent>
-
-  <name>jwt</name>
-
+    <artifactId>jwt</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <jsonWebToken.version>0.12.6</jsonWebToken.version>
     </properties>
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>com.google.cloud.tools</groupId>-->
-<!--                <artifactId>jib-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <skip>true</skip>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 
     <dependencies>
         <dependency>
@@ -48,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+            <artifactId>jjwt-jackson</artifactId>
             <version>${jsonWebToken.version}</version>
             <scope>runtime</scope>
         </dependency>
@@ -56,7 +38,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

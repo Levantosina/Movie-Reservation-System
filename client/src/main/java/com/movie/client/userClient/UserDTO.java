@@ -1,6 +1,6 @@
 package com.movie.client.userClient;
 
-import jakarta.validation.constraints.NotBlank;
+
 
 /**
  * @author DMITRII LEVKIN on 20/11/2024
@@ -11,7 +11,7 @@ public record UserDTO(
         String firstName,
         String lastName,
         String email,
-        @NotBlank String role_name
+        String role_name
 
 
 
