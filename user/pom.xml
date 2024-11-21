@@ -19,7 +19,6 @@
         <docker.image.tag/>
         <jsonWebToken.version>0.11.1</jsonWebToken.version>
         <spring-boot.main-class>com.movie.users.UserApp</spring-boot.main-class>
-
     </properties>
 
 
