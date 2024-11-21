@@ -10,11 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./user
-
     services:
       postgres:
         image: postgres:16
@@ -29,6 +24,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    defaults:
+      run:
+        working-directory: ./user
 
     steps:
       - uses: actions/checkout@v3
