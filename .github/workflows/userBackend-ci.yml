@@ -22,7 +22,6 @@ jobs:
           POSTGRES_USER: levantos
           POSTGRES_PASSWORD: password
           POSTGRES_DB: users
-
         ports:
           - 5432:5432
         options: >-
