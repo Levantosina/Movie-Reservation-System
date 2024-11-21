@@ -158,13 +158,6 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.movie.jwt</groupId>
-            <artifactId>jwt</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>com.movie.common</groupId>
             <artifactId>common</artifactId>
@@ -176,6 +169,11 @@
             <artifactId>client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.movie.resrvation</groupId>
+            <artifactId>jwt</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
@@ -255,7 +253,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.4</version>
                 <configuration>
                     <from>
                         <image>eclipse-temurin:21</image>
@@ -277,6 +275,11 @@
                         </tags>
                     </to>
                 </configuration>
+            </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.8.1</version>
             </plugin>
         </plugins>
     </build>
