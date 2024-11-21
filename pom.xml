@@ -23,21 +23,17 @@
 	</developers>
 	<modules>
 		<module>eureka-server</module>
-		<module>user</module>
-
-		<module>api-gateway</module>
-		<module>common</module>
-		<module>jwt</module>
-
 		<module>amqp</module>
+		<module>common</module>
+		<module>client</module>
+		<module>jwt</module>
+		<module>user</module>
+		<module>api-gateway</module>
 		<module>notification</module>
 		<module>movie</module>
-
 		<module>seat</module>
 		<module>cinema</module>
-		<module>client</module>
 		<module>schedule</module>
-
 	</modules>
 	<scm>
 		<connection/>
