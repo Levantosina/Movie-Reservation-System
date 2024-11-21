@@ -1,7 +1,8 @@
 package com.movie.client;
 
 import com.movie.client.userClient.UserClient;
-import com.movie.common.UserDTO;
+
+import com.movie.client.userClient.UserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

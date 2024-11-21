@@ -72,105 +72,105 @@ services:
       - zipkin
       - eureka-server
 
-#  user:
-#    image: levantosina/user:latest
-#    container_name: user
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
-#
-#  movie:
-#    image: levantosina/movie:latest
-#    container_name: movie
-#    ports:
-#      - "8084:8084"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
-#
-#  cinema:
-#    image: levantosina/cinema:latest
-#    container_name: cinema
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
-#
-#  seat:
-#    image: levantosina/seat:latest
-#    container_name: seat
-#    ports:
-#      - "8082:8082"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
-#      - cinema
-#
-#  schedule:
-#    image: levantosina/schedule:latest
-#    container_name: schedule
-#    ports:
-#      - "8085:8085"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
-#      - seat
-#      - movie
-#      - cinema
-#
-#  notification:
-#    image: levantosina/notification:latest
-#    container_name: notification
-#    ports:
-#      - "8086:8086"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
+  user:
+    image: levantosina/user:latest
+    container_name: user
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+
+  movie:
+    image: levantosina/movie:latest
+    container_name: movie
+    ports:
+      - "8084:8084"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+
+  cinema:
+    image: levantosina/cinema:latest
+    container_name: cinema
+    ports:
+      - "8081:8081"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+
+  seat:
+    image: levantosina/seat:latest
+    container_name: seat
+    ports:
+      - "8082:8082"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+      - cinema
+
+  schedule:
+    image: levantosina/schedule:latest
+    container_name: schedule
+    ports:
+      - "8085:8085"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+      - seat
+      - movie
+      - cinema
+
+  notification:
+    image: levantosina/notification:latest
+    container_name: notification
+    ports:
+      - "8086:8086"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
 
 
 networks:
