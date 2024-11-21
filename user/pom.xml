@@ -138,7 +138,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.movie.resrvation</groupId>
+            <groupId>com.movie.amqp</groupId>
             <artifactId>amqp</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>

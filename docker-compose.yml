@@ -72,22 +72,22 @@ services:
       - zipkin
       - eureka-server
 
-#  user:
-#    image: levantosina/user:latest
-#    container_name: user
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=docker"
-#      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
-#    networks:
-#      - spring
-#      - postgres
-#    depends_on:
-#      - zipkin
-#      - postgres
-#      - rabbitmq
-#
+  user:
+    image: levantosina/user:latest
+    container_name: user
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - rabbitmq
+
 #  movie:
 #    image: levantosina/movie:latest
 #    container_name: movie
