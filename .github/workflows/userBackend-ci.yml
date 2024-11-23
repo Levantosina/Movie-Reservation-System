@@ -60,7 +60,7 @@ jobs:
 
       - name: Eureka
         run: |
-            docker-compose up -d eureka-server:latest
+            docker-compose up -d eureka-server
             docker-compose up --build -d    
 
 
