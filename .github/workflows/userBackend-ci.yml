@@ -31,29 +31,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-      zipkin:
-        image: openzipkin/zipkin:3.4.2
-        ports:
-          - 9411:9411
-        options: >-
-          --rm
-          --health-cmd "curl -f http://localhost:9411/health || exit 1"
-          --health-interval 30s
-          --health-timeout 5s
-          --health-retries 10
 
-      eureka-server:
-          image: levantosina/eureka-server:latest
-          ports:
-            - 8761:8761
-          options: >-
-            --rm
-            --health-cmd "curl -f http://localhost:8761/ || exit 1"
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-
-      
 
     steps:
       - uses: actions/checkout@v3
@@ -70,19 +48,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD}}
 
-      - name: Wait for Eureka
-        run: |
-            until curl -s http://localhost:8761; do
-              echo "Waiting for Eureka server to be ready..."
-              sleep 5
-            done
 
-      - name: Wait for Zipkin
+      - name: Zipkin
         run: |
-          until curl -s http://localhost:9411/health; do
-            echo "Waiting for Zipkin server to be ready..."
-            sleep 5
-          done
+          docker-compose up -d openzipkin/zipkin:3.4.2
+          docker-compose up --build -d
+
+      - name: Eureka
+        run: |
+            docker-compose up -d eureka-server:latest
+            docker-compose up --build -d    
+
 
       - name: Build and install all modules
         run: mvn -B install
