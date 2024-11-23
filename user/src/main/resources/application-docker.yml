@@ -54,6 +54,12 @@ management:
     tracing:
       endpoint: http://zipkin:9411/
 
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+
+
 eureka:
   client:
     service-url:

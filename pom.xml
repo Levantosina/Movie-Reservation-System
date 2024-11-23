@@ -31,8 +31,8 @@
 		<module>api-gateway</module>
 		<module>notification</module>
 		<module>movie</module>
-		<module>seat</module>
 		<module>cinema</module>
+		<module>seat</module>
 		<module>schedule</module>
 	</modules>
 	<scm>
