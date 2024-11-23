@@ -14,7 +14,7 @@
 
 
     <properties>
-        <spring-boot.main-class>com.movie.movie.SeatApp</spring-boot.main-class>
+        <spring-boot.main-class>com.movie.seats.SeatApp</spring-boot.main-class>
         <docker.username>levantosina</docker.username>
         <docker.image.name>seat</docker.image.name>
         <docker.image.tag/>
