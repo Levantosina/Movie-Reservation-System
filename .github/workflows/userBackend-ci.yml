@@ -43,7 +43,7 @@ jobs:
             --health-retries 5
 
       zipkin:
-        image: levantosina/zipkin:latest
+        image: openzipkin/zipkin
         ports:
           - 9411:9411
         options: >-
