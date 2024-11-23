@@ -13,7 +13,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./user
+        working-directory: ./
 
     services:
       postgres:
