@@ -59,6 +59,13 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD}}
+
       - name: Wait for Eureka
         run: |
             until curl -s http://localhost:8761/eureka/; do
@@ -73,11 +80,6 @@ jobs:
             sleep 5
           done
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_PASSWORD}}
       - name: Build and install all modules
         run: mvn -B install
 
