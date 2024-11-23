@@ -24,30 +24,6 @@
 
 
 
-    <profiles>
-        <profile>
-            <id>build-docker-image</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                        <configuration>
-                        <skip>false</skip>
-                        <to>
-                            <image>levantosina/user</image>
-                        </to>
-                        <container>
-                            <mainClass>${spring-boot.main-class}</mainClass>
-                        </container>
-                        <containerizingMode>packaged</containerizingMode>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 
 
     <dependencies>
@@ -177,14 +153,6 @@
             <scope>compile</scope>
 
         </dependency>
-        <dependency>
-            <groupId>com.movie.resrvation</groupId>
-            <artifactId>jwt</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-
     </dependencies>
 
     <build>
@@ -258,7 +226,6 @@
                 </executions>
             </plugin>
 
-
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
@@ -283,6 +250,9 @@
                             <tag>latest</tag>
                         </tags>
                     </to>
+                    <container>
+                        <mainClass>${spring-boot.main-class}</mainClass>
+                    </container>
                 </configuration>
             </plugin>
             <plugin>
