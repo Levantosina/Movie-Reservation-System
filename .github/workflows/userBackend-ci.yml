@@ -32,7 +32,7 @@ jobs:
           --health-retries 5
 
       eureka-server:
-        image: your-eureka-server-image
+        image: levantosina/eureka-server:latest
         ports:
           - 8761:8761
         options: >-
