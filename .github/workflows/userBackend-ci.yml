@@ -32,21 +32,23 @@ jobs:
           --health-retries 5
 
       eureka-server:
-        image: levantosina/eureka-server:latest
-        ports:
-          - 8761:8761
-        options: >-
-          --health-cmd curl --silent --fail http://localhost:8761/
-          --health-interval 10s
-          --health-timeout 5s
-           --health-retries 5
+          image: levantosina/eureka-server:latest
+          ports:
+            - 8761:8761
+          options: >-
+            --rm
+            --health-cmd "curl -f http://localhost:8761/ || exit 1"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
       zipkin:
         image: openzipkin/zipkin:latest
         ports:
           - 9411:9411
         options: >-
-          --health-cmd curl --silent --fail http://localhost:9411/
+          --rm
+          --health-cmd "curl -f http://localhost:9411/ || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
