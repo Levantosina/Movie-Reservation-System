@@ -36,7 +36,7 @@ jobs:
         ports:
           - 8761:8761
         options: >-
-          --health-cmd curl --silent --fail http://localhost:8761/eureka/
+          --health-cmd curl --silent --fail http://localhost:8761/
           --health-interval 10s
           --health-timeout 5s
            --health-retries 5
