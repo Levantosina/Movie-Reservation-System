@@ -244,6 +244,7 @@
                             </platform>
                         </platforms>
                     </from>
+
                     <to>
                         <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
                         <tags>
