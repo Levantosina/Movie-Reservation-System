@@ -38,9 +38,9 @@ jobs:
         options: >-
           --rm
           --health-cmd "curl -f http://localhost:9411/health || exit 1"
-          --health-interval 10s
+          --health-interval 30s
           --health-timeout 5s
-          --health-retries 5
+          --health-retries 10
 
       eureka-server:
           image: levantosina/eureka-server:latest
