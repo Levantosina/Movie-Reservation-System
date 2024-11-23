@@ -32,7 +32,7 @@ jobs:
           --health-retries 5
 
       zipkin:
-        image: openzipkin/zipkin:latest
+        image: openzipkin/zipkin:3.4.2
         ports:
           - 9411:9411
         options: >-
@@ -79,7 +79,7 @@ jobs:
 
       - name: Wait for Zipkin
         run: |
-          until curl -s http://localhost:9411; do
+          until curl -s http://localhost:9411/health; do
             echo "Waiting for Zipkin server to be ready..."
             sleep 5
           done
