@@ -113,7 +113,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.movie.resrvation</groupId>
+            <groupId>com.movie.amqp</groupId>
             <artifactId>amqp</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
@@ -123,6 +123,7 @@
             <groupId>com.movie.resrvation</groupId>
             <artifactId>jwt</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.movie.resrvation</groupId>
