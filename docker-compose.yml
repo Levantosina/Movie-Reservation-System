@@ -9,7 +9,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - postgres
     restart: unless-stopped
@@ -68,12 +68,12 @@ services:
     image: levantosina/api-gateway:latest
     container_name: api-gateway
     ports:
-      - "8080:8081"
+      - "8083:8083"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
     networks:
-     - spring
+      - spring
     depends_on:
       - zipkin
       - eureka-server
@@ -82,7 +82,7 @@ services:
     image: levantosina/user:latest
     container_name: user
     ports:
-      - "8082:8083"
+      - "8080:8080"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
@@ -98,7 +98,7 @@ services:
     image: levantosina/movie:latest
     container_name: movie
     ports:
-      - "8084:8085"
+      - "8084:8084"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
@@ -114,7 +114,7 @@ services:
     image: levantosina/cinema:latest
     container_name: cinema
     ports:
-      - "8086:8087"
+      - "8081:8081"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
@@ -130,7 +130,7 @@ services:
     image: levantosina/seat:latest
     container_name: seat
     ports:
-      - "8088:8089"
+      - "8082:8082"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
@@ -147,7 +147,7 @@ services:
     image: levantosina/schedule:latest
     container_name: schedule
     ports:
-      - "9000:9001"
+      - "8085:8085"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"
@@ -166,7 +166,7 @@ services:
     image: levantosina/notification:latest
     container_name: notification
     ports:
-      - "9002:9003"
+      - "8086:8086"
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/api/v2/spans"

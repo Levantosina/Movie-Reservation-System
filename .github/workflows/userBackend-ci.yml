@@ -61,7 +61,9 @@ jobs:
       - name: Eureka
         run: |
             docker-compose up -d eureka-server
-        
+      - name: Rabbitmq
+        run: |
+          docker-compose up -d rabbitmq
 
 
       - name: Build and install all modules
