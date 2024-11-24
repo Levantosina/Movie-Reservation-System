@@ -24,30 +24,6 @@
 
 
 
-    <profiles>
-        <profile>
-            <id>build-docker-image</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                        <configuration>
-                        <skip>false</skip>
-                        <to>
-                            <image>levantosina/user</image>
-                        </to>
-                        <container>
-                            <mainClass>${spring-boot.main-class}</mainClass>
-                        </container>
-                        <containerizingMode>packaged</containerizingMode>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 
 
     <dependencies>
@@ -119,30 +95,29 @@
             <version>1.20.3</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
             <version>1.20.3</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>1.20.3</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
@@ -151,16 +126,8 @@
         </dependency>
 
 
-
         <dependency>
-            <groupId>com.movie.amqp</groupId>
-            <artifactId>amqp</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.movie.jwt</groupId>
+            <groupId>com.movie.resrvation</groupId>
             <artifactId>jwt</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
@@ -171,14 +138,25 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.movie.amqp</groupId>
+            <artifactId>amqp</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.movie.resrvation</groupId>
             <artifactId>client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
 
+        </dependency>
     </dependencies>
+    <profiles>
+    <profile>
+    <id>build-docker-image</id>
 
     <build>
         <plugins>
@@ -251,11 +229,10 @@
                 </executions>
             </plugin>
 
-
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.4</version>
                 <configuration>
                     <from>
                         <image>eclipse-temurin:21</image>
@@ -270,14 +247,25 @@
                             </platform>
                         </platforms>
                     </from>
+
                     <to>
                         <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
                         <tags>
                             <tag>latest</tag>
                         </tags>
                     </to>
+                    <container>
+                        <mainClass>${spring-boot.main-class}</mainClass>
+                    </container>
                 </configuration>
+            </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.8.1</version>
             </plugin>
         </plugins>
     </build>
+    </profile>
+    </profiles>
 </project>

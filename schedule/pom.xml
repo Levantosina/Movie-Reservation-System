@@ -123,16 +123,18 @@
         </dependency>
 
 
-
         <dependency>
-            <groupId>com.movie.jwt</groupId>
+            <groupId>com.movie.resrvation</groupId>
             <artifactId>jwt</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.movie.common</groupId>
             <artifactId>common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
