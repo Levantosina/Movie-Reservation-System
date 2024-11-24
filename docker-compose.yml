@@ -29,12 +29,18 @@ services:
     restart: unless-stopped
 
   zipkin:
-    image: openzipkin/zipkin
+    image: openzipkin/zipkin:3.4.2
     container_name: zipkin
     ports:
       - "9411:9411"
     networks:
       - spring
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9411/" ]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
 
   rabbitmq:
     image: rabbitmq:4.0-management
@@ -67,7 +73,7 @@ services:
       - "SPRING_PROFILES_ACTIVE=docker"
       - "MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://zipkin:9411/"
     networks:
-     - spring
+      - spring
     depends_on:
       - zipkin
       - eureka-server

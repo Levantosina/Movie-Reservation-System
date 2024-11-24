@@ -15,6 +15,10 @@
     <properties>
 
         <spring-boot.main-class>com.movie.eureka.EurekaServerApplication</spring-boot.main-class>
+        <docker.username>levantosina</docker.username>
+        <docker.image.name>eureka-server</docker.image.name>
+        <docker.image.tag/>
+
     </properties>
 
     <build>
@@ -26,16 +30,31 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.4</version>
                 <configuration>
-                    <skip>true</skip>
+                    <from>
+                        <image>eclipse-temurin:21</image>
+                        <platforms>
+                            <platform>
+                                <architecture>amd64</architecture>
+                                <os>linux</os>
+                            </platform>
+                            <platform>
+                                <architecture>arm64</architecture>
+                                <os>linux</os>
+                            </platform>
+                        </platforms>
+                    </from>
+
                     <to>
-                        <image>levantosina/eureka-server</image>
+                        <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
+                        <tags>
+                            <tag>latest</tag>
+                        </tags>
                     </to>
                     <container>
                         <mainClass>${spring-boot.main-class}</mainClass>
                     </container>
-                    <containerizingMode>packaged</containerizingMode>
-
                 </configuration>
             </plugin>
         </plugins>
