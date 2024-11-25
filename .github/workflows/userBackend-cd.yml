@@ -81,7 +81,7 @@ jobs:
           git config user.email github-actions@github.com
           git add docker-compose.yml
           git commit -m "Update docker-compose.yml with new Docker image tag"
-          git push
+          git push origin main  
 
   
        
