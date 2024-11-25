@@ -84,7 +84,6 @@ jobs:
             sed -i -E 's_(levantosina/user:)([^"]*)_\1${{steps.build-number.outputs.BUILD_NUMBER}}_' docker-compose.yml
             echo "docker-compose.yml after updating tag"
             cat docker-compose.yml
-
       - name: Commit and push updated docker-compose.yml
         run: |
               git config user.name "github-actions"
