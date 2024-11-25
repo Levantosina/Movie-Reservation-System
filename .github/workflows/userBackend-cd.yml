@@ -79,12 +79,12 @@ jobs:
 
       - name: Commit and push docker-compose.yml
         run: |
-          sed -i "s/levantosina\/user:.*/levantosina\/user:${{steps.build-number.outputs.BUILD_NUMBER}}/" docker-compose.yml
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          sed -i "s/***\/user:.*/***\/user:${{steps.build-number.outputs.BUILD_NUMBER}}/" docker-compose.yml
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           git add docker-compose.yml
           git commit -m "Update docker-compose.yml with new Docker image tag"
-          git push origin main  
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Levantosina/Movie-Reservation-System.git HEAD:main
 
   
        
