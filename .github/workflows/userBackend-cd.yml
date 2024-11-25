@@ -56,7 +56,6 @@ jobs:
               docker-compose up -d zipkin eureka-server rabbitmq
       - name: Build Package Push with Maven
         run: mvn -ntp -B verify -pl user -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
-
       - name: Commit and push docker-compose.yml
         run: |
           git config user.name github-actions
