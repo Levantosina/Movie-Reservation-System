@@ -68,7 +68,6 @@ jobs:
 
       - name: Build and install all modules
         run: mvn -B install
-
       - name: Build Package Push with Maven
         run: mvn -ntp -B verify -pl user -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
 
