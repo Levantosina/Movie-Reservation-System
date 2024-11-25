@@ -72,22 +72,22 @@ jobs:
         run: |
           docker-compose up -d rabbitmq
 
-
       - name: Build and install all modules
         run: mvn -B install
       - name: Build Package Push with Maven
         run: mvn -ntp -B verify -pl user -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+
       - name: Update docker-compose.yml with new user service image
         run: |
             echo "docker-compose.yml before updating tag"
             cat ../docker-compose.yml
-           sed -i -E 's_(levantosina/user:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' docker-compose.yml
+            sed -i -E 's_(levantosina/user:)([^"]*)_\1${{steps.build-number.outputs.BUILD_NUMBER}}_' docker-compose.yml
             echo "docker-compose.yml after updating tag"
             cat docker-compose.yml
       - name: Commit and push updated docker-compose.yml
         run: |
               git config user.name "github-actions"
               git config user.email "github-actions@github.com"
-              git add docker-compose.yml
+              git add ../docker-compose.yml
               git commit -m "Update user service image tag in docker-compose.yml ${{steps.build-number.outputs.BUILD_NUMBER}}"
-              git push
+              git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Levantosina/Movie-Reservation-System.git HEAD:main
