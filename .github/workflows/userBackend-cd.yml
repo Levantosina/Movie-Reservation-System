@@ -1,6 +1,9 @@
 name: CD - Deploy Backend
 
 on:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
       - "main"
