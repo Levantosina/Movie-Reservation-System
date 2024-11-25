@@ -10,14 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-=======
-
-    defaults:
-      run:
-        working-directory: ./
-
->>>>>>> 18d10397a8123be9f37fa5ad3ecdb0ca6730c8a9
     services:
       postgres:
         image: postgres:16
