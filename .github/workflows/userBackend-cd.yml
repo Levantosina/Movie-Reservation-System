@@ -60,9 +60,9 @@ jobs:
       - name:  Zipkin
         run: |
               docker-compose up -d zipkin eureka-server rabbitmq
-      - name: Build and install all modules
-        run: mvn -B install
 
+      - name: Zipkin
+        run: |
           docker-compose up -d zipkin
 
       - name: Eureka
@@ -79,12 +79,11 @@ jobs:
 
       - name: Commit and push docker-compose.yml
         run: |
-          sed -i "s/***\/user:.*/***\/user:${{steps.build-number.outputs.BUILD_NUMBER}}/" docker-compose.yml
+          sed -i "s|***/user:.*|***/user:${{steps.build-number.outputs.BUILD_NUMBER}}|" docker-compose.yml
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add ../docker-compose.yml
+          git add docker-compose.yml
           git commit -m "Update docker-compose.yml with new Docker image tag"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Levantosina/Movie-Reservation-System.git HEAD:main
-
   
        
