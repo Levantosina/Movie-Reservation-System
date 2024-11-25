@@ -38,22 +38,38 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Set build number
-        id: build-number
-        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
-      - name: Start services
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Set build number
+        id: build-number
+        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+
+      - name:  Zipkin
         run: |
               docker-compose up -d zipkin eureka-server rabbitmq
+      - name: Build and install all modules
+        run: mvn -B install
+
+          docker-compose up -d zipkin
+
+      - name: Eureka
+        run: |
+          docker-compose up -d eureka-server
+      - name: Rabbitmq
+        run: |
+          docker-compose up -d rabbitmq
+
       - name: Build and install all modules
         run: mvn -B install
       - name: Build Package Push with Maven
@@ -61,9 +77,10 @@ jobs:
 
       - name: Commit and push docker-compose.yml
         run: |
+          sed -i "s/levantosina\/user:.*/levantosina\/user:${{steps.build-number.outputs.BUILD_NUMBER}}/" docker-compose.yml
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add ./docker-compose.yml
+          git add docker-compose.yml
           git commit -m "Update docker-compose.yml with new Docker image tag"
           git push
 
