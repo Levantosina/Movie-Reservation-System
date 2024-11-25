@@ -64,7 +64,7 @@ jobs:
 
 
       - name: Build and install all modules
-        run: mvn -B install -pl user
+        run: mvn -B install
 
       - name: Verify user module
         run: mvn -B verify -pl user
