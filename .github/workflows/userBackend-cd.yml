@@ -55,6 +55,17 @@ jobs:
         id: build-number
         run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
 
+      - name:  Zipkin
+        run: |
+          docker-compose up -d zipkin
+
+      - name: Eureka
+        run: |
+          docker-compose up -d eureka-server
+      - name: Rabbitmq
+        run: |
+          docker-compose up -d rabbitmq
+
       - name: Build and install all modules
         run: mvn -B install
 
