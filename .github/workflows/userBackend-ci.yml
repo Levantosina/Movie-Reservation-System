@@ -50,7 +50,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD}}
 
-
       - name:  Zipkin
         run: |
           docker-compose up -d zipkin
