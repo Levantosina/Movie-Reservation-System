@@ -26,7 +26,7 @@ public class MovieAccessService implements  MovieDAO {
     @Override
     public List<Movie> selectAllMovies() {
         var sql = """
-           SELECT  movie_name, year, country, genre, description
+           SELECT  movie_id, movie_name, year, country, genre, description
            FROM movies
            """;
         return jdbcTemplate.query(sql, movieRowMapper);
@@ -35,7 +35,7 @@ public class MovieAccessService implements  MovieDAO {
     @Override
     public Optional<Movie> selectMovieById(Long movieId) {
         var sql = """
-               SELECT  movie_name,year,country,genre,description
+               SELECT  movie_id,movie_name,year,country,genre,description
                FROM movies where movie_id=?
                """;
         return jdbcTemplate.query(sql,movieRowMapper,movieId)
@@ -58,9 +58,16 @@ public class MovieAccessService implements  MovieDAO {
     public void insertMovie(Movie movie) {
         var sql= """
                 INSERT INTO movies(movie_name,year,country,genre,description)
-                VALUES (?,?,?,?,?)
+                VALUES (?,?,?,?,?) RETURNING movie_id
                 """;
-        jdbcTemplate.update(sql,movie.getMovieName(),movie.getYear(),movie.getCountry(),movie.getGenre(),movie.getDescription());
+      Long movieId =  jdbcTemplate.queryForObject(sql,
+                Long.class,
+                movie.getMovieName(),
+                movie.getYear(),
+                movie.getCountry(),
+                movie.getGenre(),
+                movie.getDescription());
+        movie.setMovieId(movieId);
 
 
     }
@@ -126,5 +133,15 @@ public class MovieAccessService implements  MovieDAO {
                     updateMovie.getMovieId()
             );
         }
+    }
+
+    @Override
+    public boolean existMovieWithId(Long movieId) {
+        var sql= """
+                SELECT count(movie_id)FROM movies
+               where movie_id=?
+               """;
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,movieId);
+        return count!=null && count>0;
     }
 }

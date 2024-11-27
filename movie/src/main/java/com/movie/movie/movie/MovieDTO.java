@@ -6,6 +6,8 @@ package com.movie.movie.movie;
  */
 public record MovieDTO(
 
+
+
         String movieName,
         Integer year,
         String country,

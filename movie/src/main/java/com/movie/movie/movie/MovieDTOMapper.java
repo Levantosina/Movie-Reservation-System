@@ -14,6 +14,7 @@ public class MovieDTOMapper implements Function<Movie,MovieDTO> {
     public MovieDTO apply(Movie movie) {
         return new MovieDTO(
 
+
                 movie.getMovieName(),
                 movie.getYear(),
                 movie.getCountry(),

@@ -18,4 +18,6 @@ public interface MovieDAO {
     void insertMovie(Movie movie);
 
     void updateMovie(Movie updateMovie);
+
+    boolean existMovieWithId(Long id);
 }
