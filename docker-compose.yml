@@ -79,7 +79,7 @@ services:
       - eureka-server
 
   user:
-    image: levantosina/user:${BUILD_NUMBER}
+    image: levantosina/user:26.11.2024.10.30.54
     container_name: user
     ports:
       - "8080:8080"
