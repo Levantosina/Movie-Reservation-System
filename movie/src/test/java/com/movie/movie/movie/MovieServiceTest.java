@@ -51,7 +51,7 @@ class MovieServiceTest {
         when(movieDAO.selectMovieById(movie_id)).thenReturn(Optional.of(movie));
 
         MovieDTO expected = movieDTOMapper.apply(movie);
-        MovieDTO actual = underTest.getMovie(movie_id);
+        MovieDTO actual = underTest.getMovieById(movie_id);
         assertThat(actual).isEqualTo(expected);
         verify(movieDAO).selectMovieById(movie_id);
     }
