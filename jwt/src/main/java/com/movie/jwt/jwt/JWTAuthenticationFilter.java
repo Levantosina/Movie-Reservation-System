@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,7 @@ import java.util.List;
  * @project MovieReservationSystem
  */
 @Component
+@Slf4j
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
@@ -39,7 +41,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            logger.warn("Authorization header is missing or invalid.");
+            log.warn("Authorization header is missing or invalid.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -49,16 +51,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         if (subject != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                List<String> roles = jwtUtil.getClaims(jwt).get("roles", List.class);
+                String role = jwtUtil.getClaims(jwt).get("role", String.class);
+                log.info("Role extracted from token: {}", role);
                 List<GrantedAuthority> authorities = new ArrayList<>();
-                if (roles != null) {
-                    for (String role : roles) {
-                        if (role != null && !role.trim().isEmpty()) {
-                            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                        } else {
-                            logger.warn("Role is null or empty: {}"+ role);
-                        }
-                    }
+                if (role != null && !role.trim().isEmpty()) {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                } else {
+                    log.warn("Role is null or empty: {}", role);
                 }
 
                 UsernamePasswordAuthenticationToken authenticationToken =
@@ -69,9 +68,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+                log.info("Authentication: {}", SecurityContextHolder.getContext().getAuthentication());
             } catch (Exception e) {
-                logger.error("Authentication failed: {}");
+                log.error("Authentication failed: {}", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
