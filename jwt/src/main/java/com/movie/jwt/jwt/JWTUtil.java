@@ -2,6 +2,7 @@ package com.movie.jwt.jwt;
 
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -23,8 +24,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class JWTUtil {
-    private static final String SECRET_KEY = "INwJBaTWR1RhFkAeSihaFRp2jCT5CKYcsvQqXfxlP3E=";
-
+    private static final String SECRET_KEY = "INwJBaTWR1RhFkAeSihaFRp2jCT5CKYcsvQqQfxl4TY=";
 
     public String issueToken(String subject, String role) {
         return issueToken(subject, Map.of("role", role));
@@ -41,11 +41,9 @@ public class JWTUtil {
                 .compact();
     }
 
-
     public String getSubject(String token) {
         return getClaims(token).getSubject();
     }
-
 
     public Claims getClaims(String token) {
         return Jwts.parser()
@@ -54,16 +52,15 @@ public class JWTUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
-
 
     public boolean isTokenValid(String jwt, String username) {
         String subject = getSubject(jwt);
         return subject.equals(username) && !isTokenExpired(jwt);
     }
-
 
     private boolean isTokenExpired(String jwt) {
         Date today = Date.from(Instant.now());
@@ -71,16 +68,19 @@ public class JWTUtil {
     }
 
     public String getRole(String token) {
-        Object roleClaim = getClaims(token).get("role");
-        if (roleClaim instanceof String) {
-            return (String) roleClaim;
-        } else if (roleClaim instanceof List<?>) {
-            List<?> roles = (List<?>) roleClaim;
-            if (!roles.isEmpty()) {
-                return roles.get(0).toString();  // Return the first role (if there are multiple)
-            }
+        String role = getClaims(token).get("role", String.class);  // Corrected to "role"
+        if (role != null && !role.trim().isEmpty()) {
+            return role;
         }
         return null;
+    }
+
+    public String getSubjectFromToken(String token) {
+        JwtParser jwtParser = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .build();
+        Claims claims = jwtParser.parseClaimsJws(token).getBody();
+        return claims.getSubject();
     }
 }
 
