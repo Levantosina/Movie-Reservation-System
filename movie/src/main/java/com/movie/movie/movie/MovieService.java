@@ -42,7 +42,7 @@ public class MovieService {
                 .collect(Collectors.toList());
     }
 
-    public MovieDTO getMovie(Long movieId){
+    public MovieDTO getMovieById(Long movieId){
         return  movieDAO.selectMovieById(movieId)
                 .map(movieDTOMapper)
                 .orElseThrow(
@@ -68,10 +68,6 @@ public class MovieService {
         movie.setDescription(movieRegistrationRequest.description());
 
         movieDAO.insertMovie(movie);
-
-
-
-
 
         NotificationRequest notificationRequest = new NotificationRequest(
                 movie.getMovieId(), "Movie created", "The movie " + movie.getMovieName() + " has been created."
