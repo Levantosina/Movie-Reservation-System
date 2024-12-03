@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+
 public class MovieSecurityFilterChainConfig {
 
 
@@ -30,9 +31,10 @@ public class MovieSecurityFilterChainConfig {
         http
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/v1/movies/**").permitAll()
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/movies/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/movies/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(JWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
