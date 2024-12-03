@@ -2,7 +2,11 @@ package com.movie.movie.movie;
 
 
 
+import com.movie.jwt.jwt.JWTUtil;
+import com.movie.users.users.UserRegistrationRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +24,10 @@ public class MovieController {
 
     private final MovieService movieService;
 
+
+
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
-
     }
 
 
@@ -35,7 +40,7 @@ public class MovieController {
     @GetMapping("{movieId}")
     public ResponseEntity<?> getMovie(@PathVariable("movieId") Long movieId) {
 
-        return ResponseEntity.ok(movieService.getMovie(movieId));
+        return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
 
     @PostMapping
