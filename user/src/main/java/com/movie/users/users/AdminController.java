@@ -57,7 +57,7 @@ public class AdminController { ///only admin
         adminService.registerAdministrator(adminRegistrationRequest,currentAdmin);
         String jwtToken= jwtUtil.issueToken(adminRegistrationRequest.email(),"ROLE_ADMIN");
 
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION,jwtToken)
                 .build();
 
