@@ -7,7 +7,7 @@ import com.movie.common.AuthenticationRequest;
 import com.movie.common.UserDTO;
 import com.movie.users.AbstractDaoUnitTest;
 import com.movie.users.users.*;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
  * @project Movie-Reservation-System
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Slf4j
 public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
     @Autowired
     private WebTestClient webTestClient;
@@ -38,7 +39,6 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
     private UserService userService;
 
     private static String ADMIN_PATH = "/api/v1/admin";
-    private static String jwtToken;
 
     @Test
     void canRegisterNewAdminAndPublishNotification() {
