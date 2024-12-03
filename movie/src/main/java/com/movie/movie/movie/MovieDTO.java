@@ -7,12 +7,11 @@ package com.movie.movie.movie;
 public record MovieDTO(
 
 
-
+        Long movieId,
         String movieName,
         Integer year,
         String country,
          String genre,
          String description
 
-) {
-}
+) {}
