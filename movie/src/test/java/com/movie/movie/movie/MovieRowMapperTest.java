@@ -1,6 +1,6 @@
 package com.movie.movie.movie;
 
-import com.movie.users.users.User;
+
 import org.junit.jupiter.api.Test;
 import java.sql.ResultSet;
 import java.sql.SQLException;

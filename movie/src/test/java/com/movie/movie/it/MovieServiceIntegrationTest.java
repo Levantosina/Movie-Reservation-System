@@ -1,41 +1,22 @@
 package com.movie.movie.it;
 
 import com.github.javafaker.Faker;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.movie.amqp.RabbitMqMessageProducer;
-import com.movie.client.notification.NotificationRequest;
-import com.movie.common.AuthenticationRequest;
-import com.movie.common.AuthenticationResponse;
-import com.movie.common.UserDTO;
+
 import com.movie.jwt.jwt.JWTUtil;
-import com.movie.movie.MovieAbstractDaoUnitTest;
-import com.movie.movie.movie.Movie;
 import com.movie.movie.movie.MovieDTO;
 import com.movie.movie.movie.MovieRegistrationRequest;
 import com.movie.movie.movie.MovieUpdateRequest;
-import com.movie.users.users.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
 import java.util.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 

@@ -2,7 +2,6 @@ package com.movie.movie.movie;
 
 
 import com.movie.movie.MovieAbstractDaoUnitTest;
-import com.movie.users.users.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
