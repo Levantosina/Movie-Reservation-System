@@ -9,6 +9,7 @@ on:
       - "main"
     paths:
       - user/**
+      - movie/**
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -70,3 +71,6 @@ jobs:
 
       - name: Verify user module
         run: mvn -B verify -pl user
+
+      - name: Verify movie module
+        run: mvn -B verify -pl movie
