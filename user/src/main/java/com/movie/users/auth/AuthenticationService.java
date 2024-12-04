@@ -43,12 +43,12 @@ public class AuthenticationService {
 
     public boolean validateToken(String token) {
         try {
-           String email = jwtUtil.getSubject(token);
+            String email = jwtUtil.getSubject(token);
 
 
             return jwtUtil.isTokenValid(token, email);
         } catch (Exception e) {
-             return false;
+            return false;
         }
     }
 }
