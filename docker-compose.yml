@@ -79,11 +79,7 @@ services:
       - eureka-server
 
   user:
-<<<<<<< HEAD
     image: levantosina/user:latest
-=======
-    image: levantosina/user:27.11.2024.14.38.27
->>>>>>> 2cf2283a138f9c48e7fd270df0f64ee6285caa08
     container_name: user
     ports:
       - "8080:8080"
