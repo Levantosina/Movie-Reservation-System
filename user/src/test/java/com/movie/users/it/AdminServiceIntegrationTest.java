@@ -100,7 +100,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
                 .body(Mono.just(adminRegistrationRequest1), AdminRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isCreated();
 
 
         List<UserDTO> allUsers = webTestClient.get()
