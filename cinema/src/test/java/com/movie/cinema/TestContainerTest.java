@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @project Movie-Reservation-System
  */
 @Testcontainers
-public class TestContainerTest extends MovieAbstractDaoUnitTest {
+public class TestContainerTest extends CinemaAbstractDaoUnitTest {
 
     @Test
     void canStartPostgresDB(){
