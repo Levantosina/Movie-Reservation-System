@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS movies;
 CREATE TABLE movies (
                         movie_id SERIAL PRIMARY KEY,
                         movie_name TEXT NOT NULL UNIQUE,

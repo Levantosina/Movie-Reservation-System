@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS cinemas;
 
 CREATE TABLE cinemas(
             cinema_id SERIAL PRIMARY KEY,
