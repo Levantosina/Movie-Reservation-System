@@ -1,6 +1,7 @@
 package com.movie.cinema.cinema;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,26 +24,26 @@ public class CinemaController {
     }
 
     @GetMapping
-    public List<CinemaDTO> getAllCinemas() {
-
-        return cinemaService.getAllCinemas();
+    public ResponseEntity<?> getAllCinemas() {
+        return ResponseEntity.ok( cinemaService.getAllCinemas());
     }
 
     @GetMapping("/cinemaId/{cinemaId}")
-    public CinemaDTO getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
+    public ResponseEntity<?> getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
 
-        return cinemaService.getCinema(cinemaId);
+        return ResponseEntity.ok( cinemaService.getCinema(cinemaId));
     }
 
     @GetMapping("/name/{cinemaName}")
-    public CinemaDTO getCinemaByName(@PathVariable("cinemaName") String cinemaName) {
-        return cinemaService.getCinemaByName(cinemaName);
+    public ResponseEntity<?> getCinemaByName(@PathVariable("cinemaName") String cinemaName) {
+        return ResponseEntity.ok(cinemaService.getCinemaByName(cinemaName));
     }
 
     @PostMapping
-    public void registerCinema(@RequestBody CinemaRegistrationRequest cinemaRegistrationRequest) {
+    public ResponseEntity<?> registerCinema(@RequestBody CinemaRegistrationRequest cinemaRegistrationRequest) {
         log.info("New customer registration: {}", cinemaRegistrationRequest);
         cinemaService.registerCinema(cinemaRegistrationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/id-by-name/{cinemaName}")
