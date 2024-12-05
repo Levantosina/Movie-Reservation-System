@@ -63,8 +63,7 @@ public class CinemaAccessService implements CinemaDAO{
     @Override
     public void insertCinema(Cinema cinema) {
         var sql = """
-    INSERT INTO cinemas (cinema_name, cinema_location) 
-    VALUES (?, ?)
+    INSERT INTO cinemas (cinema_name, cinema_location) VALUES (?, ?)
     """;
     jdbcTemplate.update(sql, cinema.getCinemaName(), cinema.getCinemaLocation());
     }

@@ -24,14 +24,19 @@ public class Cinema {
     @Id
     @SequenceGenerator(
             name = "cinemas_id_seq",
-            sequenceName = "cinemas_id_seq"
+            sequenceName = "cinemas_id_seq",
+            allocationSize = 1
     )
-    @GeneratedValue( strategy = GenerationType.SEQUENCE,
+    @GeneratedValue( strategy = GenerationType.IDENTITY,
     generator = "cinemas_id_seq")
     private Long cinemaId;
-    @Column(name = "cinema_name")
+    @Column(
+            nullable = false
+    )
     private String cinemaName;
-    @Column(name = "cinema_location")
+    @Column(
+            nullable = false
+    )
     private String cinemaLocation;
 
 

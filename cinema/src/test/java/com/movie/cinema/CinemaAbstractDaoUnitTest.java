@@ -18,11 +18,11 @@ import javax.sql.DataSource;
  * @project Movie-Reservation-System
  */
 @Testcontainers
-public abstract class MovieAbstractDaoUnitTest {
+public abstract class CinemaAbstractDaoUnitTest {
     @BeforeAll
     static void beforeAll() {
         Flyway flyway = Flyway.configure()
-                        .locations("classpath:db/migration/movies")
+                        .locations("classpath:db/migration/cinema")
                         .dataSource(
                         postgreSQLContainer.getJdbcUrl(),
                         postgreSQLContainer.getUsername(),
