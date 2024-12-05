@@ -19,42 +19,6 @@
     </properties>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
-
-    <profiles>
-        <profile>
-            <id>build-docker-image</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                            <to>
-                                <image>levantosina/cinema</image>
-                            </to>
-                            <container>
-                                <mainClass>${spring-boot.main-class}</mainClass>
-                            </container>
-                            <containerizingMode>packaged</containerizingMode>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <dependencies>
         <dependency>
