@@ -36,7 +36,7 @@ public abstract class MovieAbstractDaoUnitTest {
     @Container
     protected static final PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("levantos-dao-unit-test")
+                    .withDatabaseName("movies")
                     .withUsername("levantos")
                     .withPassword("password");
 
