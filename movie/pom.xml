@@ -117,14 +117,6 @@
             <version>1.0.2</version>
             <scope>test</scope>
         </dependency>
-
-
-        <dependency>
-            <groupId>com.movie.resrvation</groupId>
-            <artifactId>user</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>com.movie.amqp</groupId>
             <artifactId>amqp</artifactId>
