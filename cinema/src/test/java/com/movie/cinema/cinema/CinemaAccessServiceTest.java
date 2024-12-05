@@ -24,18 +24,6 @@ class CinemaAccessServiceTest extends CinemaAbstractDaoUnitTest {
                 cinemaRowMapper);
     }
 
-
-
-//        Cinema cinema = Cinema.builder()
-//
-//                .cinemaLocation("NY")
-//                .cinemaName("Amazonia")
-//                .build();
-//        underTest.insertCinema(cinema);
-//        List<Cinema> actual = underTest.selectAllCinemas();
-//        assertThat(actual).isNotEmpty();
-
-
     @Test
     void selectAllCinemas() {
 
