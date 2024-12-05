@@ -31,7 +31,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   sql:
     init:
-      mode: never
+      mode: always
 
   flyway:
       locations: classpath:db/migration/movies
