@@ -3,13 +3,13 @@ package com.movie.movie.it;
 import com.github.javafaker.Faker;
 
 import com.movie.jwt.jwt.JWTUtil;
+import com.movie.movie.MovieApp;
 import com.movie.movie.movie.MovieDTO;
 import com.movie.movie.movie.MovieRegistrationRequest;
 import com.movie.movie.movie.MovieUpdateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -26,8 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
  * @project Movie-Reservation-System
  */
 
-@AutoConfigureWebTestClient(timeout = "PT36S")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = MovieApp.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 public class MovieServiceIntegrationTest {
 
@@ -45,6 +44,8 @@ public class MovieServiceIntegrationTest {
     void setUp() {
         validToken = jwtUtil.issueToken("username", Map.of("role", "ROLE_ADMIN"));
         log.info("validToken = : {}", validToken);
+
+
     }
 
     @Test
