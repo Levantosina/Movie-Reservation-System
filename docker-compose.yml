@@ -35,13 +35,6 @@ services:
       - "9411:9411"
     networks:
       - spring
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9411/" ]
-      interval: 30s
-      retries: 5
-      start_period: 10s
-      timeout: 10s
-
   rabbitmq:
     image: rabbitmq:4.0-management
     container_name: rabbitmq
@@ -90,9 +83,11 @@ services:
       - spring
       - postgres
     depends_on:
+      - eureka-server
       - zipkin
       - postgres
       - rabbitmq
+      - api-gateway
 
   movie:
     image: levantosina/movie:latest
@@ -106,9 +101,11 @@ services:
       - spring
       - postgres
     depends_on:
+      - eureka-server
       - zipkin
       - postgres
       - rabbitmq
+      - api-gateway
 
   cinema:
     image: levantosina/cinema:latest
