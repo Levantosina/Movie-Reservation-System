@@ -18,7 +18,7 @@ jobs:
       run:
         working-directory: ./
     services:
-      postgres:
+      postgres_users:
         image: postgres:16
         env:
           POSTGRES_USER: levantos
@@ -33,7 +33,19 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-
+      postgres_movies:
+        image: postgres:16
+        env:
+          POSTGRES_USER: levantos
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: movies
+        ports:
+          - 5433:5433
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5  
 
     steps:
       - uses: actions/checkout@v3
