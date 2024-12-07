@@ -10,7 +10,6 @@ on:
       - "main"
     paths:
       - user/**
-      - movie/**
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +19,7 @@ jobs:
         working-directory: ./
 
     services:
-      postgres:
+      postgres_users:
         image: postgres:16
         env:
           POSTGRES_USER: levantos
@@ -34,6 +33,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
 
     steps:
       - uses: actions/checkout@v3
@@ -78,9 +78,6 @@ jobs:
         run: mvn -B install
       - name: Build User Package Push with Maven
         run: mvn -ntp -B verify -pl user -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
-      - name: Build Movie Package Push with Maven
-        run: mvn -ntp -B verify -pl movie -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
-
 
       - name: Commit and push updated docker-compose.yml
         run: |

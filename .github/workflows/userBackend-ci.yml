@@ -10,7 +10,6 @@ on:
       - "main"
     paths:
       - user/**
-      - movie/**
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +17,7 @@ jobs:
       run:
         working-directory: ./
     services:
-      postgres_users:
+      postgres:
         image: postgres:16
         env:
           POSTGRES_USER: levantos
@@ -32,21 +31,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
-      postgres_movies:
-        image: postgres:16
-        env:
-          POSTGRES_USER: levantos
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: movies
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5  
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -84,6 +68,3 @@ jobs:
 
       - name: Verify user module
         run: mvn -B verify -pl user
-
-      - name: Verify movie module
-        run: mvn -B verify -pl movie
