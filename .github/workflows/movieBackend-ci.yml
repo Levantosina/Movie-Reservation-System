@@ -22,7 +22,7 @@ jobs:
         env:
           POSTGRES_USER: levantos
           POSTGRES_PASSWORD: password
-          POSTGRES_DB2: movies
+          POSTGRES_DB: movies
 
         ports:
           - 5432:5432
@@ -54,7 +54,6 @@ jobs:
       - name:  Zipkin
         run: |
           docker-compose up -d zipkin
-
       - name: Eureka
         run: |
           docker-compose up -d eureka-server
@@ -64,6 +63,6 @@ jobs:
 
 
       - name: Build and install all modules
-        run: mvn -B install
+        run: mvn -B install -pl !user,!cinema,!seat,!schedule -am
       - name: Verify movie module
         run: mvn -B verify -pl movie

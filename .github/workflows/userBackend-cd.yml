@@ -75,7 +75,7 @@ jobs:
           docker-compose up -d rabbitmq
 
       - name: Build and install all modules
-        run: mvn -B install
+        run: mvn -B install -pl !movie,!cinema,!seat,!schedule -am
       - name: Build User Package Push with Maven
         run: mvn -ntp -B verify -pl user -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
 
