@@ -3,10 +3,17 @@ package com.movie.movie.movie;
 
 
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -40,11 +47,20 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerMovie(@RequestBody MovieRegistrationRequest movieRegistrationRequest) {
+    public ResponseEntity<?> registerMovie(@Valid  @RequestBody MovieRegistrationRequest movieRegistrationRequest,
+                                           BindingResult bindingResult) {
+        List<String> errorMessage= new ArrayList<>();
         log.info("New movie registration: {}", movieRegistrationRequest);
-        movieService.registerNewMovie(movieRegistrationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage.add(error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+            movieService.registerNewMovie(movieRegistrationRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 
     @PutMapping("{movieId}")
     public ResponseEntity<?> updateMovieInfo(@PathVariable("movieId") Long movieId,@RequestBody MovieUpdateRequest movieUpdateRequest){
