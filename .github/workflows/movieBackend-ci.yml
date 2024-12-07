@@ -1,4 +1,4 @@
-name: CI - Build Backend
+name: MOVIE CI - Build Backend
 
 on:
   workflow_dispatch:
