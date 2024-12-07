@@ -1,6 +1,7 @@
 package com.movie.movie.movie;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Objects;
@@ -11,7 +12,11 @@ import java.util.Objects;
  */
 
 @Entity
-@Table(name = "movies")
+@Table(name = "movies",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "movie_movieName_unique",
+                        columnNames = "movieName")
+        })
 @Getter
 @Setter
 @ToString
@@ -23,37 +28,38 @@ public class Movie {
     @Id
     @SequenceGenerator(
             name = "movies_id_seq",
-            sequenceName = "movies_id_seq",
-            allocationSize = 1
+            sequenceName = "movies_id_seq"
     )
-    @GeneratedValue(strategy = GenerationType.IDENTITY,
-                    generator = "movies_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             nullable = false
     )
     private Long movieId;
+    @NotNull
     @Column(
             nullable = false
     )
     private String movieName;
+    @NotNull
     @Column(
             nullable = false
     )
     private Integer year;
+    @NotNull
     @Column(
             nullable = false
     )
     private String country;
+    @NotNull
     @Column(
             nullable = false
     )
     private String genre;
+    @NotNull
     @Column(
             nullable = false
     )
     private String description;
-
-
 
 
     @Override
