@@ -1,10 +1,14 @@
 package com.movie.cinema.cinema;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,8 +44,16 @@ public class CinemaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerCinema(@RequestBody CinemaRegistrationRequest cinemaRegistrationRequest) {
-        log.info("New customer registration: {}", cinemaRegistrationRequest);
+    public ResponseEntity<?> registerCinema(@Valid  @RequestBody CinemaRegistrationRequest cinemaRegistrationRequest,
+                                            BindingResult bindingResult) {
+        List<String> errorMessage= new ArrayList<>();
+        log.info("New cinema registration: {}", cinemaRegistrationRequest);
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage.add(error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
         cinemaService.registerCinema(cinemaRegistrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
