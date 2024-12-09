@@ -70,15 +70,15 @@ public class CinemaAccessService implements CinemaDAO{
 
 
 
-    @Override
-    public boolean existCinemaWithName(String name) {
-        return false;
-    }
+//    @Override
+//    public boolean existCinemaWithName(String name) {
+//        return false;
+//    }
 
-    @Override
-    public void updateCinema(Cinema updateCinema) {
-
-    }
+//    @Override
+//    public void updateCinema(Cinema updateCinema) {
+//
+//    }
 
 
 }
