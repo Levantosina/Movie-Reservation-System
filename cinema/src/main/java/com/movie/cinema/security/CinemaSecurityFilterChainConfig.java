@@ -31,10 +31,9 @@ public class CinemaSecurityFilterChainConfig {
         http
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/v1/cinemas/**")
-                .permitAll()
-                .requestMatchers("/api/v1/auth/**")
-                .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cinemas/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/cinemas/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest().
                 authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
