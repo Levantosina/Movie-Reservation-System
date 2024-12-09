@@ -1,0 +1,88 @@
+name: CINEMA CD - Deploy Backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - cinema/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./
+
+    services:
+      postgres_users:
+        image: postgres:16
+        env:
+          POSTGRES_USER: levantos
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: cinemas
+
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Set build number
+        id: build-number
+        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+
+      - name:  Zipkin
+        run: |
+              docker-compose up -d zipkin eureka-server rabbitmq
+
+      - name: Zipkin
+        run: |
+          docker-compose up -d zipkin
+
+      - name: Eureka
+        run: |
+          docker-compose up -d eureka-server
+      - name: Rabbitmq
+        run: |
+          docker-compose up -d rabbitmq
+
+      - name: Build and install all modules
+        run: mvn -B install -pl !user,!movie,!seat,!schedule -am
+      - name: Build User Package Push with Maven
+        run: mvn -ntp -B verify -pl cinema -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+
+      - name: Commit and push updated docker-compose.yml
+        run: |
+              git config user.name "github-actions"
+              git config user.email "github-actions@github.com"
+              git add docker-compose.yml
+              git commit -m "Update cinema service with tag  ${{steps.build-number.outputs.BUILD_NUMBER}}"
+              git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Levantosina/Movie-Reservation-System.git HEAD:main
