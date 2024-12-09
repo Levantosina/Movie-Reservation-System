@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,21 +40,77 @@ class CinemaAccessServiceTest extends CinemaAbstractDaoUnitTest {
 
     @Test
     void selectCinemaById() {
+        String cinemaName = "Dron";
+        Cinema cinema = Cinema.builder()
+                .cinemaName(cinemaName)
+                .cinemaLocation("AnyLocation")
+                .build();
+        underTest.insertCinema(cinema);
+
+        long id = underTest.selectAllCinemas()
+                .stream()
+                .filter(c -> c.getCinemaName().equals(cinemaName))
+                .map(Cinema::getCinemaId)
+                .findFirst()
+                .orElseThrow();
+
+        Optional<Cinema> actual = underTest.selectCinemaById(id);
+        assertThat(actual).isPresent().hasValueSatisfying(c ->{
+            assertThat(c.getCinemaId()).isEqualTo(id);
+            assertThat(c.getCinemaName()).isEqualTo(cinemaName);
+            assertThat(c.getCinemaLocation()).isEqualTo("AnyLocation");
+        });
     }
 
     @Test
     void selectCinemaByCinemaName() {
+
+        String cinemaName = "Drago";
+        Cinema cinema = Cinema.builder()
+                .cinemaName(cinemaName)
+                .cinemaLocation("AnyLocation")
+                .build();
+        underTest.insertCinema(cinema);
+
+        String cinemaNameTest = underTest.selectAllCinemas()
+                .stream()
+                .filter(c -> c.getCinemaName().equals(cinemaName))
+                .map(Cinema::getCinemaName)
+                .findFirst()
+                .orElseThrow();
+
+        Optional<Cinema> actual = underTest.selectCinemaByCinemaName(cinemaNameTest);
+
+        assertThat(actual).isPresent().hasValueSatisfying(c ->{
+            assertThat(c.getCinemaName()).isEqualTo(cinemaName);
+            assertThat(c.getCinemaLocation()).isEqualTo("AnyLocation");
+        });
+
     }
 
     @Test
     void insertCinema() {
+        String cinemaName = "Drago";
+        String cinemaLocation = "AnyLocation";
+        Cinema cinema = Cinema.builder()
+                .cinemaName(cinemaName)
+                .cinemaLocation(cinemaLocation)
+                .build();
+        underTest.insertCinema(cinema);
+
+        Optional<Cinema> actual = underTest.selectCinemaByCinemaName(cinemaName);
+        assertThat(actual).isPresent().hasValueSatisfying(c ->{
+            assertThat(c.getCinemaName()).isEqualTo(cinemaName);
+            assertThat(c.getCinemaLocation()).isEqualTo(cinemaLocation);
+        });
+
     }
 
-    @Test
-    void existCinemaWithName() {
-    }
+//    @Test
+//    void existCinemaWithName() {
+//    }
 
-    @Test
-    void updateCinema() {
-    }
+//    @Test
+//    void updateCinema() {
+//    }
 }
