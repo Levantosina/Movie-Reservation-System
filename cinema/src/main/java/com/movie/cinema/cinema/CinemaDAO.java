@@ -20,7 +20,7 @@ public interface CinemaDAO {
 
 
     void insertCinema(Cinema cinema);
-    boolean existCinemaWithName(String name);
+  //  boolean existCinemaWithName(String name);
 
-    void updateCinema(Cinema updateCinema);
+   // void updateCinema(Cinema updateCinema);
 }
