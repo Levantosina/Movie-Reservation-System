@@ -1,6 +1,7 @@
 package com.movie.cinema.cinema;
 
 import com.movie.amqp.RabbitMqMessageProducer;
+import com.movie.cinema.exception.DuplicateResourceException;
 import com.movie.cinema.exception.ResourceNotFoundException;
 import com.movie.client.notification.NotificationRequest;
 import com.opencsv.CSVReader;
@@ -65,6 +66,12 @@ public class CinemaService {
 
     public void registerCinema(CinemaRegistrationRequest cinemaRegistrationRequest){
 
+        String cinemaName = cinemaRegistrationRequest.cinemaName();
+
+        if(cinemaDAO.selectCinemaByCinemaName(cinemaName).isPresent()){
+            throw  new DuplicateResourceException("Cinema name must be unique.");
+        }
+
         Cinema cinema = new Cinema();
         cinema.setCinemaName(cinemaRegistrationRequest.cinemaName());
         cinema.setCinemaLocation(cinemaRegistrationRequest.cinemaLocation());
@@ -106,6 +113,8 @@ public class CinemaService {
             e.printStackTrace();
         }
     }
+
+
 
 
 }
