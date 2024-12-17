@@ -13,9 +13,9 @@ public interface SeatDAO {
 
     void insertSeat(Seat seat);
 
+    boolean isSeatOccupied(Long seatId);
 
-
-    boolean ifSeatOccupied(String name);
+    void updateSeatOccupation(Long seatId, boolean isOccupied);
 
     void  updateSeat(Seat updateSeat);
 
