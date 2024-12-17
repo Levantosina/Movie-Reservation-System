@@ -9,16 +9,14 @@ import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.cinemaClient.CinemaClient;
 import com.movie.client.notification.NotificationRequest;
 import com.movie.seats.exception.ResourceNotFoundException;
+import com.movie.seats.exception.SeatNotFoundException;
+import com.movie.seats.exception.SeatRequestValidationException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.annotation.PostConstruct;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-
-
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -63,7 +61,7 @@ public class SeatService {
         return seatDAO.selectSeatById(seatId)
                 .map(seatDTOMapper)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Seat with id [%s] not found".formatted(seatId))
+                        () -> new SeatNotFoundException("Seat with id [%s] not found".formatted(seatId))
                 );
     }
 
@@ -73,7 +71,7 @@ public class SeatService {
         seat.setRow(seatRegistrationRequest.row());
         seat.setType(seatRegistrationRequest.type());
         seat.setCinemaId(seatRegistrationRequest.cinemaId());
-
+        seat.setOccupied(seatRegistrationRequest.isOccupied());
         seatDAO.insertSeat(seat);
 
 
@@ -93,6 +91,48 @@ public class SeatService {
                 .stream()
                 .map(seatDTOMapper)
                 .collect(Collectors.toList());
+    }
+
+    public void  updateSeat(Long seatId,SeatUpdateRequest seatUpdateRequest){
+        Seat seat = seatDAO.selectSeatById(seatId)
+                .orElseThrow(()->
+                        new ResourceNotFoundException("Seat with [%s] not found".formatted(seatId)));
+
+        seat.setSeatId(seatId);
+        boolean changes = false;
+
+
+        if (seatUpdateRequest.seatNumber() != null) {
+            if (!seat.getSeatNumber().equals(seatUpdateRequest.seatNumber())) {
+                throw new IllegalArgumentException("Seat number cannot be changed.");
+            }
+        }
+
+        if (seatUpdateRequest.row() != null) {
+            if (!seat.getRow().equals(seatUpdateRequest.row())) {
+                throw new IllegalArgumentException("Row cannot be changed.");
+            }
+        }
+
+        if (seatUpdateRequest.type() != null && !seat.getType().equals(seatUpdateRequest.type())) {
+            seat.setType(seatUpdateRequest.type());
+            changes = true;
+        }
+
+        if (seatUpdateRequest.cinemaId() != null && !seat.getCinemaId().equals(seatUpdateRequest.cinemaId())) {
+            seat.setCinemaId(seatUpdateRequest.cinemaId());
+            changes = true;
+        }
+        if (seatUpdateRequest.isOccupied() != null && seat.isOccupied() != seatUpdateRequest.isOccupied()) {
+            seat.setOccupied(seatUpdateRequest.isOccupied());
+            changes = true;
+        }
+
+        if (!changes) {
+            throw new SeatRequestValidationException("No changes detected");
+        }
+            seatDAO.updateSeat(seat);
+
     }
 
     @PostConstruct
@@ -148,7 +188,7 @@ public class SeatService {
         for (int i = 1; i <= seatCount; i++) {
             Seat seat = new Seat();
             seat.setRow(row);
-            seat.setSeatNumber(String.valueOf(i));
+            seat.setSeatNumber(i);
             seat.setCinemaId(cinemaId);
 
 
@@ -185,7 +225,7 @@ public class SeatService {
         return Integer.parseInt(parts[0]);
     }
 
-    private Long getCinemaId(String cinemaName) {
+    Long getCinemaId(String cinemaName) {
         if (cinemaMap.containsKey(cinemaName)) {
             return cinemaMap.get(cinemaName);
         }
@@ -200,5 +240,20 @@ public class SeatService {
     public int getTotalSeatsByCinemaId(Long cinemaId) {
 
         return seatDAO.countSeatsByCinemaId(cinemaId);
+    }
+
+    public boolean isSeatOccupied(Long seatId) {
+        return seatDAO.selectSeatById(seatId)
+                .map(Seat::isOccupied)
+                .orElseThrow(
+                        () -> new SeatNotFoundException("Seat with id [%s] not found".formatted(seatId))
+                );
+    }
+
+    public void updateSeatOccupation(Long seatId, boolean occupied) {
+        seatDAO.selectSeatById(seatId).ifPresent(seat -> {
+            seat.setOccupied(occupied);
+            seatDAO.insertSeat(seat);
+        });
     }
 }
