@@ -3,12 +3,16 @@ package com.movie.seats.it;
 import com.movie.jwt.jwt.JWTUtil;
 
 import com.movie.seats.SeatApp;
+import com.movie.seats.exception.GlobalExceptions;
+import com.movie.seats.exception.SeatNotFoundException;
 import com.movie.seats.seat.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 
@@ -17,6 +21,7 @@ import java.util.Map;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 /**
@@ -26,6 +31,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @SpringBootTest(classes = SeatApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
+@Import(GlobalExceptions.class)
 public class SeatIntegrationTest {
 
     @Autowired
@@ -34,10 +40,13 @@ public class SeatIntegrationTest {
     @Autowired
     private JWTUtil jwtUtil;
 
-    @Autowired
+    @MockBean
     private SeatService seatService;
     @Autowired
     private SeatDAO seatDAO;
+
+    @Autowired
+    SeatDTOMapper seatDTOMapper;
 
     private String validToken;
 
@@ -55,7 +64,7 @@ public class SeatIntegrationTest {
     void canRegisterNewSeatScheme() {
 
         SeatRegistrationRequest seatRegistrationRequest = new SeatRegistrationRequest(
-                1, "A", "Standard", 1L
+                1, "A", "Standard", 1L,true
         );
         webTestClient.post()
                 .uri(SEAT_PATH)
@@ -67,7 +76,11 @@ public class SeatIntegrationTest {
 
     @Test
     void canGetSeatById() {
-        Long seatId = 1L;
+        long seatId = 23;
+        SeatDTO mockSeatDTO = new SeatDTO(seatId, 1, "A", "standard", false);
+
+        when(seatService.getSeat(seatId)).thenReturn(mockSeatDTO);
+
         webTestClient.get()
                 .uri(SEAT_PATH + "/" + seatId)
                 .header(AUTHORIZATION, "Bearer " + validToken)
@@ -82,15 +95,19 @@ public class SeatIntegrationTest {
 
     @Test
     void cannotGetSeatWhenNotFound() {
-        Long nonExistentSeatId = 999L; // Seat ID that doesn't exist in the database
+        Long nonExistentSeatId = 999L;
+
+        when(seatService.getSeat(nonExistentSeatId))
+                .thenThrow(new SeatNotFoundException("Seat with id [%s] not found".formatted(nonExistentSeatId)));
+
         webTestClient.get()
-                .uri(SEAT_PATH + "/" + nonExistentSeatId) // Access endpoint
-                .header(AUTHORIZATION, "Bearer " + validToken) // Valid token
+                .uri(SEAT_PATH + "/" + nonExistentSeatId)
+                .header(AUTHORIZATION, "Bearer " + validToken)
                 .exchange()
                 .expectStatus().isNotFound() // Expect 404 Not Found
                 .expectBody(String.class)
                 .value(response -> {
-                    assertThat(response).isEmpty(); // The body should be null or empty
+                    assertThat(response).contains("Seat with id [999] not found");
                 });
     }
 }
