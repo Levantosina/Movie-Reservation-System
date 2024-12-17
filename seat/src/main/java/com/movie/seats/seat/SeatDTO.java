@@ -6,8 +6,9 @@ package com.movie.seats.seat;
  */
 public record SeatDTO(
         Long seatId,
-        String seatNumber,
+        Integer seatNumber,
         String row,
-        String type
+        String type,
+        Boolean isOccupied
 
 ) { }
