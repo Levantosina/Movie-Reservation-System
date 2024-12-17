@@ -1,5 +1,7 @@
 package com.movie.seats.seat;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +18,7 @@ import java.util.Optional;
  * @project MovieReservationSystem
  */
 @Repository("seatJdbc")
+@Slf4j
 public class SeatAccessService implements SeatDAO{
 
     private  final JdbcTemplate jdbcTemplate;
@@ -34,39 +37,45 @@ public class SeatAccessService implements SeatDAO{
     public List<Seat> selectAllSeats() {
 
         var sql= """
-                SELECT seat_id,seat_number,row,type,cinema_id
+                SELECT seat_id,seat_number,row,type,cinema_id,is_occupied
                 FROM seats
                 
                 """;
         return jdbcTemplate.query(sql,seatRowMapper);
     }
 
+
+
     @Override
     public Optional<Seat> selectSeatById(Long seatId) {
         var sql= """
-                SELECT seat_id,seat_number,row,type,cinema_id
-                FROM seats where seat_id=?
+                SELECT * FROM seats WHERE seat_id = ?
                 
                 """;
-
-        return jdbcTemplate.query(sql,seatRowMapper,seatId)
-                .stream()
-                .findFirst();
+        try {
+            Seat seat = jdbcTemplate.queryForObject(sql, seatRowMapper, seatId);
+            return Optional.ofNullable(seat);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public void insertSeat(Seat seat) {
         var sql = """
-        INSERT INTO seats (seat_number, row, type, cinema_id) VALUES (?, ?, ?, ?)
+        INSERT INTO seats (seat_number, row, type, cinema_id,is_occupied) VALUES (?, ?, ?, ?, ?)
         """;
-        jdbcTemplate.update(sql, seat.getSeatNumber(), seat.getRow(), seat.getType(), seat.getCinemaId());
+        jdbcTemplate.update(sql, seat.getSeatNumber(), seat.getRow(), seat.getType(), seat.getCinemaId(), seat.isOccupied());
+
     }
+
+
 
     @Override
 
     public List<Seat> selectSeatsByCinemaId(Long cinemaId) {
         var sql = """
-                SELECT seat_id, seat_number, row, type,cinema_id
+                SELECT seat_id, seat_number, row, type,cinema_id,is_occupied
                 FROM seats
                 WHERE cinema_id = ?
                 """;
@@ -96,14 +105,57 @@ public class SeatAccessService implements SeatDAO{
 
     }
 
-
     @Override
-    public boolean ifSeatOccupied(String name) {
-        return false;
+    public boolean isSeatOccupied(Long seatId) {
+        var sql = """
+            SELECT is_occupied FROM seats WHERE seat_id = ?
+            """;
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, seatId));
+
+        }
+    @Override
+    public void updateSeatOccupation(Long seatId, boolean isOccupied) {
+        var sql = """
+             UPDATE seats SET is_occupied = ?  WHERE seat_id = ?
+              """;
+        jdbcTemplate.update(sql, isOccupied, seatId);
     }
 
     @Override
     public void updateSeat(Seat updateSeat) {
+        if(updateSeat.getSeatNumber()!=null){
+            var sql = """
+                    UPDATE seats SET seat_number=? where seat_id=?
+                    """;
+        jdbcTemplate.update(sql,updateSeat.getSeatNumber(),updateSeat.getSeatId());
+        }
 
-    }
+        if(updateSeat.getRow()!=null){
+            var sql = """
+                    UPDATE seats SET row=? where seat_id=?
+                    """;
+            jdbcTemplate.update(sql,updateSeat.getRow(),updateSeat.getSeatId());
+        }
+
+        if(updateSeat.getType()!=null){
+            var sql = """
+                    UPDATE seats SET type=? where seat_id=?
+                    """;
+            jdbcTemplate.update(sql,updateSeat.getType(),updateSeat.getSeatId());
+        }
+
+        if(updateSeat.getCinemaId()!=null){
+            var sql = """
+                    UPDATE seats SET cinema_id=? where seat_id=?
+                    """;
+            jdbcTemplate.update(sql,updateSeat.getCinemaId(),updateSeat.getSeatId());
+        }
+
+        // occupied is boolean and don t need to check for null
+            var sql = """
+                UPDATE seats SET is_occupied=? WHERE seat_id=?
+                """;
+            jdbcTemplate.update(sql, updateSeat.isOccupied(), updateSeat.getSeatId());
+        }
+
 }
