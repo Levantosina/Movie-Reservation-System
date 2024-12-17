@@ -18,4 +18,9 @@ public class GlobalExceptions {
     public ResponseEntity<String> handleSeatNotFoundException(SeatNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    @ExceptionHandler(SeatRequestValidationException.class)
+    public ResponseEntity<String> handleSeatRequestValidationException(SeatRequestValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
 }
