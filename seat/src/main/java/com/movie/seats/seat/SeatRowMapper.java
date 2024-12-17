@@ -15,12 +15,12 @@ public class SeatRowMapper implements RowMapper<Seat> {
     @Override
     public Seat mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Seat.builder()
-
                 .seatId(rs.getLong("seat_id"))
-                .seatNumber(rs.getString("seat_number"))
+                .seatNumber(rs.getInt("seat_number"))
                 .row(rs.getString("row"))
                 .type(rs.getString("type"))
                 .cinemaId(rs.getLong("cinema_id"))
+                .isOccupied(rs.getBoolean("is_occupied"))
                 .build();
     }
 }
