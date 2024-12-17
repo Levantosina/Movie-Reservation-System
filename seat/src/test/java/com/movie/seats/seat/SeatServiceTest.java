@@ -51,7 +51,7 @@ class SeatServiceTest {
     @Test
     void getSeat() {
         long seatId = 14;
-        Seat seat = new Seat(seatId,12,"A","VIP",1L);
+        Seat seat = new Seat(seatId,12,"A","VIP",1L,false);
         when(seatDAO.selectSeatById(seatId)).thenReturn(Optional.of(seat));
 
         SeatDTO expected  = seatDTOMapper.apply(seat);
@@ -66,7 +66,8 @@ class SeatServiceTest {
                 2,
                 "A",
                 "VIP",
-                2L
+                2L,
+                false
         );
 
         underTest.registerNewSeat(seatRegistrationRequest);
@@ -80,6 +81,7 @@ class SeatServiceTest {
         assertThat(capturedSeat.getSeatNumber()).isEqualTo(seatRegistrationRequest.seatNumber());
         assertThat(capturedSeat.getRow()).isEqualTo(seatRegistrationRequest.row());
         assertThat(capturedSeat.getType()).isEqualTo(seatRegistrationRequest.type());
+        assertThat(capturedSeat.isOccupied()).isEqualTo(seatRegistrationRequest.isOccupied());
 
         ArgumentCaptor<NotificationRequest> notificationCaptor = ArgumentCaptor.forClass(NotificationRequest.class);
         verify(rabbitMqMessageProducer).publish(
@@ -92,7 +94,7 @@ class SeatServiceTest {
     @Test
     void getSeatsByCinema() {
         long cinemaId = 1;
-        Seat seat = new Seat(1L,2,"A","VIP",cinemaId);
+        Seat seat = new Seat(1L,2,"A","VIP",cinemaId,false);
         when(seatDAO.selectSeatsByCinemaId(cinemaId)).thenReturn(List.of(seat));
         SeatDTO expected = seatDTOMapper.apply(seat);
         List<SeatDTO> actual = underTest.getSeatsByCinema(cinemaId);
