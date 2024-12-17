@@ -1,5 +1,6 @@
 package com.movie.cinema.it;
 
+import com.github.javafaker.Faker;
 import com.movie.cinema.CinemaApp;
 
 import com.movie.cinema.cinema.CinemaDAO;
@@ -38,6 +39,7 @@ public class CinemaServiceIntegrationTest {
     @Mock
     private static CinemaDAO cinemaDAO;
 
+
     @BeforeEach
     void setUp() {
         validToken = jwtUtil.issueToken("username", Map.of("role", "ROLE_ADMIN"));
@@ -46,8 +48,9 @@ public class CinemaServiceIntegrationTest {
 
     @Test
     void canRegisterNewCinema() {
-        String cinemaName = "cinemaName";
-        String cinemaLocation = "cinemaLocation";
+        Faker faker = new Faker();
+        String cinemaName = faker.name().lastName();
+        String cinemaLocation = faker.name().firstName();
 
         CinemaRegistrationRequest cinemaRegistrationRequest = new CinemaRegistrationRequest(
                 cinemaName,

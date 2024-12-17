@@ -1,5 +1,4 @@
 name: SEAT CI - Build Backend
-
 on:
   workflow_dispatch:
   push:
@@ -63,6 +62,6 @@ jobs:
 
 
       - name: Build and install all modules
-        run: mvn -B install -pl !user,!movie,!schedule -am
+        run: mvn -B install -pl !user,!movie,!cinema,!schedule -am
       - name: Verify seat module
         run: mvn -B verify -pl seat
