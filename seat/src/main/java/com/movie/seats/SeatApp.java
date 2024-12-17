@@ -14,7 +14,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
         "com.movie.seats",
         "com.movie.amqp",
         "com.movie.client",
-        "com.movie.users",
         "com.movie.jwt.jwt"
 
 })
