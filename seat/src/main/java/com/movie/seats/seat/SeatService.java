@@ -16,6 +16,9 @@ import com.opencsv.exceptions.CsvValidationException;
 import jakarta.annotation.PostConstruct;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,6 +43,9 @@ public class SeatService {
     private final CinemaClient cinemaClient;
 
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
+
+    @Value("${seats.resources}")
+    private Resource csvFilePath;
 
 
     public SeatService(@Qualifier("seatJdbc") SeatDAO seatDAO, SeatDTOMapper seatDTOMapper, CinemaClient cinemaClient, RabbitMqMessageProducer rabbitMqMessageProducer) {
@@ -136,11 +142,9 @@ public class SeatService {
     }
 
     @PostConstruct
-    public void loadSeatsFromCSV() {
 
-        String csvFilePath = "cinema_seating_schemes.csv";
-        try (CSVReader csvReader = new CSVReader(new InputStreamReader(
-                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(csvFilePath))))) {
+    public void loadSeatsFromCSV() {
+        try (CSVReader csvReader = new CSVReader(new InputStreamReader(csvFilePath.getInputStream()))){
             String[] values;
             boolean headerSkipped = false;
 
