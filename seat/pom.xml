@@ -141,17 +141,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.movie.resrvation</groupId>
-            <artifactId>cinema</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.movie.resrvation</groupId>
-            <artifactId>movie</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>com.movie.amqp</groupId>
