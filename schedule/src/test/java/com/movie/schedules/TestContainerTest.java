@@ -1,3 +1,5 @@
+package com.movie.schedules;
+
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
