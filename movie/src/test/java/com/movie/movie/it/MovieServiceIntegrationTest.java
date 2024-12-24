@@ -102,6 +102,7 @@ public class MovieServiceIntegrationTest {
             .expectBodyList(new ParameterizedTypeReference<MovieDTO>() {
             }).returnResult()
             .getResponseBody();
+        log.info("allSchedules:{}",allMovies);
 
     long movieId = allMovies.stream()
             .filter(user -> user.movieName().equals(name))
