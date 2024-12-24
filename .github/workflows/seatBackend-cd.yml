@@ -73,16 +73,13 @@ jobs:
       - name: Rabbitmq
         run: |
           docker-compose up -d rabbitmq
+      - name: Cinema
+        run: |
+          docker-compose up -d cinema
 
-      - name: Build and install all modules
-        run: mvn -B install -pl !user,!movie,cinema,!schedule -am
-      - name: Build User Package Push with Maven
+      - name: Build and install seat modules
+        run: mvn -B install -pl seat -am
+
+      - name: Build Seat Package Push with Maven
         run: mvn -ntp -B verify -pl seat -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
 
-      - name: Commit and push updated docker-compose.yml
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add docker-compose.yml
-          git commit -m "Update seat service with tag  ${{steps.build-number.outputs.BUILD_NUMBER}}"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Levantosina/Movie-Reservation-System.git HEAD:main

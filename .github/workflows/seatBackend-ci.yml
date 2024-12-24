@@ -59,9 +59,15 @@ jobs:
       - name: Rabbitmq
         run: |
           docker-compose up -d rabbitmq
+      - name: Cinema
+        run: |
+          docker-compose up -d cinema
 
+      - name: Build and install seat module
+        run: mvn -B install -pl seat -am
 
-      - name: Build and install all modules
-        run: mvn -B install -pl !user,!movie,!cinema,!schedule -am
       - name: Verify seat module
         run: mvn -B verify -pl seat
+
+      - name: Shut down dependencies
+        run: docker-compose down

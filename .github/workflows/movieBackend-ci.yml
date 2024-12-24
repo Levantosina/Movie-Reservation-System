@@ -62,7 +62,7 @@ jobs:
           docker-compose up -d rabbitmq
 
 
-      - name: Build and install all modules
+      - name: Build and install movie modules
         run: mvn -B install -pl !user,!cinema,!seat,!schedule -am
       - name: Verify movie module
         run: mvn -B verify -pl movie

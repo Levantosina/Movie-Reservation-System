@@ -79,10 +79,3 @@ jobs:
       - name: Build User Package Push with Maven
         run: mvn -ntp -B verify -pl user -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
 
-      - name: Commit and push updated docker-compose.yml
-        run: |
-              git config user.name "github-actions"
-              git config user.email "github-actions@github.com"
-              git add docker-compose.yml
-              git commit -m "Update user service with tag  ${{steps.build-number.outputs.BUILD_NUMBER}}"
-              git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Levantosina/Movie-Reservation-System.git HEAD:main
