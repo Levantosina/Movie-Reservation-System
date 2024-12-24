@@ -41,14 +41,11 @@ public class ScheduleSecurityFilterChainConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/schedules/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/schedules/schedules/**").permitAll()
-                        //.hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/schedules/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
-                .authenticationProvider(authenticationProvider)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(JWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint);
+                .addFilterBefore(JWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
