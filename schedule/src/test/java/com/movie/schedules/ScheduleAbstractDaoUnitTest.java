@@ -1,3 +1,5 @@
+package com.movie.schedules;
+
 import com.github.javafaker.Faker;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
