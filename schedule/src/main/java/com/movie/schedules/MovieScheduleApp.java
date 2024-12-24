@@ -11,7 +11,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = {
         "com.movie.schedules",
-        "com.movie.amqp",
         "com.movie.client",
         "com.movie.jwt.jwt",
 })

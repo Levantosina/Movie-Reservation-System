@@ -1,11 +1,17 @@
 package com.movie.schedules.movieschedules;
 
+
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,23 +29,43 @@ public class MovieScheduleController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public List<MovieScheduleDTO>getAllMovie(){
-
-        return movieScheduleService.getAllSchedules();
+    public ResponseEntity<?>getAllMovie(){
+       List<MovieScheduleDTO> scheduleDTO = movieScheduleService.getAllSchedules();
+        return ResponseEntity.ok(scheduleDTO);
     }
-    @PostMapping("/schedules")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MovieSchedule> createSchedule(@RequestBody MovieScheduleRegistrationRequest request) {
-        System.out.println("Received request: " + request);
-        MovieSchedule movieSchedule = movieScheduleService.createSchedule(request);
-        return ResponseEntity.ok(movieSchedule);
+
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<MovieScheduleDTO> getSchedule(@PathVariable("scheduleId") Long scheduleId) {
+        MovieScheduleDTO movieScheduleDTO = movieScheduleService.getScheduleById(scheduleId);
+        return ResponseEntity.ok(movieScheduleDTO);
+    }
+    @PostMapping
+    public ResponseEntity<?> createSchedule(@Valid @RequestBody MovieScheduleRegistrationRequest request, BindingResult bindingResult) {
+        List<String> errorMessage= new ArrayList<>();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage.add(error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        movieScheduleService.createSchedule(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("{scheduleId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void updateSchedule(@PathVariable Long scheduleId, @RequestBody MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
-        movieScheduleService.updateSchedule(scheduleId, movieScheduleRegistrationRequest);
+    public ResponseEntity<?> updateSchedule(@PathVariable Long scheduleId, @Valid @RequestBody ScheduleUpdateRequest updateRequest,
+            BindingResult bindingResult) {
+
+        List<String> errorMessage= new ArrayList<>();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage.add(error.getDefaultMessage());
+            }
+            log.error("Validation errors: {}", bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        movieScheduleService.updateSchedule(scheduleId, updateRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/cinema/{cinemaId}")
