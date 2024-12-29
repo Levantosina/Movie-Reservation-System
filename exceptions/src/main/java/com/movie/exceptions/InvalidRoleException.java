@@ -1,4 +1,4 @@
-package com.movie.users.users.exception;
+package com.movie.exceptions;
 
 /**
  * @author DMITRII LEVKIN on 17/11/2024

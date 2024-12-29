@@ -1,4 +1,4 @@
-package com.movie.users.users.exception;
+package com.movie.exceptions;
 
 
 
@@ -35,7 +35,6 @@ public class DefaultExceptionHandler {
 
     return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
-
 
     @ExceptionHandler(InsufficientAuthenticationException.class)
     public ResponseEntity<ApiError> handlerException (InsufficientAuthenticationException e, HttpServletRequest request){
@@ -100,6 +99,10 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(RequestValidationException.class)
+    public ResponseEntity<String> handleSeatRequestValidationException(RequestValidationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 
 
     ///ADD NEW!!!!!!!!!!!!!!!!!!!!
