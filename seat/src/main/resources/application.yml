@@ -42,12 +42,7 @@ spring:
   rabbitmq:
     addresses: localhost:5672
 
-  cloud:
-    openfeign:
-      client:
-        config:
-          cinema:
-            url: http://localhost:8081
+
 
 
 management:

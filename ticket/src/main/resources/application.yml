@@ -9,7 +9,7 @@ cors:
 
 spring:
   application:
-    name: seat
+    name: ticket
 
   main:
     allow-bean-definition-overriding: true
@@ -30,7 +30,20 @@ spring:
       boot:
         allow_jdbc_metadata_access: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
+  cloud:
+    openfeign:
+      client:
+        config:
+          user:
+            url: http://localhost:8080
+          cinema:
+            url: http://localhost:8081
+          movie:
+            url: http://localhost:8084
+          seat:
+            url: http://localhost:8082
+          schedule:
+            url: http://localhost:8085
   sql:
     init:
       mode: never
@@ -41,14 +54,6 @@ spring:
 
   rabbitmq:
     addresses: localhost:5672
-
-#  cloud:
-#    openfeign:
-#      client:
-#        config:
-#          cinema:
-#            url: http://localhost:8081
-
 
 management:
   tracing:

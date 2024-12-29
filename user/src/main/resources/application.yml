@@ -64,3 +64,10 @@ eureka:
     prefer-ip-address: true
 
 
+logging:
+  level:
+    com:
+      movie:
+        client:
+          userClient:
+            UserClient=DEBUG:
