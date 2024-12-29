@@ -34,7 +34,9 @@
 		<module>cinema</module>
 		<module>seat</module>
 		<module>schedule</module>
-	</modules>
+        <module>ticket</module>
+        <module>exceptions</module>
+    </modules>
 	<scm>
 		<connection/>
 		<developerConnection/>

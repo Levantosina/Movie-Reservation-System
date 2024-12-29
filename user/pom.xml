@@ -153,6 +153,12 @@
             <scope>compile</scope>
 
         </dependency>
+        <dependency>
+            <groupId>com.movie.exceptions</groupId>
+            <artifactId>exceptions</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
