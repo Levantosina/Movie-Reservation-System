@@ -22,7 +22,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * @project MovieReservationSystem
  */
 
-@Service
+@Service("jwtUtilService")
 public class JWTUtil {
     private static final String SECRET_KEY = "INwJBaTWR1RhFkAeSihaFRp2jCT5CKYcsvQqQfxl4TY=";
 
@@ -82,6 +82,7 @@ public class JWTUtil {
         Claims claims = jwtParser.parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
+
 }
 
 
