@@ -2,6 +2,7 @@ package com.movie.cinema.cinema;
 
 import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.notification.NotificationRequest;
+import com.movie.client.seatClient.SeatClient;
 import com.opencsv.CSVReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,8 @@ class CinemaServiceTest {
     private CinemaService underTest;
     @Mock
     private CinemaDAO cinemaDAO;
+    @Mock
+    SeatClient seatClient;
 
     private final CinemaDTOMapper cinemaDTOMapper = new CinemaDTOMapper();
     @Mock
@@ -38,7 +41,7 @@ class CinemaServiceTest {
     @BeforeEach
     void setUp() {
 
-        underTest = new CinemaService(cinemaDAO, cinemaDTOMapper, rabbitMqMessageProducer);
+        underTest = new CinemaService(cinemaDAO, cinemaDTOMapper, rabbitMqMessageProducer,seatClient);
 
     }
 
@@ -57,7 +60,7 @@ class CinemaServiceTest {
         when(cinemaDAO.selectCinemaById(cinema_id)).thenReturn(Optional.of(cinema));
 
         CinemaDTO expected = cinemaDTOMapper.apply(cinema);
-        CinemaDTO actual = underTest.getCinema(cinema_id);
+        CinemaDTO actual = underTest.getCinemaById(cinema_id);
         assertThat(actual).isEqualTo(expected);
         verify(cinemaDAO).selectCinemaById(cinema_id);
     }

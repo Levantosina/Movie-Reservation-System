@@ -32,10 +32,10 @@ public class CinemaController {
         return ResponseEntity.ok( cinemaService.getAllCinemas());
     }
 
-    @GetMapping("/cinemaId/{cinemaId}")
+    @GetMapping("/{cinemaId}")
     public ResponseEntity<?> getCinemaById(@PathVariable("cinemaId") Long cinemaId) {
 
-        return ResponseEntity.ok( cinemaService.getCinema(cinemaId));
+        return ResponseEntity.ok( cinemaService.getCinemaById(cinemaId));
     }
 
     @GetMapping("/name/{cinemaName}")

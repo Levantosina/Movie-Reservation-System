@@ -5,9 +5,9 @@ import com.movie.amqp.RabbitMqMessageProducer;
 
 import com.movie.client.notification.NotificationRequest;
 import com.movie.common.UserDTO;
-import com.movie.users.users.exception.DuplicateResourceException;
+import com.movie.exceptions.DuplicateResourceException;
+import com.movie.exceptions.ResourceNotFoundException;
 
-import com.movie.users.users.exception.ResourceNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -21,8 +21,7 @@ public record UserRegistrationRequest(
         @NotBlank(message = "Email is required")
         String email,
         @NotBlank(message = "Password is required")
-        String password,
-        String roleName
+        String password
 
 
 ) {

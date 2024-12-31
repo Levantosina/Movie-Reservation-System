@@ -1,6 +1,7 @@
 package com.movie.schedules.movieschedules;
 
 
+import com.movie.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,7 @@ public class MovieScheduleController {
             }
             return ResponseEntity.badRequest().body(errorMessage);
         }
+
         movieScheduleService.createSchedule(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -86,6 +88,18 @@ public class MovieScheduleController {
     @GetMapping("/cinema/{cinemaId}/movie/{movieId}")
     public List<MovieScheduleDTO> getScheduleByDate(@PathVariable("cinemaId") Long cinemaId, @PathVariable("movieId") Long movieId) {
         return movieScheduleService.findByCinemaIdAndMovieId(cinemaId, movieId);
+    }
+
+    @PutMapping("/{scheduleId}/decrease")
+    public ResponseEntity<?> decreaseAvailableSeats(@PathVariable Long scheduleId) {
+        try {
+            movieScheduleService.decreaseAvailableSeats(scheduleId);
+            return ResponseEntity.ok("Available seats decreased successfully");
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @DeleteMapping("{scheduleId}")

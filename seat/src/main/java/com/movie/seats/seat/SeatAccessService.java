@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -105,6 +106,9 @@ public class SeatAccessService implements SeatDAO{
 
     }
 
+
+
+
     @Override
     public boolean isSeatOccupied(Long seatId) {
         var sql = """
@@ -157,5 +161,6 @@ public class SeatAccessService implements SeatDAO{
                 """;
             jdbcTemplate.update(sql, updateSeat.isOccupied(), updateSeat.getSeatId());
         }
+
 
 }

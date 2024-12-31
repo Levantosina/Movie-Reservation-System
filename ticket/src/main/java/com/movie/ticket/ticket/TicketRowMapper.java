@@ -16,7 +16,7 @@ public class TicketRowMapper implements RowMapper<Ticket> {
     @Override
     public Ticket mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Ticket.builder()
-                .seatId(rs.getLong("ticket_id"))
+                .ticketId(rs.getLong("ticket_id"))
                 .userId(rs.getLong("user_id"))
                 .movieId(rs.getLong("movie_id"))
                 .cinemaId(rs.getLong("cinema_id"))

@@ -2,12 +2,11 @@ package com.movie.movie.movie;
 
 import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.notification.NotificationRequest;
-import com.movie.movie.exception.DuplicateResourceException;
 
 
-import com.movie.movie.exception.MovieRequestValidationException;
-
-import com.movie.movie.exception.ResourceNotFoundException;
+import com.movie.exceptions.DuplicateResourceException;
+import com.movie.exceptions.RequestValidationException;
+import com.movie.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,7 @@ public class MovieService {
         return  movieDAO.selectMovieById(movieId)
                 .map(movieDTOMapper)
                 .orElseThrow(
-                        () -> new MovieRequestValidationException(
+                        () -> new RequestValidationException(
                                 "Movie with id [%s] not found".
                                         formatted(movieId)));
 
@@ -118,10 +117,11 @@ public class MovieService {
         }
 
         if(!changes){
-            throw  new MovieRequestValidationException("No changes detected");
+            throw  new RequestValidationException("No changes detected");
         }
         log.info("Updating movie: {}", movie);
 
         movieDAO.updateMovie(movie);
     }
+
 }

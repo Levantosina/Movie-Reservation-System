@@ -1,10 +1,10 @@
 package com.movie.schedules.movieschedules;
 
 import com.movie.client.seatClient.SeatClient;
-import com.movie.schedules.exception.ResourceNotFoundException;
-import com.movie.schedules.exception.ScheduleRequestValidationException;
+import com.movie.common.TotalSeatsDTO;
+import com.movie.exceptions.RequestValidationException;
+import com.movie.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
-import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,25 +40,25 @@ import java.util.stream.Collectors;
 
     public void createSchedule(MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
 
-        int totalSeats;
-        if (movieScheduleRegistrationRequest.availableSeats() == null) {
-            totalSeats = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
-        } else {
-            totalSeats = movieScheduleRegistrationRequest.availableSeats();
+        TotalSeatsDTO totalSeatsDTO = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
+
+        if (totalSeatsDTO == null || totalSeatsDTO.getTotalSeats() == null) {
+            throw new RuntimeException("Unable to fetch seat data for the specified cinema.");
         }
+        ///ADD EXEPTION!!!!!!!!!!!!!!!!!!!!
 
         MovieSchedule movieSchedule = new MovieSchedule();
 
         movieSchedule.setDate(movieScheduleRegistrationRequest.date());
         movieSchedule.setStartTime(movieScheduleRegistrationRequest.startTime());
         movieSchedule.setEndTime(movieScheduleRegistrationRequest.endTime());
-        movieSchedule.setAvailableSeats(totalSeats);
+        movieSchedule.setAvailableSeats(totalSeatsDTO.totalSeats());
         movieSchedule.setCinemaId(movieScheduleRegistrationRequest.cinemaId());
         movieSchedule.setMovieId(movieScheduleRegistrationRequest.movieId());
+
+
         movieScheduleDAO.createSchedule(movieSchedule);
-
     }
-
         public List<MovieScheduleDTO> findByCinemaId(Long cinemaId) {
             return movieScheduleDAO.selectSchedulesByCinemaId(cinemaId)
                     .stream()
@@ -132,11 +132,22 @@ import java.util.stream.Collectors;
             }
 
             if (!changes) {
-                throw new ScheduleRequestValidationException("No changes detected");
+                throw new RequestValidationException("No changes detected");
             }
 
             movieScheduleDAO.upDateSchedule(schedule);
         }
+
+
+    public void decreaseAvailableSeats(Long scheduleId) {
+        MovieSchedule schedule = movieScheduleDAO.selectScheduleById(scheduleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
+        if (schedule.getAvailableSeats() <= 0) {
+            throw new IllegalArgumentException("No available seats for this schedule");
+        }
+        int updatedSeats = schedule.getAvailableSeats() - 1;
+        movieScheduleDAO.updateAvailableSeats(scheduleId,updatedSeats);
+    }
 
         public void deleteSchedule(Long scheduleId) {
             movieScheduleDAO.deleteSchedule(scheduleId);

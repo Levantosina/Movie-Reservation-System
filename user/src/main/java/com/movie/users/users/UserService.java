@@ -6,10 +6,11 @@ import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.notification.NotificationRequest;
 import com.movie.common.UserDTO;
 
-import com.movie.users.users.exception.DuplicateResourceException;
-import com.movie.users.users.exception.InvalidRoleException;
-import com.movie.users.users.exception.RequestValidationException;
-import com.movie.users.users.exception.ResourceNotFoundException;
+
+import com.movie.exceptions.DuplicateResourceException;
+import com.movie.exceptions.RequestValidationException;
+import com.movie.exceptions.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  * @project MovieReservationSystem
  */
 @Service
+@Slf4j
 public class UserService {
 
     private final UserDAO userDAO;
@@ -57,6 +59,14 @@ public class UserService {
                                 "User with id [%s] not found".
                                         formatted(id)));
     }
+    public UserDTO getUserByUsername(String username) {
+        return userDAO.selectUserByEmail(username)
+                .map(userDTOMapper)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "User with username [%s] not found".
+                                        formatted(username)));
+    }
 
     public void registerUser(UserRegistrationRequest userRegistrationRequest) {
         Optional<User> existingUser = userDAO.selectUserByEmail(userRegistrationRequest.email());
@@ -64,17 +74,6 @@ public class UserService {
             throw new DuplicateResourceException("Email is already taken");
         }
 
-        String roleName = userRegistrationRequest.roleName();
-        Role role;
-        try {
-            role = Role.valueOf(roleName);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidRoleException("Invalid role. Only regular users can register.");
-        }
-
-        if (!"ROLE_USER".equals(roleName)) {
-            throw new InvalidRoleException("Invalid role. Only regular users can register.");
-        }
 
         User user = new User();
         user.setFirstName(userRegistrationRequest.firstName());
@@ -84,14 +83,9 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(userRegistrationRequest.password());
         user.setPassword(encodedPassword);
 
-        user.setRole(role);
+        user.setRole(Role.ROLE_USER);
 
         userDAO.insertUser(user);
-
-        Optional<User> savedUser = userDAO.selectUserByEmail(user.getEmail());
-        if (savedUser.isPresent()) {
-            user.setUserId(savedUser.get().getUserId());
-        }
 
         NotificationRequest notificationRequest = new NotificationRequest(
                 user.getUserId(),
@@ -104,7 +98,10 @@ public class UserService {
                 "internal.exchange",
                 "internal.notification.routing-key"
         );
+
+        log.info("User registered with ID: {}", user.getUserId());
     }
+
 
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
         User user = userDAO.selectUserById(userId)

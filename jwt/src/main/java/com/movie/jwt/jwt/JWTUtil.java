@@ -6,6 +6,8 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -81,6 +83,14 @@ public class JWTUtil {
                 .build();
         Claims claims = jwtParser.parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    public String getTokenFromSecurityContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getCredentials() != null) {
+            return authentication.getCredentials().toString();
+        }
+        return null;
     }
 
 }

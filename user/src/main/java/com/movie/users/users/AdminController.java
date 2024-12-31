@@ -3,8 +3,8 @@ package com.movie.users.users;
 
 
 import com.movie.common.UserDTO;
+import com.movie.exceptions.ResourceNotFoundException;
 import com.movie.jwt.jwt.JWTUtil;
-import com.movie.users.users.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

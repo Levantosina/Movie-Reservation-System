@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
 
     @Override
     public void createSchedule(MovieSchedule movieSchedule) {
+
        String sql = """
             INSERT INTO schedules (date, start_time, end_time,available_seats,cinema_id,movie_id)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -49,6 +51,16 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
                 movieSchedule.getMovieId());
 
         log.info("Schedule created: " + movieSchedule);
+    }
+
+    public boolean scheduleExists(Long cinemaId, Long movieId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        String sql = """
+        SELECT COUNT(*) 
+        FROM schedules 
+        WHERE cinema_id = ? AND movie_id = ? AND date = ? AND start_time = ? AND end_time = ?
+        """;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cinemaId, movieId, date, startTime, endTime);
+        return count != null && count > 0;
     }
     @Override
     public List<MovieSchedule> selectAllSchedules() {
@@ -157,5 +169,18 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
         String sql = "DELETE FROM schedules WHERE schedule_id = ?";
         jdbcTemplate.update(sql, scheduleId);
     }
+
+    @Transactional
+    public void updateAvailableSeats(Long scheduleId, int availableSeats) {
+        String sql = """
+        UPDATE schedules 
+        SET available_seats = ? 
+        WHERE schedule_id = ?
+    """;
+        jdbcTemplate.update(sql, availableSeats, scheduleId);
+        log.info("Updated available seats to {} for schedule ID {}", availableSeats, scheduleId);
+    }
+
+
 
 }

@@ -27,15 +27,15 @@
 		<module>common</module>
 		<module>client</module>
 		<module>jwt</module>
-		<module>user</module>
+		<module>exceptions</module>
 		<module>api-gateway</module>
 		<module>notification</module>
+		<module>user</module>
 		<module>movie</module>
 		<module>cinema</module>
 		<module>seat</module>
 		<module>schedule</module>
         <module>ticket</module>
-        <module>exceptions</module>
     </modules>
 	<scm>
 		<connection/>

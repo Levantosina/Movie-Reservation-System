@@ -24,11 +24,6 @@ public record MovieScheduleRegistrationRequest(
         @JsonProperty("end_time")
         LocalTime endTime,
 
-        @JsonProperty("available_seats")
-        @NotNull(message = "Available seats cannot be null")
-        @Positive(message = "Available seats must be a positive number")
-        Integer availableSeats,
-
         @JsonProperty("cinema_id")
         @NotNull(message = "Cinema ID cannot be null")
         Long cinemaId,

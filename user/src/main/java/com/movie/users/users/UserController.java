@@ -3,8 +3,8 @@ package com.movie.users.users;
 
 
 import com.movie.common.UserDTO;
+import com.movie.exceptions.ResourceNotFoundException;
 import com.movie.jwt.jwt.JWTUtil;
-import com.movie.users.users.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author DMITRII LEVKIN on 22/09/2024
@@ -50,7 +49,7 @@ public class UserController {
 
         log.info("New customer registration: {}", userRegistrationRequest);
         userService.registerUser(userRegistrationRequest);
-        String jwtToken = jwtUtil.issueToken(userRegistrationRequest.email(),userRegistrationRequest.roleName().toString());
+        String jwtToken = jwtUtil.issueToken(userRegistrationRequest.email(),"ROLE_USER");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION,jwtToken)
@@ -68,5 +67,13 @@ public class UserController {
         userService.deleteUserById(userId);
     }
 
-
+    @GetMapping("/userName/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
+        try {
+            UserDTO user = userService.getUserByUsername(username);
+            return ResponseEntity.ok(user);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

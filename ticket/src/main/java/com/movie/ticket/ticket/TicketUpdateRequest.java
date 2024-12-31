@@ -20,6 +20,9 @@ public record TicketUpdateRequest(
     Long cinemaId,
     @NotNull(message = "ScheduleId id is required")
     Long scheduleId,
+
+    @NotNull(message = "Seat id is required")
+    Long seatId,
     @NotNull(message = "Price is required")
     @Positive(message = "Available seats must be a positive number")
     BigDecimal price,

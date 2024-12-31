@@ -1,11 +1,14 @@
 package com.movie.ticket.ticket;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,5 +30,20 @@ public class TicketController {
     public ResponseEntity<?> getAllTickets(){
         List<TicketDTO> scheduleDTO = ticketService.getAllTickets();
         return ResponseEntity.ok(scheduleDTO);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createTicket(@Valid @RequestBody TicketRegistrationRequest ticketRegistrationRequest,
+                                               BindingResult bindingResult) {
+        List<String> errorMessage= new ArrayList<>();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage.add(error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+
+     ticketService.createTicket(ticketRegistrationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

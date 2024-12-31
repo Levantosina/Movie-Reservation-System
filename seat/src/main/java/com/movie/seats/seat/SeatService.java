@@ -8,20 +8,21 @@ package com.movie.seats.seat;
 import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.cinemaClient.CinemaClient;
 import com.movie.client.notification.NotificationRequest;
-import com.movie.seats.exception.ResourceNotFoundException;
-import com.movie.seats.exception.SeatNotFoundException;
-import com.movie.seats.exception.SeatRequestValidationException;
+import com.movie.common.CinemaDTO;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-
+import com.movie.exceptions.RequestValidationException;
+import com.movie.exceptions.ResourceNotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ import java.util.List;
  * @project MovieReservationSystem
  */
 @Service
+@Slf4j
 public class SeatService {
 
     private final SeatDAO seatDAO;
@@ -46,6 +48,8 @@ public class SeatService {
 
     @Value("${seats.resources}")
     private Resource csvFilePath;
+
+
 
 
     public SeatService(@Qualifier("seatJdbc") SeatDAO seatDAO, SeatDTOMapper seatDTOMapper, CinemaClient cinemaClient, RabbitMqMessageProducer rabbitMqMessageProducer) {
@@ -67,18 +71,39 @@ public class SeatService {
         return seatDAO.selectSeatById(seatId)
                 .map(seatDTOMapper)
                 .orElseThrow(
-                        () -> new SeatNotFoundException("Seat with id [%s] not found".formatted(seatId))
+                        () -> new ResourceNotFoundException("Seat with id [%s] not found".formatted(seatId))
                 );
     }
 
+    public BigDecimal getSeatPrice(String seatType) {
+        return SeatType.getPriceByType(seatType);
+    }
+
+    public BigDecimal getSeatPrice(Long seatId) {
+        Optional<Seat> seatOptional = seatDAO.selectSeatById(seatId);
+        if (seatOptional.isPresent()) {
+            Seat seat = seatOptional.get();
+            SeatType seatType = SeatType.valueOf(seat.getType().toUpperCase());
+            return seatType.getPrice();
+        } else {
+            throw new ResourceNotFoundException("Seat not found with ID: " + seatId);
+        }
+
+}
+
     public void registerNewSeat(SeatRegistrationRequest seatRegistrationRequest) {
+
         Seat seat = new Seat();
         seat.setSeatNumber(seatRegistrationRequest.seatNumber());
         seat.setRow(seatRegistrationRequest.row());
-        seat.setType(seatRegistrationRequest.type());
         seat.setCinemaId(seatRegistrationRequest.cinemaId());
         seat.setOccupied(seatRegistrationRequest.isOccupied());
+
+        SeatType seatType = SeatType.valueOf(seatRegistrationRequest.type().toUpperCase());
+        seat.setType(seatType.name());
+
         seatDAO.insertSeat(seat);
+
 
 
         NotificationRequest notificationRequest = new NotificationRequest(
@@ -92,12 +117,14 @@ public class SeatService {
         );
     }
 
-    public List<SeatDTO> getSeatsByCinema(Long cinemaId) {
+    public List<SeatDTO> getSeatsByCinema(CinemaDTO cinemaDTO) {
+        Long cinemaId = cinemaDTO.cinemaId();
         return seatDAO.selectSeatsByCinemaId(cinemaId)
                 .stream()
                 .map(seatDTOMapper)
                 .collect(Collectors.toList());
     }
+
 
     public void  updateSeat(Long seatId,SeatUpdateRequest seatUpdateRequest){
         Seat seat = seatDAO.selectSeatById(seatId)
@@ -135,16 +162,15 @@ public class SeatService {
         }
 
         if (!changes) {
-            throw new SeatRequestValidationException("No changes detected");
+            throw new RequestValidationException("No changes detected");
         }
             seatDAO.updateSeat(seat);
 
     }
 
     @PostConstruct
-
     public void loadSeatsFromCSV() {
-        try (CSVReader csvReader = new CSVReader(new InputStreamReader(csvFilePath.getInputStream()))){
+        try (CSVReader csvReader = new CSVReader(new InputStreamReader(csvFilePath.getInputStream()))) {
             String[] values;
             boolean headerSkipped = false;
 
@@ -158,7 +184,8 @@ public class SeatService {
                 List<String> rows = parseRows(values[1]);
                 JSONObject details = new JSONObject(values[2].replace("'", "\""));
 
-                Long cinemaId = getCinemaId(cinemaName);
+                System.out.println("Processing cinema: " + cinemaName); // Log cinema name
+                Long cinemaId = getCinema(cinemaName);
                 if (cinemaId != null) {
                     for (String row : rows) {
                         String seatDetails = details.getString(row);
@@ -229,16 +256,15 @@ public class SeatService {
         return Integer.parseInt(parts[0]);
     }
 
-    Long getCinemaId(String cinemaName) {
-        if (cinemaMap.containsKey(cinemaName)) {
-            return cinemaMap.get(cinemaName);
+    private Long getCinema(String cinemaName) {
+        log.info("Fetching CinemaDTO for: {} ",cinemaName);
+        Long id = cinemaClient.getCinemaIdByName(cinemaName);
+        log.info(" CinemaDTO : {} ",id);
+        if (id == null) {
+            log.info("Cinema not found:{} ", cinemaName);
         }
 
-        Long cinemaId = cinemaClient.getCinemaIdByName(cinemaName);
-        if (cinemaId != null) {
-            cinemaMap.put(cinemaName, cinemaId);
-        }
-        return cinemaId;
+        return id;
     }
 
     public int getTotalSeatsByCinemaId(Long cinemaId) {
@@ -250,14 +276,30 @@ public class SeatService {
         return seatDAO.selectSeatById(seatId)
                 .map(Seat::isOccupied)
                 .orElseThrow(
-                        () -> new SeatNotFoundException("Seat with id [%s] not found".formatted(seatId))
+                        () -> new ResourceNotFoundException("Seat with id [%s] not found".formatted(seatId))
                 );
     }
 
     public void updateSeatOccupation(Long seatId, boolean occupied) {
-        seatDAO.selectSeatById(seatId).ifPresent(seat -> {
-            seat.setOccupied(occupied);
-            seatDAO.insertSeat(seat);
-        });
+        Seat seat = seatDAO.selectSeatById(seatId)
+                .orElseThrow(() -> new ResourceNotFoundException("Seat with id [%s] not found".formatted(seatId)));
+
+        if (seat.isOccupied()) {
+            throw new IllegalArgumentException("This seat is already booked.");
+        }
+        seat.setOccupied(occupied);
+        seatDAO.updateSeat(seat);
+
+        if (occupied) {
+            NotificationRequest notificationRequest = new NotificationRequest(
+                    seat.getCinemaId(), "Seat Booked", "The seat " + seat.getSeatNumber() + " in row " + seat.getRow() + " has been booked."
+            );
+
+            rabbitMqMessageProducer.publish(
+                    notificationRequest,
+                    "internal.exchange",
+                    "internal.notification.routing-key"
+            );
+        }
     }
 }

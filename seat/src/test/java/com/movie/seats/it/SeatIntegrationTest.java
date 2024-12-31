@@ -3,7 +3,6 @@ package com.movie.seats.it;
 import com.movie.jwt.jwt.JWTUtil;
 
 import com.movie.seats.SeatApp;
-import com.movie.seats.exception.GlobalExceptions;
 import com.movie.seats.exception.SeatNotFoundException;
 import com.movie.seats.seat.*;
 import lombok.extern.slf4j.Slf4j;

@@ -2,8 +2,12 @@ package com.movie.ticket.ticket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,19 +39,27 @@ public class TicketAccessService implements TicketDAO  {
 
   @Override
     public void createOneTicket(Ticket ticket) {
-        var sql = """
+      log.info("Creating ticket for ticketId: {} userId: {}, movieId: {}", ticket.getTicketId(), ticket.getUserId(), ticket.getMovieId());
+
+      var sql =
+              """
                 INSERT INTO ticket (user_id,movie_id,cinema_id,seat_id,schedule_id,price,date)
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
-        jdbcTemplate.update(sql,
-                ticket.getUserId(),
-                ticket.getCinemaId(),
-                ticket.getMovieId(),
-                ticket.getSeatId(),
-                ticket.getScheduleId(),
-                ticket.getPrice(),
-                ticket.getDate());
-    }
+      KeyHolder keyHolder = new GeneratedKeyHolder();
+
+      jdbcTemplate.update(connection -> {
+          PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+          ps.setLong(1, ticket.getUserId());
+          ps.setLong(2, ticket.getMovieId());
+          ps.setLong(3, ticket.getCinemaId());
+          ps.setLong(4, ticket.getSeatId());
+          ps.setLong(5, ticket.getScheduleId());
+          ps.setBigDecimal(6, ticket.getPrice());
+          ps.setDate(7, new java.sql.Date(ticket.getDate().getTime()));
+          return ps;
+      }, keyHolder);
+      }
 
     @Override
     public void updateTicket(Ticket updatTicket) {

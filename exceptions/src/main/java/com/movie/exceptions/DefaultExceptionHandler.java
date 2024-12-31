@@ -103,6 +103,17 @@ public class DefaultExceptionHandler {
     public ResponseEntity<String> handleSeatRequestValidationException(RequestValidationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(AlreadyOccupiedException.class)
+    public ResponseEntity<String> handleAlreadyOccupiedException(AlreadyOccupiedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    @ExceptionHandler(HandleRuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(HandleRuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+
+
 
 
     ///ADD NEW!!!!!!!!!!!!!!!!!!!!

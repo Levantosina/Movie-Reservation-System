@@ -1,9 +1,10 @@
 package com.movie.cinema.cinema;
 
 import com.movie.amqp.RabbitMqMessageProducer;
-import com.movie.cinema.exception.DuplicateResourceException;
-import com.movie.cinema.exception.ResourceNotFoundException;
 import com.movie.client.notification.NotificationRequest;
+import com.movie.client.seatClient.SeatClient;
+import com.movie.exceptions.DuplicateResourceException;
+import com.movie.exceptions.ResourceNotFoundException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.annotation.PostConstruct;
@@ -27,14 +28,17 @@ public class CinemaService {
     private final CinemaDTOMapper cinemaDTOMapper;
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
+    private final SeatClient seatClient;
+
     @Getter
     private Map<String, Long> cinemaMap = new HashMap<>();
 
 
-    public CinemaService(@Qualifier("cinemaJdbc") CinemaDAO cinemaDAO, CinemaDTOMapper cinemaDTOMapper, RabbitMqMessageProducer rabbitMqMessageProducer) {
+    public CinemaService(@Qualifier("cinemaJdbc") CinemaDAO cinemaDAO, CinemaDTOMapper cinemaDTOMapper, RabbitMqMessageProducer rabbitMqMessageProducer, SeatClient seatClient) {
         this.cinemaDAO = cinemaDAO;
         this.cinemaDTOMapper = cinemaDTOMapper;
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
+        this.seatClient = seatClient;
     }
     public List<CinemaDTO> getAllCinemas() {
         return cinemaDAO.selectAllCinemas()
@@ -42,7 +46,7 @@ public class CinemaService {
                 .map(cinemaDTOMapper)
                 .collect(Collectors.toList());
     }
-    public CinemaDTO getCinema(Long id) {
+    public CinemaDTO getCinemaById(Long id) {
         return cinemaDAO.selectCinemaById(id)
                 .map(cinemaDTOMapper)
                 .orElseThrow(
@@ -113,8 +117,4 @@ public class CinemaService {
             e.printStackTrace();
         }
     }
-
-
-
-
 }
