@@ -151,7 +151,7 @@ class SeatServiceTest {
         when(seatDAO.countSeatsByCinemaId(cinemaDTO.cinemaId())).thenReturn(expected);
 
 
-        int actual = seatService.getTotalSeatsByCinemaId(cinemaDTO);
+        int actual = seatService.getTotalSeatsByCinemaId(cinemaId);
 
 
         assertThat(actual).isEqualTo(expected);

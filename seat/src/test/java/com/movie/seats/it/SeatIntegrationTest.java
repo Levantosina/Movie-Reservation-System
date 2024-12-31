@@ -1,9 +1,11 @@
 package com.movie.seats.it;
 
+import com.movie.exceptions.DefaultExceptionHandler;
+import com.movie.exceptions.ResourceNotFoundException;
 import com.movie.jwt.jwt.JWTUtil;
 
 import com.movie.seats.SeatApp;
-import com.movie.seats.exception.SeatNotFoundException;
+
 import com.movie.seats.seat.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +32,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @SpringBootTest(classes = SeatApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
-@Import(GlobalExceptions.class)
+@Import(DefaultExceptionHandler.class)
 public class SeatIntegrationTest {
 
     @Autowired
@@ -97,7 +99,7 @@ public class SeatIntegrationTest {
         Long nonExistentSeatId = 999L;
 
         when(seatService.getSeat(nonExistentSeatId))
-                .thenThrow(new SeatNotFoundException("Seat with id [%s] not found".formatted(nonExistentSeatId)));
+                .thenThrow(new ResourceNotFoundException("Seat with id [%s] not found".formatted(nonExistentSeatId)));
 
         webTestClient.get()
                 .uri(SEAT_PATH + "/" + nonExistentSeatId)
