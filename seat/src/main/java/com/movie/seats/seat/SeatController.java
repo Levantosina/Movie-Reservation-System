@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author DMITRII LEVKIN on 26/09/2024
@@ -51,6 +51,7 @@ public class SeatController {
         return seatService.getAllSeats();
     }
 
+
     @GetMapping("/{seatId}")
     public ResponseEntity<SeatDTO> getSeat(@PathVariable("seatId") Long seatId) {
         SeatDTO seatDTO = seatService.getSeat(seatId);
@@ -58,18 +59,12 @@ public class SeatController {
     }
 
 
-    @GetMapping("/cinema")
-    public List<SeatDTO> getAllSeatsByCinema(@RequestBody CinemaDTO cinemaDTO) {
-        log.info("Fetching seats for cinema: {}", cinemaDTO);
-        return seatService.getSeatsByCinema(cinemaDTO);
+    @GetMapping("/cinema/{cinemaId}")
+    public List<SeatDTO> getSeatsByCinema(@PathVariable Long cinemaId) {
+        log.info("Fetching seats for cinema with ID: {}", cinemaId);
+        return seatService.getSeatsByCinema(cinemaId);
     }
 
-
-    @PostMapping("/cinema")
-    public List<SeatDTO> getSeatsByCinema(@RequestBody CinemaDTO cinemaDTO) {
-        log.info("Fetching seats for cinema: {}", cinemaDTO);
-        return seatService.getSeatsByCinema(cinemaDTO);
-    }
 
     @GetMapping("/cinema/{cinemaId}/total-seats")
     public int getTotalSeatsByCinema(@PathVariable Long cinemaId) {

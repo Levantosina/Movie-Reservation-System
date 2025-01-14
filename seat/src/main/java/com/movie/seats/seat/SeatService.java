@@ -117,8 +117,8 @@ public class SeatService {
         );
     }
 
-    public List<SeatDTO> getSeatsByCinema(CinemaDTO cinemaDTO) {
-        Long cinemaId = cinemaDTO.cinemaId();
+    public List<SeatDTO> getSeatsByCinema(Long cinemaId) {
+       // Long cinemaId = cinemaDTO.cinemaId();
         return seatDAO.selectSeatsByCinemaId(cinemaId)
                 .stream()
                 .map(seatDTOMapper)
