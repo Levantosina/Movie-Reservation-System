@@ -49,8 +49,8 @@ public class AuthorizationIntegrationTest {
                 firstName,
                 lastName,
                 email,
-                password,
-                role
+                password
+
         );
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(
@@ -96,7 +96,7 @@ public class AuthorizationIntegrationTest {
         assertThat(userDTO.firstName()).isEqualTo(firstName);
         assertThat(userDTO.lastName()).isEqualTo(lastName);
         assertThat(userDTO.email()).isEqualTo(email);
-        assertThat(userDTO.role_name()).isEqualTo(role);
+        assertThat(userDTO.roleName()).isEqualTo(role);
 
     }
 }
