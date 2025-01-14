@@ -100,7 +100,7 @@ class SeatServiceTest {
         when(seatDAO.selectSeatsByCinemaId(cinemaDTO.cinemaId())).thenReturn(List.of(seat));
 
         SeatDTO expected = seatDTOMapper.apply(seat);
-        List<SeatDTO> actual = underTest.getSeatsByCinema(cinemaDTO);
+        List<SeatDTO> actual = underTest.getSeatsByCinema(cinemaId);
 
         assertThat(actual).hasSize(1);
         assertThat(actual.get(0)).isEqualTo(expected);
