@@ -124,4 +124,8 @@ public class MovieService {
         movieDAO.updateMovie(movie);
     }
 
+    public boolean existsById(long movieId) {
+        return movieDAO.existMovieWithId(movieId);
+    }
+
 }
