@@ -60,8 +60,8 @@ public class JWTUtil {
     }
 
     public boolean isTokenValid(String jwt, String username) {
-        String subject = getSubject(jwt);
-        return subject.equals(username) && !isTokenExpired(jwt);
+        String extractedUsername = getSubject(jwt);
+        return extractedUsername.equals(username) && !isTokenExpired(jwt);
     }
 
     private boolean isTokenExpired(String jwt) {
@@ -86,9 +86,9 @@ public class JWTUtil {
     }
 
     public String getTokenFromSecurityContext() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getCredentials() != null) {
-            return authentication.getCredentials().toString();
+            return authentication.getCredentials().toString(); // Return the token
         }
         return null;
     }
