@@ -3,13 +3,12 @@ package com.movie.client.seatClient;
 
 import com.movie.common.SeatDTO;
 import com.movie.common.TotalSeatsDTO;
+import com.movie.jwt.jwt.FeignClientConfiguration;
 import com.movie.jwt.jwt.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 /**
  * @author DMITRII LEVKIN on 04/10/2024
@@ -23,8 +22,13 @@ public interface SeatClient {
     @GetMapping(value = "/api/v1/seats/{id}")
     SeatDTO getSeatById(@PathVariable("id") Long seatId);
 
+    @PostMapping("/api/v1/seats/{seatId}/update-occupation")
+    void updateSeatOccupation(@PathVariable("seatId") Long seatId, @RequestBody boolean isOccupied);
 
-    @PostMapping("/{seatId}/update-occupation")
-    ResponseEntity<?> updateSeatOccupation(@PathVariable("seatId") Long seatId, @RequestBody boolean isOccupied);
+    @GetMapping("/api/v1/seats/{seatId}/price")
+    BigDecimal getSeatPriceById(@PathVariable("seatId") Long seatId);
+
+    @GetMapping("/api/v1/seats/price/{seatType}")
+    BigDecimal getSeatPriceByType(@PathVariable("seatType") String seatType);
 
 }
