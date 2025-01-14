@@ -117,4 +117,8 @@ public class CinemaService {
             e.printStackTrace();
         }
     }
+
+    public boolean existsById(long cinemaId) {
+        return cinemaDAO.existsById(cinemaId);
+    }
 }
