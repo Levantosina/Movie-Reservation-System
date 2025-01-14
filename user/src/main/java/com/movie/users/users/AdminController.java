@@ -81,8 +81,13 @@ public class AdminController { ///only admin
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetAdminPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+        log.info("Admin password reset requested for user: {}", passwordResetRequest.userName());
         adminService.resetAdminPassword(passwordResetRequest.userName(), passwordResetRequest.newPassword());
-        return ResponseEntity.ok("Password reset successfully");
+        String jwtToken = jwtUtil.issueToken(passwordResetRequest.userName(), "ROLE_ADMIN");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION,  jwtToken)
+                .body("Password reset successfully");
     }
 
     @GetMapping("/{id}")
