@@ -30,6 +30,7 @@ public interface MovieScheduleDAO {
 
     void updateAvailableSeats(Long scheduleId, int availableSeats);
     boolean scheduleExists(Long cinemaId, Long movieId, LocalDate date, LocalTime startTime, LocalTime endTime);
-
+    long countSchedulesForMovieOnDate(long movieId, LocalDate scheduleDate);
+    List<MovieSchedule> getSchedulesForCinemaOnDate(long cinemaId, LocalDate date);
 
 }
