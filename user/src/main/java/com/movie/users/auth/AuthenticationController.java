@@ -29,8 +29,10 @@ public class AuthenticationController {
 
     @PostMapping("login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequest request){
+
+        log.info("Request: {}", request);
         AuthenticationResponse response = authenticationService.login(request);
-        log.info("Authenticating user: {}", request.username());
+        log.info("Authenticating user: {}", request.userName());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION,response.token())
                 .body(response);
