@@ -32,12 +32,12 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         Authentication authentication =   authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationRequest.username(),
+                authenticationRequest.userName(),
                 authenticationRequest.password()
         ));
         User principal=(User) authentication.getPrincipal();
         UserDTO userDTO=userDTOMapper.apply(principal);
-        String token= jwtUtil.issueToken(userDTO.email(),userDTO.role_name().toString());
+        String token= jwtUtil.issueToken(userDTO.email(), userDTO.roleName());
         return  new AuthenticationResponse(token,userDTO);
     }
 
