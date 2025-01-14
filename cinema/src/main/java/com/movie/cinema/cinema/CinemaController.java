@@ -63,4 +63,11 @@ public class CinemaController {
         Long cinemaId = cinemaService.getCinemaIdByName(cinemaName);
         return ResponseEntity.ok(cinemaId);
     }
+
+
+    @GetMapping("/{cinemaId}/exists")
+    public ResponseEntity<Boolean> existsById(@PathVariable long cinemaId) {
+        boolean exists = cinemaService.existsById(cinemaId);
+        return ResponseEntity.ok(exists);
+    }
 }
