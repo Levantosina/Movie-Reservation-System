@@ -5,6 +5,6 @@ package com.movie.common;
  * @project MovieReservationSystem
  */
 public record AuthenticationRequest(
-        String username,
+        String userName,
         String password)
 { }
