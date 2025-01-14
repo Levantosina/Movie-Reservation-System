@@ -68,6 +68,14 @@ public class CinemaAccessService implements CinemaDAO{
     jdbcTemplate.update(sql, cinema.getCinemaName(), cinema.getCinemaLocation());
     }
 
+    @Override
+    public boolean existsById(long cinemaId) {
+        var sql = """
+        SELECT COUNT(cinema_id) FROM cinemas WHERE cinema_id = ?
+        """;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cinemaId);
+        return count != null && count > 0;
+    }
 
 
 //    @Override
