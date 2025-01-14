@@ -1,13 +1,17 @@
 package com.movie.schedules.movieschedules;
 
+import com.movie.client.cinemaClient.CinemaClient;
+import com.movie.client.movieClient.MovieClient;
 import com.movie.client.seatClient.SeatClient;
 import com.movie.common.TotalSeatsDTO;
+import com.movie.exceptions.AlreadyOccupiedException;
 import com.movie.exceptions.RequestValidationException;
 import com.movie.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +25,8 @@ import java.util.stream.Collectors;
         private final MovieScheduleDAO movieScheduleDAO;
         private final MovieScheduleDTOMapper movieScheduleDTOMapper;
         private final SeatClient seatClient;
+    private final MovieClient movieClient;
+    private final CinemaClient cinemaClient;
 
 
     public List<MovieScheduleDTO>getAllSchedules(){
@@ -40,26 +46,65 @@ import java.util.stream.Collectors;
 
     public void createSchedule(MovieScheduleRegistrationRequest movieScheduleRegistrationRequest) {
 
+        if (!cinemaClient.existsById(movieScheduleRegistrationRequest.cinemaId())) {
+            throw new ResourceNotFoundException("Cinema with ID " + movieScheduleRegistrationRequest.cinemaId() + " does not exist.");
+        }
+
+
+        if (!movieClient.existsById(movieScheduleRegistrationRequest.movieId())) {
+            throw new ResourceNotFoundException("Movie with ID " + movieScheduleRegistrationRequest.movieId() + " does not exist.");
+        }
+
+        if (movieScheduleRegistrationRequest.startTime().isBefore(LocalTime.of(10, 0)) ||
+                movieScheduleRegistrationRequest.endTime().isAfter(LocalTime.of(22, 0))) {
+            throw new RuntimeException("Schedule time must be between 10:00 AM and 10:00 PM.");
+        }
+
         TotalSeatsDTO totalSeatsDTO = seatClient.getTotalSeatsByCinemaId(movieScheduleRegistrationRequest.cinemaId());
 
         if (totalSeatsDTO == null || totalSeatsDTO.getTotalSeats() == null) {
             throw new RuntimeException("Unable to fetch seat data for the specified cinema.");
         }
-        ///ADD EXEPTION!!!!!!!!!!!!!!!!!!!!
+
+        LocalDate scheduleDate = movieScheduleRegistrationRequest.date();
+        Long movieId = movieScheduleRegistrationRequest.movieId();
+
+        long existingSchedulesCount = movieScheduleDAO.countSchedulesForMovieOnDate(movieId, scheduleDate);
+
+        if (existingSchedulesCount >= 2) {
+            throw new AlreadyOccupiedException("A maximum of 2 showings per day for the same movie is allowed.");
+        }
+
+        List<MovieSchedule> existingSchedules = movieScheduleDAO.getSchedulesForCinemaOnDate(
+                movieScheduleRegistrationRequest.cinemaId(),
+                scheduleDate
+        );
+
+        for (MovieSchedule existingSchedule : existingSchedules) {
+            if (isOverlapping(
+                    movieScheduleRegistrationRequest.startTime(),
+                    movieScheduleRegistrationRequest.endTime(),
+                    existingSchedule.getStartTime(),
+                    existingSchedule.getEndTime())) {
+                throw new RuntimeException("Schedule overlaps with an existing schedule for this cinema.");
+            }
+        }
+
 
         MovieSchedule movieSchedule = new MovieSchedule();
-
-        movieSchedule.setDate(movieScheduleRegistrationRequest.date());
+        movieSchedule.setDate(scheduleDate);
         movieSchedule.setStartTime(movieScheduleRegistrationRequest.startTime());
         movieSchedule.setEndTime(movieScheduleRegistrationRequest.endTime());
         movieSchedule.setAvailableSeats(totalSeatsDTO.totalSeats());
         movieSchedule.setCinemaId(movieScheduleRegistrationRequest.cinemaId());
         movieSchedule.setMovieId(movieScheduleRegistrationRequest.movieId());
-
-
         movieScheduleDAO.createSchedule(movieSchedule);
     }
-        public List<MovieScheduleDTO> findByCinemaId(Long cinemaId) {
+    private boolean isOverlapping(LocalTime newStart, LocalTime newEnd, LocalTime existingStart, LocalTime existingEnd) {
+        return !(newEnd.isBefore(existingStart) || newStart.isAfter(existingEnd));
+    }
+
+    public List<MovieScheduleDTO> findByCinemaId(Long cinemaId) {
             return movieScheduleDAO.selectSchedulesByCinemaId(cinemaId)
                     .stream()
                     .map(movieScheduleDTOMapper)
