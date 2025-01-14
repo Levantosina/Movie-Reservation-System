@@ -71,8 +71,7 @@ class UserServiceTest {
                 "Abra",
                 "Kadabra",
                 email,
-                "password",
-                "ROLE_USER"
+                "password"
         );
 
         String passwordHash = "2331234355";

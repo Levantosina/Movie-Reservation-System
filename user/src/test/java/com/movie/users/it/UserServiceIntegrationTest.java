@@ -46,8 +46,8 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
              firstName,
                 lastName,
                 email,
-                "password",
-                role
+                "password"
+
         );
 
         jwtToken = webTestClient.post()
@@ -118,8 +118,8 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 firstName,
                 lastName,
                 email,
-                "password",
-                role
+                "password"
+
         );
 
         jwtToken=webTestClient.post()
@@ -211,15 +211,15 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 firstName,
                 lastName,
                 email,
-                "password",
-                role
+                "password"
+
         );
         UserRegistrationRequest userRegistrationRequest2= new UserRegistrationRequest(
                 firstName2,
                 lastName2,
                 email2,
-                "password",
-                role2
+                "password"
+
         );
 
         webTestClient.post()
@@ -295,8 +295,8 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 firstName,
                 lastName,
                 email,
-                "password",
-                role
+                "password"
+
         );
 
         long nonExistentUserId = 99L;
@@ -334,8 +334,7 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 "",
                 "",
                 "invalid-email",
-                "",
-                "ROLE_USER"
+                ""
         );
 
         webTestClient.post()
@@ -353,9 +352,9 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
 
         String email = "test@gmail.com";
         UserRegistrationRequest userRegistrationRequest1 = new UserRegistrationRequest(
-                "Test", "Test", email, "password", "ROLE_USER");
+                "Test", "Test", email, "password");
         UserRegistrationRequest userRegistrationRequest2 = new UserRegistrationRequest(
-                "Test2", "Test2", email, "password", "ROLE_USER");
+                "Test2", "Test2", email, "password");
 
         webTestClient.post()
                 .uri(USER_PATH)
