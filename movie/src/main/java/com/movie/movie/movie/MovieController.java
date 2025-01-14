@@ -68,4 +68,10 @@ public class MovieController {
         movieService.updateMovie(movieId,movieUpdateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @GetMapping("/{movieId}/exists")
+    public ResponseEntity<Boolean> existsById(@PathVariable long movieId) {
+        boolean exists = movieService.existsById(movieId);
+        return ResponseEntity.ok(exists);
+    }
 }
