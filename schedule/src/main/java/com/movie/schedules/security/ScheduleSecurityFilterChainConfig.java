@@ -22,16 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class ScheduleSecurityFilterChainConfig {
 
-    private final AuthenticationProvider authenticationProvider;
+
     private final JWTAuthenticationFilter JWTAuthenticationFilter;
 
-
-    private  final AuthenticationEntryPoint authenticationEntryPoint;
-
-    public ScheduleSecurityFilterChainConfig(AuthenticationProvider authenticationProvider, com.movie.jwt.jwt.JWTAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPoint authenticationEntryPoint) {
-        this.authenticationProvider = authenticationProvider;
+    public ScheduleSecurityFilterChainConfig(com.movie.jwt.jwt.JWTAuthenticationFilter jwtAuthenticationFilter) {
         JWTAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
 
