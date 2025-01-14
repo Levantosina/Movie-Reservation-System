@@ -22,16 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class TicketSecurityFilterChainConfig {
 
-    private final AuthenticationProvider authenticationProvider;
+
     private final JWTAuthenticationFilter JWTAuthenticationFilter;
 
 
-    private  final AuthenticationEntryPoint authenticationEntryPoint;
 
     public TicketSecurityFilterChainConfig(AuthenticationProvider authenticationProvider, com.movie.jwt.jwt.JWTAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPoint authenticationEntryPoint) {
-        this.authenticationProvider = authenticationProvider;
         JWTAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
 
@@ -41,10 +38,7 @@ public class TicketSecurityFilterChainConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/ticket/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/movies/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/ticket/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT,"/api/v1/schedules/**").authenticated()
-
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

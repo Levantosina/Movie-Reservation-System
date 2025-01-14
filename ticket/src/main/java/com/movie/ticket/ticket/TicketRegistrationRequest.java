@@ -19,10 +19,5 @@ public record TicketRegistrationRequest (
         @NotNull(message = "Seat id is required")
         Long seatId,
         @NotNull(message = "ScheduleId id is required")
-        Long scheduleId,
-        @NotNull(message = "Price is required")
-        @Positive(message = "Available seats must be a positive number")
-        BigDecimal price,
-        @NotNull(message = "Date is required")
-        Date date
+        Long scheduleId
 ) { }
