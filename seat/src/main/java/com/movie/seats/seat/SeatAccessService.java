@@ -1,5 +1,6 @@
 package com.movie.seats.seat;
 
+import com.movie.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -114,7 +115,12 @@ public class SeatAccessService implements SeatDAO{
         var sql = """
             SELECT is_occupied FROM seats WHERE seat_id = ?
             """;
-            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, seatId));
+
+        Boolean isOccupied = jdbcTemplate.queryForObject(sql, Boolean.class, seatId);
+        if (isOccupied == null) {
+            throw new ResourceNotFoundException("Seat with id [" + seatId + "] not found");
+        }
+            return isOccupied;
 
         }
     @Override
