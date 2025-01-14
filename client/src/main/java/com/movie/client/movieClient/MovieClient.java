@@ -16,4 +16,7 @@ public interface MovieClient {
 
     @GetMapping(value = "/api/v1/movies/{movieId}")
     MovieDTO getMovieById(@PathVariable("movieId") Long movieId);
+
+    @GetMapping("/api/v1/movies/{movieId}/exists")
+    boolean existsById(@PathVariable long movieId);
 }
