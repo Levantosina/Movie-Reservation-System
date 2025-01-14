@@ -12,7 +12,7 @@ public record UserDTO(
         String firstName,
         String lastName,
         String email,
-        @NotBlank String role_name
+        @NotBlank String roleName
 
 
 
