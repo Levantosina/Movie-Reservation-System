@@ -157,7 +157,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
         String userPassword = "password";
 
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(
-                "USER", "USER", userEmail, userPassword, "ROLE_USER");
+                "USER", "USER", userEmail, userPassword);
         User currentUser= new User();
         currentUser.setEmail(userEmail);
         currentUser.setRole(Role.ROLE_USER);
