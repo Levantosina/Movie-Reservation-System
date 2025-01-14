@@ -182,5 +182,22 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
     }
 
 
+    @Override
+    public long countSchedulesForMovieOnDate(long movieId, LocalDate scheduleDate) {
+        String sql = """
+       SELECT COUNT(*) FROM schedules WHERE movie_id = ? AND date = ?
+       """;
+        return jdbcTemplate.queryForObject(sql, Long.class, movieId, scheduleDate);
+    }
+
+    @Override
+    public List<MovieSchedule> getSchedulesForCinemaOnDate(long cinemaId, LocalDate date) {
+        String sql = """
+       SELECT schedule_id, date, start_time, end_time, available_seats, cinema_id, movie_id
+       FROM schedules
+       WHERE cinema_id = ? AND date = ?
+       """;
+        return jdbcTemplate.query(sql, movieScheduleRowMapper, cinemaId, date);
+    }
 
 }
