@@ -25,6 +25,9 @@ public interface CinemaClient {
     @GetMapping(value = "/api/v1/cinemas/{id}")
     CinemaDTO getCinemaById(@PathVariable("id") Long cinemaId);
 
+    @GetMapping("/api/v1/cinemas/{cinemaId}/exists")
+    boolean existsById(@PathVariable long cinemaId);
+
 }
 
 
