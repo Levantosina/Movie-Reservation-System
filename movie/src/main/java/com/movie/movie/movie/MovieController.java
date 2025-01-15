@@ -3,9 +3,11 @@ package com.movie.movie.movie;
 
 
 
+import com.movie.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -41,9 +43,14 @@ public class MovieController {
 
 
     @GetMapping("{movieId}")
-    public ResponseEntity<?> getMovie(@PathVariable("movieId") Long movieId) {
-
+    public ResponseEntity<MovieDTO> getMovie(@PathVariable("movieId") Long movieId) {
         return ResponseEntity.ok(movieService.getMovieById(movieId));
+    }
+
+    @GetMapping("/{movieId}/name")
+    public ResponseEntity<String> getMovieNameById(@PathVariable Long movieId) {
+        String movieName = movieService.getMovieNameById(movieId);
+        return ResponseEntity.ok(movieName);
     }
 
     @PostMapping
@@ -70,8 +77,8 @@ public class MovieController {
     }
 
     @GetMapping("/{movieId}/exists")
-    public ResponseEntity<Boolean> existsById(@PathVariable long movieId) {
-        boolean exists = movieService.existsById(movieId);
-        return ResponseEntity.ok(exists);
+    public ResponseEntity<?> existsById(@PathVariable Long movieId) {
+        movieService.existsById(movieId);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(true);
     }
 }

@@ -11,13 +11,16 @@ public interface MovieDAO {
 
     List<Movie> selectAllMovies();
 
-    Optional<Movie> selectMovieById(Long movieId);
+
 
     Optional<Movie>selectMovieByName(String name);
+
+    Optional<Movie> selectMovieById(Long movieId);
 
     void insertMovie(Movie movie);
 
     void updateMovie(Movie updateMovie);
 
-    boolean existMovieWithId(Long id);
+    boolean  existMovieWithId(Long id);
+
 }
