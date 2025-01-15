@@ -45,10 +45,18 @@ public class MovieService {
         return  movieDAO.selectMovieById(movieId)
                 .map(movieDTOMapper)
                 .orElseThrow(
-                        () -> new RequestValidationException(
+                        () -> new ResourceNotFoundException(
                                 "Movie with id [%s] not found".
                                         formatted(movieId)));
 
+    }
+
+    public String getMovieNameById(Long movieId) {
+        return movieDAO.selectMovieById(movieId)
+                .map(Movie::getMovieName)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Movie with id [%s] not found".formatted(movieId)
+                ));
     }
 
     public void registerNewMovie(MovieRegistrationRequest movieRegistrationRequest){
@@ -124,8 +132,12 @@ public class MovieService {
         movieDAO.updateMovie(movie);
     }
 
-    public boolean existsById(long movieId) {
-        return movieDAO.existMovieWithId(movieId);
+    public boolean existsById(Long movieId) {
+        boolean exists = movieDAO.existMovieWithId(movieId);
+        if (!exists) {
+            throw new ResourceNotFoundException("Movie with ID " + movieId + " does not exist.");
+        }
+        return true;
     }
 
 }
