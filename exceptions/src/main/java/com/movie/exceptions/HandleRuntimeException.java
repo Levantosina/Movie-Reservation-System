@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus; /**
  * @project Movie-Reservation-System
  */
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
+
 public class HandleRuntimeException extends RuntimeException  {
     public HandleRuntimeException(String message){
         super(message);

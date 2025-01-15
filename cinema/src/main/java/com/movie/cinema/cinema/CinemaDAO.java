@@ -20,5 +20,5 @@ public interface CinemaDAO {
 
 
     void insertCinema(Cinema cinema);
-    boolean existsById(long cinemaId);
+    boolean existsById(Long cinemaId);
 }

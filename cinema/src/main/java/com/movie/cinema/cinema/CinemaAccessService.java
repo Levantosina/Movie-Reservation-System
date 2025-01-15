@@ -69,7 +69,7 @@ public class CinemaAccessService implements CinemaDAO{
     }
 
     @Override
-    public boolean existsById(long cinemaId) {
+    public boolean existsById(Long cinemaId) {
         var sql = """
         SELECT COUNT(cinema_id) FROM cinemas WHERE cinema_id = ?
         """;

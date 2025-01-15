@@ -1,5 +1,6 @@
 package com.movie.cinema.cinema;
 
+import com.movie.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -66,8 +67,12 @@ public class CinemaController {
 
 
     @GetMapping("/{cinemaId}/exists")
-    public ResponseEntity<Boolean> existsById(@PathVariable long cinemaId) {
+    public ResponseEntity<?> existsById(@PathVariable long cinemaId) {
         boolean exists = cinemaService.existsById(cinemaId);
-        return ResponseEntity.ok(exists);
+        if (!exists) {
+            throw new ResourceNotFoundException("Cinema with id " + cinemaId + " not found");
+        }
+        return ResponseEntity.ok(true);
     }
+
 }
