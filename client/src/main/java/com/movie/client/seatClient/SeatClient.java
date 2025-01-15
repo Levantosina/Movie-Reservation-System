@@ -3,7 +3,7 @@ package com.movie.client.seatClient;
 
 import com.movie.common.SeatDTO;
 import com.movie.common.TotalSeatsDTO;
-import com.movie.jwt.jwt.FeignClientConfiguration;
+
 import com.movie.jwt.jwt.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

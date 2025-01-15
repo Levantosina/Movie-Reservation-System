@@ -7,24 +7,18 @@ import com.movie.client.notification.NotificationRequest;
 import com.movie.client.scheduleClient.ScheduleClient;
 import com.movie.client.seatClient.SeatClient;
 import com.movie.client.userClient.UserClient;
-import com.movie.common.MovieDTO;
 import com.movie.common.ScheduleDTO;
 import com.movie.common.SeatDTO;
 import com.movie.common.UserDTO;
 import com.movie.exceptions.AlreadyOccupiedException;
-import com.movie.exceptions.DuplicateResourceException;
+import com.movie.exceptions.HandleRuntimeException;
 import com.movie.exceptions.ResourceNotFoundException;
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import javax.xml.crypto.NodeSetData;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +43,7 @@ public class TicketService {
     private final MovieClient movieClient;
 
     private final SeatClient seatClient;
+
     private final ScheduleClient scheduleClient;
 
 
@@ -76,8 +71,11 @@ public class TicketService {
         Ticket ticket = new Ticket();
 
         // Get the current auth_user
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new HandleRuntimeException("Unauthorized user. Please login before proceeding.");
+        }
+        String username = (String) authentication.getPrincipal();
 
 
         // Retrieve user
@@ -106,10 +104,24 @@ public class TicketService {
         }
 
         // validation
-        MovieDTO movieDTO = movieClient.getMovieById(ticketRegistrationRequest.movieId());
-        if (movieDTO == null) {
-            throw new ResourceNotFoundException("Movie not found.");
+
+        try {
+            boolean movieExists = movieClient.existsById(ticketRegistrationRequest.movieId());
+            if (!movieExists) {
+                throw new ResourceNotFoundException("Movie with ID " + ticketRegistrationRequest.movieId() + " does not exist.");
+            }
+        } catch (HandleRuntimeException e) {
+            log.error("Authorization error when accessing movie client: {}", e.getMessage());
+            throw new HandleRuntimeException("Cannot validate movie existence due to authorization restrictions.");
+        } catch (ResourceNotFoundException e) {
+            log.error("Movie resource not found: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Unexpected error occurred when accessing movie service: {}", e.getMessage());
+            throw new HandleRuntimeException("Unable to process the ticket at this time. Please try again later.");
         }
+
+
 
         //validation
         if (scheduleDTO.availableSeats() <= 0) {
@@ -131,7 +143,7 @@ public class TicketService {
 
         // Mark the seat
         seatClient.updateSeatOccupation(ticketRegistrationRequest.seatId(), true);
-
+        String movieName = movieClient.getMovieNameById(ticketRegistrationRequest.movieId());
 
         ticket.setUserId(userDTO.userId());
         ticket.setMovieId(ticketRegistrationRequest.movieId());
@@ -145,7 +157,9 @@ public class TicketService {
 
         ticketDAO.createOneTicket(ticket);
         NotificationRequest notificationRequest = new NotificationRequest(
-                ticket.getTicketId(), "New Ticket created", "The ticket has been created."
+                ticket.getTicketId(),
+                "Ticket Purchased Successfully",
+                String.format("Dear %s, your ticket for the movie '%s' has been successfully booked. Enjoy the movie!",username,movieName)
         );
 
         rabbitMqMessageProducer.publish(
