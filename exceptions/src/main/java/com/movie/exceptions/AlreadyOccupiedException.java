@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @project Movie-Reservation-System
  */
 
-@ResponseStatus(code= HttpStatus.CONFLICT)
+
 public class AlreadyOccupiedException extends RuntimeException {
     public AlreadyOccupiedException(String message) {
 

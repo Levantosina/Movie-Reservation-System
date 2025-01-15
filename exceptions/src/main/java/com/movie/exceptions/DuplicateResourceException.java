@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @project Movie-Reservation-System
  */
 
-@ResponseStatus(code= HttpStatus.CONFLICT)
+
 public class DuplicateResourceException extends RuntimeException{
     public DuplicateResourceException(String message) {
         super(message);
