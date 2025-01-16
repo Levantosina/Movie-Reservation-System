@@ -26,6 +26,7 @@ public interface MovieScheduleDAO {
 
     List<MovieSchedule>selectSchedulesByCinemaId(Long cinemaId);
     List<MovieSchedule>selectSchedulesByMovieId(Long movieId);
+    Optional<LocalTime>selectStartTimeByScheduleId(Long scheduleId);
     void deleteSchedule(Long scheduleId);
 
     void updateAvailableSeats(Long scheduleId, int availableSeats);
