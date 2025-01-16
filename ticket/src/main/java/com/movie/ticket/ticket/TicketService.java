@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -121,7 +122,15 @@ public class TicketService {
             throw new HandleRuntimeException("Unable to process the ticket at this time. Please try again later.");
         }
 
-
+        Long cinemaId = ticketRegistrationRequest.cinemaId();
+        Long seatId = ticketRegistrationRequest.seatId();
+        boolean isSeatValid = seatClient.getSeatsByCinema(cinemaId)
+                .stream()
+                .anyMatch(seat -> seat.seatId().equals(seatId));
+        //validation
+        if (!isSeatValid) {
+            throw new IllegalArgumentException("Invalid seatId for the provided cinemaId.");
+        }
 
         //validation
         if (scheduleDTO.availableSeats() <= 0) {
@@ -138,12 +147,15 @@ public class TicketService {
             throw new AlreadyOccupiedException("The schedule does not belong to the selected cinema.");
         }
 
+
         // decrease available seats
         scheduleClient.decreaseAvailableSeats(ticketRegistrationRequest.scheduleId());
 
         // Mark the seat
         seatClient.updateSeatOccupation(ticketRegistrationRequest.seatId(), true);
         String movieName = movieClient.getMovieNameById(ticketRegistrationRequest.movieId());
+
+        String startTime = scheduleClient.getStartTime(ticketRegistrationRequest.scheduleId());
 
         ticket.setUserId(userDTO.userId());
         ticket.setMovieId(ticketRegistrationRequest.movieId());
@@ -159,7 +171,9 @@ public class TicketService {
         NotificationRequest notificationRequest = new NotificationRequest(
                 ticket.getTicketId(),
                 "Ticket Purchased Successfully",
-                String.format("Dear %s, your ticket for the movie '%s' has been successfully booked. Enjoy the movie!",username,movieName)
+                String.format("Dear %s, your ticket for the movie '%s' has been successfully booked." +
+                        "The price is '%s'.The start time is '%s'. " +
+                        "Enjoy the movie!",username,movieName,price,startTime)
         );
 
         rabbitMqMessageProducer.publish(
