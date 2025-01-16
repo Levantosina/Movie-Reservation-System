@@ -165,6 +165,16 @@ public class MovieMovieScheduleAccessService implements MovieScheduleDAO {
     }
 
     @Override
+    public Optional<LocalTime> selectStartTimeByScheduleId(Long scheduleId) {
+        String sql = """
+            SELECT start_time FROM schedules WHERE schedule_id = ?
+            """;
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> rs.getTime("start_time").toLocalTime(),
+                scheduleId).stream().findFirst();
+    }
+
+    @Override
     public void deleteSchedule(Long scheduleId) {
         String sql = "DELETE FROM schedules WHERE schedule_id = ?";
         jdbcTemplate.update(sql, scheduleId);
