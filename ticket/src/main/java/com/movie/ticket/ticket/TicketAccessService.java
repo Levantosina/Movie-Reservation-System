@@ -2,6 +2,8 @@ package com.movie.ticket.ticket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -37,30 +40,36 @@ public class TicketAccessService implements TicketDAO  {
         return jdbcTemplate.query(sql,rowMapper);
     }
 
-  @Override
+    @Override
     public void createOneTicket(Ticket ticket) {
-      log.info("Creating ticket for ticketId: {} userId: {}, movieId: {}", ticket.getTicketId(), ticket.getUserId(), ticket.getMovieId());
+        var sql = """
+          INSERT INTO ticket (user_id, movie_id, cinema_id, seat_id, schedule_id, price, date)
+          VALUES (:userId, :movieId, :cinemaId, :seatId, :scheduleId, :price, :date)
+          """;
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("userId", ticket.getUserId())
+                .addValue("movieId", ticket.getMovieId())
+                .addValue("cinemaId", ticket.getCinemaId())
+                .addValue("seatId", ticket.getSeatId())
+                .addValue("scheduleId", ticket.getScheduleId())
+                .addValue("price", ticket.getPrice())
+                .addValue("date", new java.sql.Date(ticket.getDate().getTime()));
 
-      var sql =
-              """
-                INSERT INTO ticket (user_id,movie_id,cinema_id,seat_id,schedule_id,price,date)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """;
-      KeyHolder keyHolder = new GeneratedKeyHolder();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-      jdbcTemplate.update(connection -> {
-          PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-          ps.setLong(1, ticket.getUserId());
-          ps.setLong(2, ticket.getMovieId());
-          ps.setLong(3, ticket.getCinemaId());
-          ps.setLong(4, ticket.getSeatId());
-          ps.setLong(5, ticket.getScheduleId());
-          ps.setBigDecimal(6, ticket.getPrice());
-          ps.setDate(7, new java.sql.Date(ticket.getDate().getTime()));
-          return ps;
-      }, keyHolder);
-      }
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
 
+
+        Map<String, Object> keys = keyHolder.getKeys();
+
+        if (keys != null && keys.containsKey("ticket_id")) {
+            ticket.setTicketId(((Number) keys.get("ticket_id")).longValue());
+        } else {
+            log.error("Failed to retrieve generated key for ticket_id");
+            throw new IllegalStateException("Failed to retrieve generated key for ticket_id");
+        }
+    }
     @Override
     public void updateTicket(Ticket updatTicket) {
 
@@ -121,7 +130,6 @@ public class TicketAccessService implements TicketDAO  {
                     updatTicket.getDate(),
                     updatTicket.getTicketId());
         }
-
     }
 
     @Override
