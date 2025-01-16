@@ -18,4 +18,6 @@ public interface ScheduleClient {
     ScheduleDTO getScheduleById(@PathVariable("scheduleId") Long scheduleId);
     @PutMapping("/api/v1/schedules/{scheduleId}/decrease")
     void decreaseAvailableSeats(@PathVariable("scheduleId") Long scheduleId);
+    @GetMapping("/api/v1/schedules/startTime/{scheduleId}")
+    String getStartTime(@PathVariable("scheduleId") Long scheduleId);
 }
