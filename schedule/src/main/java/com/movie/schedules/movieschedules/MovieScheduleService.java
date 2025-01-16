@@ -124,6 +124,13 @@ import java.util.stream.Collectors;
                     .map(movieScheduleDTOMapper)
                     .collect(Collectors.toList());
         }
+    public String findStartTimeByScheduleId(Long scheduleId) {
+        return movieScheduleDAO.selectStartTimeByScheduleId(scheduleId)
+                .map(LocalTime::toString)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Start time with id [%s] not found".formatted(scheduleId)
+                ));
+    }
 
         public List<MovieScheduleDTO> findByCinemaIdAndMovieId(Long cinemaId, Long movieId) {
             return movieScheduleDAO.findByCinemaIdAndMovieId(cinemaId, movieId)
