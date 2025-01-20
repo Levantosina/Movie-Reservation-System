@@ -3,6 +3,7 @@ package com.movie.users.users;
 
 
 import com.movie.common.UserDTO;
+import com.movie.exceptions.DuplicateResourceException;
 import com.movie.exceptions.ResourceNotFoundException;
 import com.movie.jwt.jwt.JWTUtil;
 import jakarta.validation.Valid;
@@ -46,14 +47,25 @@ public class UserController {
     }
     @PostMapping
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
+        log.info("New user registration: {}", userRegistrationRequest);
 
-        log.info("New customer registration: {}", userRegistrationRequest);
-        userService.registerUser(userRegistrationRequest);
-        String jwtToken = jwtUtil.issueToken(userRegistrationRequest.email(),"ROLE_USER");
+        try {
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION,jwtToken)
-                .build();
+            userService.registerUser(userRegistrationRequest);
+
+            String jwtToken = jwtUtil.issueToken(userRegistrationRequest.email(), "ROLE_USER");
+
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, jwtToken)
+                    .body("User registered successfully");
+        } catch (DuplicateResourceException ex) {
+            log.error("Error during registration: {}", ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Unexpected error during registration", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
     }
     @PutMapping("{userId}")
     public void updateUser(@PathVariable("userId") Long userId,@RequestBody UserUpdateRequest userUpdateRequest){
