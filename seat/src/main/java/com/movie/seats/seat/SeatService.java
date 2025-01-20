@@ -184,7 +184,7 @@ public class SeatService {
                 List<String> rows = parseRows(values[1]);
                 JSONObject details = new JSONObject(values[2].replace("'", "\""));
 
-                System.out.println("Processing cinema: " + cinemaName); // Log cinema name
+                log.info("Processing cinema :{} ",  cinemaName);
                 Long cinemaId = getCinema(cinemaName);
                 if (cinemaId != null) {
                     for (String row : rows) {
@@ -284,9 +284,6 @@ public class SeatService {
         Seat seat = seatDAO.selectSeatById(seatId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seat with id [%s] not found".formatted(seatId)));
 
-        if (seat.isOccupied()) {
-            throw new IllegalArgumentException("This seat is already booked.");
-        }
         seat.setOccupied(occupied);
         seatDAO.updateSeat(seat);
 
