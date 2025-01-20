@@ -372,8 +372,7 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 .body(Mono.just(userRegistrationRequest2), UserRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
-                .isEqualTo(HttpStatus.CONFLICT)
-                .expectBody();
+                .isBadRequest();
     }
 
 }
