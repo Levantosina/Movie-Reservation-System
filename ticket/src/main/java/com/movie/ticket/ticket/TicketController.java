@@ -46,4 +46,25 @@ public class TicketController {
      ticketService.createTicket(ticketRegistrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PutMapping("/{ticketId}")
+        public ResponseEntity<?> updateTicket(@PathVariable("ticketId") Long ticketId,@RequestBody TicketUpdateRequest ticketUpdateRequest,
+                                              BindingResult bindingResult){
+        log.info("Update ticket: {} " ,ticketUpdateRequest);
+        List<String> errorMessage= new ArrayList<>();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage.add(error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        ticketService.updateTicket(ticketId,ticketUpdateRequest);
+        return  ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping ("/{ticketId}")
+    public ResponseEntity<?> deleteTicket(@PathVariable("ticketId") Long ticketId){
+        ticketService.deleteTicket(ticketId);
+        return  ResponseEntity.ok().build();
+    };
 }

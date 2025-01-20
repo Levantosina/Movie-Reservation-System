@@ -182,4 +182,93 @@ public class TicketService {
                 "internal.notification.routing-key"
         );
     }
+    public void updateTicket(Long ticketId, TicketUpdateRequest ticketUpdateRequest) {
+        // Authentication check to ensure the user is authenticated
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new HandleRuntimeException("Unauthorized user. Please login before proceeding.");
+        }
+        String username = (String) authentication.getPrincipal();
+
+        // Fetch the seat details
+        SeatDTO seatDTO = seatClient.getSeatById(ticketUpdateRequest.seatId());
+        Ticket ticket = ticketDAO.selectTicketById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket with [%s] not found.".formatted(ticketId)));
+
+        Long oldSeatId = ticket.getSeatId();
+
+
+        if (!ticket.getScheduleId().equals(ticketUpdateRequest.scheduleId())) {
+            throw new IllegalArgumentException("Schedule ID cannot be changed.");
+        }
+
+        boolean changes = false;
+
+        // Update movie ID if it's different
+        if (ticketUpdateRequest.movieId() != null && !ticketUpdateRequest.movieId().equals(ticket.getMovieId())) {
+            ticket.setMovieId(ticketUpdateRequest.movieId());
+            changes = true;
+        }
+
+        // Update cinema ID if it's different
+        if (ticketUpdateRequest.cinemaId() != null && !ticketUpdateRequest.cinemaId().equals(ticket.getCinemaId())) {
+            ticket.setCinemaId(ticketUpdateRequest.cinemaId());
+            changes = true;
+        }
+
+        // Check if the seat ID needs to be updated
+        if (ticketUpdateRequest.seatId() != null && !ticketUpdateRequest.seatId().equals(ticket.getSeatId())) {
+            if (seatDTO == null) {
+                throw new ResourceNotFoundException("Seat not found.");
+            }
+            if (seatDTO.isOccupied()) {
+                throw new AlreadyOccupiedException("The selected seat is already occupied.");
+            }
+            ticket.setSeatId(ticketUpdateRequest.seatId());
+            changes = true;
+        }
+
+        Long cinemaId = ticketUpdateRequest.cinemaId();
+        Long seatId = ticketUpdateRequest.seatId();
+        boolean isSeatValid = seatClient.getSeatsByCinema(cinemaId)
+                .stream()
+                .anyMatch(seat -> seat.seatId().equals(seatId));
+        //validation
+
+        if (!isSeatValid) {
+            throw new IllegalArgumentException("Invalid seatId for the provided cinemaId.");
+        }
+
+        // Update price if it has changed
+        if (ticketUpdateRequest.price() != null && !ticketUpdateRequest.price().equals(ticket.getTicketId())) {
+            ticket.setPrice(ticketUpdateRequest.price());
+            changes = true;
+        }
+
+        // Update date if it has changed
+        if (ticketUpdateRequest.date() != null && !ticketUpdateRequest.date().equals(ticket.getDate())) {
+            ticket.setDate(ticketUpdateRequest.date());
+            changes = true;
+        }
+
+        // Throw exception if no changes were made
+        if (!changes) {
+            throw new ResourceNotFoundException("No changes were made.");
+        }
+
+        // Update the seat occupation
+        if (oldSeatId != null && !oldSeatId.equals(ticketUpdateRequest.seatId())) {
+            log.info("Old Seat {} changed.", oldSeatId);
+            seatClient.updateSeatOccupation(oldSeatId, false);
+        }
+        seatClient.updateSeatOccupation(ticketUpdateRequest.seatId(), true);
+
+        // Update the ticket record in the database
+        ticketDAO.updateTicket(ticket);
+    }
+
+    public void deleteTicket(Long ticketId) {
+        ticketDAO.deleteTicket(ticketId);
+    }
+
 }
