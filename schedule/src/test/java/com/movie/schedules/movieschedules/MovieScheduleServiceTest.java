@@ -1,7 +1,10 @@
 package com.movie.schedules.movieschedules;
 
 
+import com.movie.client.cinemaClient.CinemaClient;
+import com.movie.client.movieClient.MovieClient;
 import com.movie.client.seatClient.SeatClient;
+import com.movie.common.TotalSeatsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,18 +33,25 @@ class MovieScheduleServiceTest {
     private MovieScheduleDAO scheduleDAO;
     @Mock
     private SeatClient seatClient;
+    @Mock
+    private  MovieClient movieClient;
+    @Mock
+    private CinemaClient cinemaClient;
+
     private final MovieScheduleDTOMapper scheduleDTOMapper = new MovieScheduleDTOMapper();
-    private final long scheduleId = 35;
+    private final Long scheduleId = 35L;
     private final LocalDate date = LocalDate.parse("2024-12-03");
     private final LocalTime startTime = LocalTime.parse("10:00:00");
     private final LocalTime endTime = LocalTime.parse("12:00:00");
     private final  int availableSeats = 2;
-    private final long cinemaId = 1;
-    private final  long movieId = 1;
+    private final Long cinemaId = 1L;
+    private final  Long movieId = 1L;
+
+
 
     @BeforeEach
     void setUp() {
-        underTest = new MovieScheduleService(scheduleDAO,scheduleDTOMapper,seatClient );
+        underTest = new MovieScheduleService(scheduleDAO,scheduleDTOMapper,seatClient,movieClient,cinemaClient );
     }
 
     @Test
@@ -52,24 +62,29 @@ class MovieScheduleServiceTest {
 
     @Test
     void createSchedule() {
+
+        TotalSeatsDTO mockTotalSeatsDTO = new TotalSeatsDTO(10);
+        when(seatClient.getTotalSeatsByCinemaId(cinemaId)).thenReturn(mockTotalSeatsDTO);
+        when(cinemaClient.existsById(cinemaId)).thenReturn(true);
+        when(movieClient.existsById(movieId)).thenReturn(true);
+
         MovieScheduleRegistrationRequest registrationRequest = new MovieScheduleRegistrationRequest(
-                date,startTime,endTime,availableSeats,cinemaId,movieId
+                date, startTime, endTime, cinemaId, movieId
         );
         underTest.createSchedule(registrationRequest);
 
         ArgumentCaptor<MovieSchedule> scheduleArgumentCaptor = ArgumentCaptor.forClass(MovieSchedule.class);
-
         verify(scheduleDAO).createSchedule(scheduleArgumentCaptor.capture());
+
 
         MovieSchedule capturedSchedule = scheduleArgumentCaptor.getValue();
 
         assertThat(capturedSchedule.getDate()).isEqualTo(registrationRequest.date());
         assertThat(capturedSchedule.getStartTime()).isEqualTo(registrationRequest.startTime());
         assertThat(capturedSchedule.getEndTime()).isEqualTo(registrationRequest.endTime());
-        assertThat(capturedSchedule.getAvailableSeats()).isEqualTo(registrationRequest.availableSeats());
+        assertThat(capturedSchedule.getAvailableSeats()).isEqualTo(mockTotalSeatsDTO.totalSeats());  // Verify against mocked value
         assertThat(capturedSchedule.getCinemaId()).isEqualTo(registrationRequest.cinemaId());
         assertThat(capturedSchedule.getMovieId()).isEqualTo(registrationRequest.movieId());
-
     }
 
     @Test

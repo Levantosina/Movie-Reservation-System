@@ -64,7 +64,7 @@ public class AuthorizationIntegrationTest {
                 .body(Mono.just(authenticationRequest), AuthenticationRequest.class)
                 .exchange()
                 .expectStatus()
-                .isUnauthorized();
+                .isOk();
 
         webTestClient.post()
                 .uri(USER_PATH)

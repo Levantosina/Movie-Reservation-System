@@ -64,12 +64,12 @@ public class ScheduleServiceIntegrationTest  extends ScheduleAbstractDaoUnitTest
         LocalDate date = LocalDate.parse("2024-12-03");
         LocalTime startTime = LocalTime.parse("10:00:00");
         LocalTime endTime = LocalTime.parse("12:00:00");
-        int availableSeats = 2;
+
         long cinemaId = 1;
         long movieId = 1;
 
         MovieScheduleRegistrationRequest registrationRequest = new MovieScheduleRegistrationRequest(
-                date, startTime, endTime, availableSeats, cinemaId, movieId
+                date, startTime, endTime,  cinemaId, movieId
         );
         webTestClient.post()
                 .uri(SCHEDULE_PATH)
