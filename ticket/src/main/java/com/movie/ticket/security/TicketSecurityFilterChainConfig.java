@@ -39,6 +39,7 @@ public class TicketSecurityFilterChainConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/ticket/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/ticket/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/ticket/**").authenticated()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
