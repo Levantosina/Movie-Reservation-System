@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author DMITRII LEVKIN on 04/10/2024
  * @project MovieReservationSystem
  */
-@FeignClient(value = "cinema",configuration = FeignConfig.class)
+@FeignClient(value = "cinema",url = "http://localhost:8081",configuration = FeignConfig.class)
 
 public interface CinemaClient {
     @GetMapping(value= "/api/v1/cinemas/id-by-name/{cinemaName}")

@@ -23,7 +23,7 @@ public interface SeatClient {
     @GetMapping(value = "/api/v1/seats/{id}")
     SeatDTO getSeatById(@PathVariable("id") Long seatId);
 
-    @PostMapping("/api/v1/seats/{seatId}/update-occupation")
+    @PutMapping("/api/v1/seats/{seatId}/update-occupation")
     void updateSeatOccupation(@PathVariable("seatId") Long seatId, @RequestBody boolean isOccupied);
 
     @GetMapping("/api/v1/seats/{seatId}/price")
