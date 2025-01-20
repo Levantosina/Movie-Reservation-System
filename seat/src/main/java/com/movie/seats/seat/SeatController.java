@@ -78,7 +78,7 @@ public class SeatController {
         return ResponseEntity.ok(isOccupied);
     }
 
-    @PostMapping("/{seatId}/update-occupation")
+    @PutMapping("/{seatId}/update-occupation")
     public ResponseEntity<?> updateSeatOccupation(@PathVariable("seatId") Long seatId, @RequestBody boolean isOccupied) {
         seatService.updateSeatOccupation(seatId, isOccupied);
         return ResponseEntity.ok(isOccupied);
