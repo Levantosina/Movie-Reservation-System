@@ -16,13 +16,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
         "com.movie.ticket",
         "com.movie.amqp",
-        "com.movie.jwt",
+        "com.movie.jwt.jwt",
         "com.movie.client"
 
 
 })
-@EnableFeignClients(basePackages = "com.movie.client")
 @EnableDiscoveryClient
+@EnableFeignClients(basePackages = "com.movie.client")
 @EntityScan(basePackages = "com.movie.ticket.ticket.entity")
 
 
