@@ -12,13 +12,12 @@ import java.util.Date;
  */
 public record TicketUpdateRequest(
 
-    @NotNull(message = "UserId id is required")
-    Long userId,
+
     @NotNull(message = " MovieId id is required")
     Long movieId,
     @NotNull(message = "CinemaId id is required")
     Long cinemaId,
-    @NotNull(message = "ScheduleId id is required")
+    @NotNull(message = "ScheduleId cannot be changed.")
     Long scheduleId,
 
     @NotNull(message = "Seat id is required")
