@@ -8,8 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,11 +23,12 @@ import java.util.Optional;
 @Slf4j
 public class TicketAccessService implements TicketDAO  {
     private final JdbcTemplate jdbcTemplate;
-
+    private final DataSource dataSource;
     private final TicketRowMapper rowMapper;
 
-    public TicketAccessService(JdbcTemplate jdbcTemplate, TicketRowMapper rowMapper) {
+    public TicketAccessService(JdbcTemplate jdbcTemplate, DataSource dataSource,TicketRowMapper rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.dataSource = dataSource;
         this.rowMapper = rowMapper;
     }
 
@@ -141,6 +141,16 @@ public class TicketAccessService implements TicketDAO  {
         return jdbcTemplate.query(sql,rowMapper,ticketId)
                 .stream()
                 .findFirst();
+    }
+
+    @Override
+    public boolean existTicketWithId(Long ticketId) {
+        var sql= """
+                SELECT count(ticket_id)FROM users
+                where ticket_id=?
+                """;
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,ticketId);
+        return count!=null && count>0;
     }
 
     @Override
