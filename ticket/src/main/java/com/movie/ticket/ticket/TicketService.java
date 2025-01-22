@@ -50,7 +50,6 @@ public class TicketService {
 
     public TicketService(@Qualifier("ticketJdbc") TicketDAO ticketDAO, TicketDTOMapper ticketDTOMapper, RabbitMqMessageProducer rabbitMqMessageProducer, UserClient userClient, MovieClient movieClient, SeatClient seatClient, ScheduleClient scheduleClient) {
         this.ticketDAO = ticketDAO;
-
         this.ticketDTOMapper = ticketDTOMapper;
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
         this.userClient = userClient;
@@ -183,14 +182,14 @@ public class TicketService {
         );
     }
     public void updateTicket(Long ticketId, TicketUpdateRequest ticketUpdateRequest) {
-        // Authentication check to ensure the user is authenticated
+       //auth
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new HandleRuntimeException("Unauthorized user. Please login before proceeding.");
         }
         String username = (String) authentication.getPrincipal();
 
-        // Fetch the seat details
+
         SeatDTO seatDTO = seatClient.getSeatById(ticketUpdateRequest.seatId());
         Ticket ticket = ticketDAO.selectTicketById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket with [%s] not found.".formatted(ticketId)));
@@ -204,19 +203,19 @@ public class TicketService {
 
         boolean changes = false;
 
-        // Update movie ID if it's different
+
         if (ticketUpdateRequest.movieId() != null && !ticketUpdateRequest.movieId().equals(ticket.getMovieId())) {
             ticket.setMovieId(ticketUpdateRequest.movieId());
             changes = true;
         }
 
-        // Update cinema ID if it's different
+
         if (ticketUpdateRequest.cinemaId() != null && !ticketUpdateRequest.cinemaId().equals(ticket.getCinemaId())) {
             ticket.setCinemaId(ticketUpdateRequest.cinemaId());
             changes = true;
         }
 
-        // Check if the seat ID needs to be updated
+
         if (ticketUpdateRequest.seatId() != null && !ticketUpdateRequest.seatId().equals(ticket.getSeatId())) {
             if (seatDTO == null) {
                 throw new ResourceNotFoundException("Seat not found.");
@@ -251,7 +250,7 @@ public class TicketService {
             changes = true;
         }
 
-        // Throw exception if no changes were made
+
         if (!changes) {
             throw new ResourceNotFoundException("No changes were made.");
         }
@@ -268,7 +267,11 @@ public class TicketService {
     }
 
     public void deleteTicket(Long ticketId) {
+        if (!ticketDAO.existTicketWithId(ticketId)) {
+            throw new ResourceNotFoundException(
+                    "Ticket with id [%s] not found.".formatted(ticketId));
+        }
         ticketDAO.deleteTicket(ticketId);
+        }
     }
 
-}
