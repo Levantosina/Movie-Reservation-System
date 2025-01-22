@@ -59,9 +59,6 @@ jobs:
         id: build-number
         run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
 
-      - name:  Zipkin
-        run: |
-          docker-compose up -d zipkin eureka-server rabbitmq
 
       - name: Zipkin
         run: |
@@ -76,7 +73,7 @@ jobs:
       
 
       - name: Build and install seat modules
-        run: mvn -B install -pl !user,,,!schedule -am
+        run: mvn -B install -pl !user,!schedule,!ticket -am
 
       - name: Build Seat Package Push with Maven
         run: mvn -ntp -B verify -pl seat -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
