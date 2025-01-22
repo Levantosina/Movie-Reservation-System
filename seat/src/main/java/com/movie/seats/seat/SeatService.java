@@ -8,7 +8,6 @@ package com.movie.seats.seat;
 import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.cinemaClient.CinemaClient;
 import com.movie.client.notification.NotificationRequest;
-import com.movie.common.CinemaDTO;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.annotation.PostConstruct;
@@ -40,10 +39,7 @@ public class SeatService {
 
     private final SeatDAO seatDAO;
     private final SeatDTOMapper seatDTOMapper;
-    private final Map<String, Long> cinemaMap = new HashMap<>();
-
     private final CinemaClient cinemaClient;
-
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
     @Value("${seats.resources}")
@@ -118,7 +114,6 @@ public class SeatService {
     }
 
     public List<SeatDTO> getSeatsByCinema(Long cinemaId) {
-       // Long cinemaId = cinemaDTO.cinemaId();
         return seatDAO.selectSeatsByCinemaId(cinemaId)
                 .stream()
                 .map(seatDTOMapper)

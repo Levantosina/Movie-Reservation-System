@@ -107,40 +107,6 @@ class SeatServiceTest {
         verify(seatDAO).selectSeatsByCinemaId(cinemaDTO.cinemaId());
     }
 
-
-
-
-//    @ParameterizedTest(name = "cinema name ''{0}'' should return id {1}")
-//    @CsvSource({
-//            "Amazonia, 1",
-//            "Atmosphere, 2",
-//            "Stars, 3"
-//    })
-   // void testGetCinemaId(String cinemaName, Long expectedCinemaId) {
-
-//        when(cinemaClient.getCinemaIdByName(cinemaName)).thenReturn(expectedCinemaId);
-//        Long cinemaId = seatService.getCinemaId(cinemaName);
-//        assertThat(cinemaId).isEqualTo(expectedCinemaId);
-//        verify(cinemaClient, times(1)).getCinemaIdByName(cinemaName);
-//    }
-//    void testGetCinemaId(String cinemaName, Long expectedCinemaId,String cinemaLocation) {
-//
-//        CinemaDTO mockedCinemaDTO = new CinemaDTO(expectedCinemaId, cinemaName,cinemaLocation);
-//
-//
-//        when(cinemaClient.getCinemaIdByName(cinemaName)).thenReturn(mockedCinemaDTO.cinemaId());
-//
-//
-//        CinemaDTO cinemaDTO = seatService.getCinemaId(mockedCinemaDTO.cinemaName());
-//
-//
-//        assertThat(cinemaDTO).isEqualTo(mockedCinemaDTO);
-//
-//
-//        verify(cinemaClient, times(1)).getCinemaIdByName(cinemaName);
-//    }
-
-
     @Test
     void getTotalSeatsByCinemaId() {
         Long cinemaId = 1L;
