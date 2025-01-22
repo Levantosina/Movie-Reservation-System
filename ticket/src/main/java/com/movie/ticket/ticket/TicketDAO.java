@@ -17,5 +17,7 @@ public interface TicketDAO {
 
     Optional<Ticket> selectTicketById(Long ticketId);
 
+    boolean existTicketWithId(Long id);
+
     void deleteTicket(Long ticketId);
 }
