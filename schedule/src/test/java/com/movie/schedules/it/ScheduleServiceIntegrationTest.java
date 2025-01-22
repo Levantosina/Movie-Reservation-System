@@ -9,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -24,7 +22,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
-import java.util.List;
+
 import java.util.Map;
 
 /**
@@ -44,10 +42,6 @@ public class ScheduleServiceIntegrationTest  extends ScheduleAbstractDaoUnitTest
 
     @MockBean
     private MovieScheduleService scheduleService;
-    @Autowired
-    private MovieScheduleDAO movieScheduleDAO;
-    @Autowired
-    MovieScheduleDTOMapper scheduleDTOMapper;
     private String validToken;
 
 
