@@ -45,6 +45,9 @@ public class SeatService {
     @Value("${seats.resources}")
     private Resource csvFilePath;
 
+    @Value("${seats.load.enabled:false}")
+    private boolean loadSeatsEnabled;
+
 
 
 
@@ -165,6 +168,12 @@ public class SeatService {
 
     @PostConstruct
     public void loadSeatsFromCSV() {
+
+        if (!loadSeatsEnabled) {
+            log.info("Skipping seat loading during initialization.");
+            return;
+        }
+
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(csvFilePath.getInputStream()))) {
             String[] values;
             boolean headerSkipped = false;
@@ -179,7 +188,7 @@ public class SeatService {
                 List<String> rows = parseRows(values[1]);
                 JSONObject details = new JSONObject(values[2].replace("'", "\""));
 
-                log.info("Processing cinema :{} ",  cinemaName);
+                log.info("Processing cinema: {}", cinemaName);
                 Long cinemaId = getCinema(cinemaName);
                 if (cinemaId != null) {
                     for (String row : rows) {
@@ -187,7 +196,7 @@ public class SeatService {
                         processSeats(row, seatDetails, cinemaId);
                     }
                 } else {
-                    System.out.println("No cinema Id found for " + cinemaName);
+                    log.warn("No cinema ID found for {}", cinemaName);
                 }
             }
         } catch (IOException | CsvValidationException e) {
@@ -253,13 +262,14 @@ public class SeatService {
 
     private Long getCinema(String cinemaName) {
         log.info("Fetching CinemaDTO for: {} ",cinemaName);
-        Long id = cinemaClient.getCinemaIdByName(cinemaName);
-        log.info(" CinemaDTO : {} ",id);
-        if (id == null) {
-            log.info("Cinema not found:{} ", cinemaName);
+        try {
+            Long id = cinemaClient.getCinemaIdByName(cinemaName);
+            log.info("Cinema ID: {}", id);
+            return id;
+        } catch (  ResourceNotFoundException e) {
+            log.error("Failed to fetch Cinema ID for {}: {}", cinemaName, e.getMessage());
+            return null;
         }
-
-        return id;
     }
 
     public int getTotalSeatsByCinemaId(Long cinemaId) {
