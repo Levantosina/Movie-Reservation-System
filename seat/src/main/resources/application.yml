@@ -44,9 +44,6 @@ spring:
   rabbitmq:
     addresses: localhost:5672
 
-
-
-
 management:
   tracing:
     sampling:
@@ -61,7 +58,9 @@ eureka:
     enabled: true
   instance:
     prefer-ip-address: true
-
+seats:
+  load:
+    enabled: false
 
 
 
