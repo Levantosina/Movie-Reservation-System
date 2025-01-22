@@ -102,4 +102,10 @@ public class SeatController {
         return ResponseEntity.ok(price);
     }
 
+    @PostMapping("/load-csv")
+    public ResponseEntity<String> loadSeatsFromCSV() {
+        seatService.loadSeatsFromCSV();
+        return ResponseEntity.ok("Seats loaded successfully.");
+    }
+
 }
