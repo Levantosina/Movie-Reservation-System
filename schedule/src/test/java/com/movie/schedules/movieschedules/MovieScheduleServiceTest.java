@@ -1,6 +1,7 @@
 package com.movie.schedules.movieschedules;
 
 
+import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.cinemaClient.CinemaClient;
 import com.movie.client.movieClient.MovieClient;
 import com.movie.client.seatClient.SeatClient;
@@ -37,6 +38,10 @@ class MovieScheduleServiceTest {
     private  MovieClient movieClient;
     @Mock
     private CinemaClient cinemaClient;
+    @Mock
+    private final RabbitMqMessageProducer rabbitMqMessageProducer;
+
+
 
     private final MovieScheduleDTOMapper scheduleDTOMapper = new MovieScheduleDTOMapper();
     private final Long scheduleId = 35L;
@@ -47,11 +52,14 @@ class MovieScheduleServiceTest {
     private final Long cinemaId = 1L;
     private final  Long movieId = 1L;
 
+    MovieScheduleServiceTest(RabbitMqMessageProducer rabbitMqMessageProducer) {
+        this.rabbitMqMessageProducer = rabbitMqMessageProducer;
+    }
 
 
     @BeforeEach
     void setUp() {
-        underTest = new MovieScheduleService(scheduleDAO,scheduleDTOMapper,seatClient,movieClient,cinemaClient );
+        underTest = new MovieScheduleService(scheduleDAO,scheduleDTOMapper,seatClient,movieClient,cinemaClient,rabbitMqMessageProducer );
     }
 
     @Test
