@@ -1,7 +1,9 @@
 package com.movie.schedules.movieschedules;
 
+import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.cinemaClient.CinemaClient;
 import com.movie.client.movieClient.MovieClient;
+import com.movie.client.notification.NotificationRequest;
 import com.movie.client.seatClient.SeatClient;
 import com.movie.common.TotalSeatsDTO;
 import com.movie.exceptions.AlreadyOccupiedException;
@@ -22,11 +24,13 @@ import java.util.stream.Collectors;
     @Service
     @AllArgsConstructor
     public class MovieScheduleService {
+
         private final MovieScheduleDAO movieScheduleDAO;
         private final MovieScheduleDTOMapper movieScheduleDTOMapper;
         private final SeatClient seatClient;
-    private final MovieClient movieClient;
-    private final CinemaClient cinemaClient;
+        private final MovieClient movieClient;
+        private final CinemaClient cinemaClient;
+        private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
 
     public List<MovieScheduleDTO>getAllSchedules(){
@@ -99,6 +103,21 @@ import java.util.stream.Collectors;
         movieSchedule.setCinemaId(movieScheduleRegistrationRequest.cinemaId());
         movieSchedule.setMovieId(movieScheduleRegistrationRequest.movieId());
         movieScheduleDAO.createSchedule(movieSchedule);
+
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                movieSchedule.getScheduleId(),
+                "Schedule created Successfully",
+                String.format(" Schedule  id '%s' has been successfully created.", movieSchedule.getScheduleId())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
+
+
     }
     private boolean isOverlapping(LocalTime newStart, LocalTime newEnd, LocalTime existingStart, LocalTime existingEnd) {
         return !(newEnd.isBefore(existingStart) || newStart.isAfter(existingEnd));
@@ -188,6 +207,20 @@ import java.util.stream.Collectors;
             }
 
             movieScheduleDAO.upDateSchedule(schedule);
+
+
+            NotificationRequest notificationRequest = new NotificationRequest(
+                    schedule.getScheduleId(),
+                    "Schedule was updated Successfully",
+                    String.format(" Schedule  id '%s' has been successfully updated.", schedule.getScheduleId())
+            );
+
+            rabbitMqMessageProducer.publish(
+                    notificationRequest,
+                    "internal.exchange",
+                    "internal.notification.routing-key"
+            );
+
         }
 
 
