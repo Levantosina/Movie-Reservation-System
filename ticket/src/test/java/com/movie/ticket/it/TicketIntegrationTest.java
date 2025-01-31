@@ -131,5 +131,23 @@ public class TicketIntegrationTest extends TicketAbstractDaoUnitTest {
                 .expectStatus().isOk();
     }
 
+    @Test
+    void canCreateAndGetAllTickets() {
+
+        TicketRegistrationRequest ticketRequest =
+                new TicketRegistrationRequest(1L, 1L, 1L, 1L);
+        webTestClient.post()
+                .uri(TICKET_PATH)
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .bodyValue(ticketRequest)
+                .exchange()
+                .expectStatus().isCreated();
+
+        webTestClient.get()
+                .uri(TICKET_PATH)
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
 
