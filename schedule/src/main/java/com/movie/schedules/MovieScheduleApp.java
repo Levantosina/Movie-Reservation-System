@@ -13,6 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
         "com.movie.schedules",
         "com.movie.client",
         "com.movie.jwt.jwt",
+        "com.movie.amqp",
 })
 @EnableDiscoveryClient
 @EntityScan(basePackages = "com.movie.schedules.movieschedules.entity")
