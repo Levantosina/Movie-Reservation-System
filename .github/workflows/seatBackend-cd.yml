@@ -73,7 +73,7 @@ jobs:
       
 
       - name: Build and install seat modules
-        run: mvn -B install -pl !user,!schedule,!ticket -am
+        run: mvn -B install -pl seat -am
 
       - name: Build Seat Package Push with Maven
         run: mvn -ntp -B verify -pl seat -Ddocker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
