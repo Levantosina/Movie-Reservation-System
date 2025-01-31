@@ -101,6 +101,19 @@ public class AdminService {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
 
+        NotificationRequest notificationRequest = new NotificationRequest(
+
+                userOpt.get().getUserId(),
+                userOpt.get().getEmail(),
+                String.format("Hi %s, Admin was updated", userOpt.get().getFirstName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
+
     }
 
 
@@ -133,5 +146,6 @@ public class AdminService {
             throw new ResourceNotFoundException("Admin not found with id " + id);
         }
     }
+
 }
 

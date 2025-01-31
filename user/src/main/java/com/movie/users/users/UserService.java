@@ -130,6 +130,19 @@ public class UserService {
             throw new RequestValidationException("No changes detected");
         }
         userDAO.updateUser(user);
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+
+                user.getUserId(),
+                user.getEmail(),
+                String.format("Hi %s, User was updated", user.getFirstName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 
     public void deleteUserById(Long userId) {

@@ -188,7 +188,7 @@ public class TicketService {
             throw new HandleRuntimeException("Unauthorized user. Please login before proceeding.");
         }
         String username = (String) authentication.getPrincipal();
-
+        String movieName = movieClient.getMovieNameById(ticketUpdateRequest.movieId());
 
         SeatDTO seatDTO = seatClient.getSeatById(ticketUpdateRequest.seatId());
         Ticket ticket = ticketDAO.selectTicketById(ticketId)
@@ -264,6 +264,18 @@ public class TicketService {
 
         // Update the ticket record in the database
         ticketDAO.updateTicket(ticket);
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                ticket.getTicketId(),
+                "Ticket Changed Successfully",
+                String.format("Dear %s, your ticket for the movie '%s' has been successfully changed.", username, movieName)
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 
     public void deleteTicket(Long ticketId) {

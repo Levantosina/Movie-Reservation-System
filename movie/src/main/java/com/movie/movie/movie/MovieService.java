@@ -130,6 +130,20 @@ public class MovieService {
         log.info("Updating movie: {}", movie);
 
         movieDAO.updateMovie(movie);
+
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                movie.getMovieId(),
+                "Movie was updated Successfully",
+                String.format(" Movie  with id '%s' and name '%s' has been successfully updated.", movie.getMovieId(),movie.getMovieName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
+
     }
 
     public boolean existsById(Long movieId) {
