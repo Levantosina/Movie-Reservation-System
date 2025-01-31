@@ -146,6 +146,12 @@ class TicketServiceTest {
         verify(ticketDAO, times(1)).updateTicket(any(Ticket.class));
         verify(seatClient, times(1)).updateSeatOccupation(1L, false);
         verify(seatClient, times(1)).updateSeatOccupation(2L, true);
+
+        ArgumentCaptor<NotificationRequest> notificationCaptor = ArgumentCaptor.forClass(NotificationRequest.class);
+        verify(rabbitMqMessageProducer).publish(
+                notificationCaptor.capture(),
+                eq("internal.exchange"),
+                eq("internal.notification.routing-key"));
     }
 
     @Test
