@@ -16,7 +16,6 @@ public interface SeatDAO {
 
     boolean isSeatOccupied(Long seatId);
 
-    void updateSeatOccupation(Long seatId, boolean isOccupied);
 
     void  updateSeat(Seat updateSeat);
 

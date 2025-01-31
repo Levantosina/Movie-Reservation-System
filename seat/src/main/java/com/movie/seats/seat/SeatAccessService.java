@@ -123,13 +123,6 @@ public class SeatAccessService implements SeatDAO{
             return isOccupied;
 
         }
-    @Override
-    public void updateSeatOccupation(Long seatId, boolean isOccupied) {
-        var sql = """
-             UPDATE seats SET is_occupied = ?  WHERE seat_id = ?
-              """;
-        jdbcTemplate.update(sql, isOccupied, seatId);
-    }
 
     @Override
     public void updateSeat(Seat updateSeat) {
