@@ -39,7 +39,7 @@ class MovieScheduleServiceTest {
     @Mock
     private CinemaClient cinemaClient;
     @Mock
-    private final RabbitMqMessageProducer rabbitMqMessageProducer;
+    private RabbitMqMessageProducer rabbitMqMessageProducer;
 
 
 
@@ -52,9 +52,7 @@ class MovieScheduleServiceTest {
     private final Long cinemaId = 1L;
     private final  Long movieId = 1L;
 
-    MovieScheduleServiceTest(RabbitMqMessageProducer rabbitMqMessageProducer) {
-        this.rabbitMqMessageProducer = rabbitMqMessageProducer;
-    }
+
 
 
     @BeforeEach
