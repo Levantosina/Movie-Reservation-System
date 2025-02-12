@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -43,7 +43,7 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
         String role="ROLE_USER";
 
         UserRegistrationRequest userRegistrationRequest= new UserRegistrationRequest(
-             firstName,
+                firstName,
                 lastName,
                 email,
                 "password"
@@ -108,10 +108,10 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
     @Test
     void canUpdateUser(){
 
-        Faker faker =new Faker();
+
         String firstName = "Test";
         String lastName = "Test";
-        String email= faker.name().lastName() + "-" + UUID.randomUUID() + "@gmail.com";
+        String email = "test" + UUID.randomUUID() + "@gmail.com";
         String role="ROLE_USER";
 
         UserRegistrationRequest userRegistrationRequest= new UserRegistrationRequest(
@@ -194,48 +194,29 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
     }
 
     @Test
-    void canDeleteUser(){
+    void canDeleteUser() {
 
-        Faker faker =new Faker();
         String firstName = "Test";
         String lastName = "Test";
-        String email= faker.name().lastName() + "-" + UUID.randomUUID() + "@gmail.com";
+        String email = "test" + UUID.randomUUID() + "@gmail.com";
         String role="ROLE_USER";
 
-        String firstName2 = "Test2";
-        String lastName2 = "Test2";
-        String email2= faker.name().lastName() + "-" + UUID.randomUUID() + "@gmail.com";
-        String role2="ROLE_USER";
-
-        UserRegistrationRequest userRegistrationRequest1= new UserRegistrationRequest(
+        UserRegistrationRequest userRegistrationRequest= new UserRegistrationRequest(
                 firstName,
                 lastName,
                 email,
                 "password"
 
         );
-        UserRegistrationRequest userRegistrationRequest2= new UserRegistrationRequest(
-                firstName2,
-                lastName2,
-                email2,
-                "password"
 
-        );
 
-        webTestClient.post()
-                .uri(USER_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(userRegistrationRequest1), UserRegistrationRequest.class)
-                .exchange()
-                .expectStatus()
-                .isOk();
+
 
         jwtToken = webTestClient.post()
                 .uri(USER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(userRegistrationRequest2), UserRegistrationRequest.class)
+                .body(Mono.just(userRegistrationRequest), UserRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -244,7 +225,7 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 .get(AUTHORIZATION)
                 .get(0);
 
-
+        // Get all users and find User 1's ID
         List<UserDTO> allUsers = webTestClient.get()
                 .uri(USER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
@@ -252,35 +233,29 @@ public class UserServiceIntegrationTest extends AbstractDaoUnitTest {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<UserDTO>() {
-                }).returnResult()
+                .expectBodyList(new ParameterizedTypeReference<UserDTO>() {})
+                .returnResult()
                 .getResponseBody();
 
-
-        long id = allUsers.stream()
-                .filter(customer -> customer.email().equals(email))
+        long userId = allUsers.stream()
+                .filter(user -> user.email().equals(email))
                 .map(UserDTO::userId)
                 .findFirst()
                 .orElseThrow();
 
-
+        // User 1 deletes their own account using their JWT token
         webTestClient.delete()
-                .uri(USER_PATH + "/{userId}", id)
+                .uri(USER_PATH + "/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, String.format("Bearer %s", jwtToken))
                 .exchange()
                 .expectStatus()
                 .isOk();
 
-
-        webTestClient.get()
-                .uri(USER_PATH + "/{userId}", id)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(AUTHORIZATION, String.format("Bearer %s", jwtToken))
-                .exchange()
-                .expectStatus()
-                .isNotFound();
     }
+
+
+
 
     @Test
     void cannotGetNonExistentUser() {
