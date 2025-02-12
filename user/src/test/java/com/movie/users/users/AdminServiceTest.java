@@ -2,6 +2,8 @@ package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.notification.NotificationRequest;
+import com.movie.common.UserDTO;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +39,28 @@ class AdminServiceTest {
 
     @BeforeEach
     void setUp() {
+
         underTest=new AdminService(userDAO,passwordEncoder,rabbitMqMessageProducer,userDTOMapper);
+    }
+
+
+    @AfterEach
+    void tearDown() {
+    }
+
+    @Test
+    void getAdminById() {
+        long id = 2;
+        User admin = new User(id, "Admin", "User", "admin@test.com", "password", Role.ROLE_ADMIN);
+
+        when(userDAO.getAdminById(id)).thenReturn(Optional.of(admin));
+        when(userDTOMapper.apply(admin)).thenReturn(new UserDTO(id, "Admin", "User", "admin@test.com","ROLE_ADMIN"));
+
+        UserDTO expected = new UserDTO(id, "Admin", "User", "admin@test.com","ROLE_ADMIN");
+        UserDTO actual = underTest.getAdminById(id);
+
+        assertThat(actual).isEqualTo(expected);
+        verify(userDAO).getAdminById(id);
     }
 
     @Test
