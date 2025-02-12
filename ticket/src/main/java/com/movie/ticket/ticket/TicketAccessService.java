@@ -41,6 +41,14 @@ public class TicketAccessService implements TicketDAO  {
     }
 
     @Override
+    public List<Ticket> selectTicketsByUser(Long user) {
+        var sql = """
+                SELECT * FROM ticket WHERE user_id=?;
+                """;
+        return jdbcTemplate.query(sql,rowMapper,user);
+    }
+
+    @Override
     public void createOneTicket(Ticket ticket) {
         var sql = """
           INSERT INTO ticket (user_id, movie_id, cinema_id, seat_id, schedule_id, price, date)
