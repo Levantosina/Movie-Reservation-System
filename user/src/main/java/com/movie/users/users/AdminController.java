@@ -45,6 +45,26 @@ public class AdminController { ///only admin
                 .body(users);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable Long userId) {
+        try {
+            UserDTO user = adminService.getUserById(userId);
+            return ResponseEntity.ok(user);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/userName/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
+        try {
+            UserDTO user = adminService.getUserByUsername(username);
+            return ResponseEntity.ok(user);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody AdminRegistrationRequest adminRegistrationRequest,
                                            @AuthenticationPrincipal User currentAdmin){
@@ -100,5 +120,11 @@ public class AdminController { ///only admin
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving admin");
         }
+    }
+
+    @PutMapping("{userId}")
+    public void updateUser(@PathVariable("userId") Long userId,@RequestBody UserUpdateRequest userUpdateRequest){
+        log.info(" Updated user: {}",userUpdateRequest);
+        adminService.updateUser(userId,userUpdateRequest);
     }
 }
