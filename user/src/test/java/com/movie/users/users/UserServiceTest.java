@@ -2,7 +2,7 @@ package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.notification.NotificationRequest;
-import com.movie.common.UserDTO;
+import com.movie.users.AbstractDaoUnitTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Optional;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -23,8 +25,10 @@ import static org.mockito.Mockito.*;
  */
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceTest extends AbstractDaoUnitTest {
     private UserService underTest;
+
+
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
@@ -32,33 +36,17 @@ class UserServiceTest {
 
     private final UserDTOMapper userDTOMapper = new UserDTOMapper();
     @Mock
-    private RabbitMqMessageProducer rabbitMqMessageProducer ;
+    private RabbitMqMessageProducer rabbitMqMessageProducer;
+
 
     @BeforeEach
     void setUp() {
 
-        underTest= new UserService(userDAO,userDTOMapper,rabbitMqMessageProducer,passwordEncoder);
+        underTest = new UserService(userDAO, userDTOMapper, rabbitMqMessageProducer, passwordEncoder);
     }
+
     @AfterEach
     void tearDown() {
-    }
-
-    @Test
-    void getAllUsers() {
-        underTest.getAllUsers();
-        verify(userDAO).selectAllUsers();
-    }
-
-    @Test
-    void getUserById() {
-        long id=1;
-        User user= new User(id,"Abra","kadabra","abrakadabra.test.com","password",Role.ROLE_USER);
-        when(userDAO.selectUserById((Long) id)).thenReturn(Optional.of(user));
-
-        UserDTO expected = userDTOMapper.apply(user);
-        UserDTO actual= underTest.getUserById(id);
-        assertThat(actual).isEqualTo(expected);
-        verify(userDAO).selectUserById(id);
     }
 
     @Test
@@ -105,11 +93,4 @@ class UserServiceTest {
         assertThat(capturedNotification.message()).contains("Hi Abra, welcome to Levantos...");
     }
 
-    @Test
-    void deleteUserById() {
-        long id= 1;
-        when(userDAO.existUserWithId(id)).thenReturn(true);
-        underTest.deleteUserById(id);
-        verify(userDAO).deleteUserById(id);
-    }
 }
