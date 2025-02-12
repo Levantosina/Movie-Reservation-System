@@ -28,14 +28,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class JWTUtil {
     private static final String SECRET_KEY = "INwJBaTWR1RhFkAeSihaFRp2jCT5CKYcsvQqQfxl4TY=";
 
-    public String issueToken(String subject, String role) {
-        return issueToken(subject, Map.of("role", role));
+    public String issueToken(String username, String role) {
+        return issueToken(username, Map.of("role", role));
     }
 
-    public String issueToken(String subject, Map<String, Object> claims) {
+    public String issueToken(String username, Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(subject)
+                .setSubject(username)
                 .setIssuer("https://github.com/Levantosina")
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plus(15, DAYS)))
@@ -76,23 +76,6 @@ public class JWTUtil {
         }
         return null;
     }
-
-    public String getSubjectFromToken(String token) {
-        JwtParser jwtParser = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .build();
-        Claims claims = jwtParser.parseClaimsJws(token).getBody();
-        return claims.getSubject();
-    }
-
-    public String getTokenFromSecurityContext() {
-      var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getCredentials() != null) {
-            return authentication.getCredentials().toString(); // Return the token
-        }
-        return null;
-    }
-
 }
 
 
