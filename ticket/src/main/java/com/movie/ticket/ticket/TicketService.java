@@ -20,8 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -64,6 +66,23 @@ public class TicketService {
         return ticketDAO.selectAllTickets().stream()
                 .map(ticketDTOMapper)
                 .collect(Collectors.toList());
+    }
+
+    public List<TicketDTO> getTicketsForAuthenticatedUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new HandleRuntimeException("Unauthorized user. Please login before proceeding.");
+        }
+        String username = (String) authentication.getPrincipal();
+        UserDTO userDTO = userClient.getUserByUsername(username);
+
+        List<TicketDTO> tickets = ticketDAO.selectTicketsByUser(userDTO.userId())
+                .stream()
+                .map(ticketDTOMapper)
+                .collect(Collectors.toList());
+
+
+        return new ArrayList<>(tickets);
     }
 
     public void createTicket(TicketRegistrationRequest ticketRegistrationRequest) {
