@@ -130,7 +130,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
 
 
         webTestClient.get()
-                .uri(ADMIN_PATH + "/{id}", adminId)
+                .uri(ADMIN_PATH + "/user/{id}", adminId)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, String.format("Bearer %s", jwtToken))
                 .exchange()
