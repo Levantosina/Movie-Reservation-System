@@ -144,4 +144,13 @@ public class MovieAccessService implements  MovieDAO {
         Integer count = jdbcTemplate.queryForObject(sql,Integer.class,movieId);
         return count!=null && count>0;
     }
+
+    @Override
+    public void deleteMovieById(Long movieId) {
+        var sql = """
+                    DELETE FROM movies where movie_id = ?
+                    """;
+        int res = jdbcTemplate.update(sql,movieId);
+        System.out.println("Delete movie: " + res);
+    }
 }

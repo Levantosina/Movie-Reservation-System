@@ -21,6 +21,6 @@ public interface MovieDAO {
 
     void updateMovie(Movie updateMovie);
 
-    boolean  existMovieWithId(Long id);
-
+    boolean  existMovieWithId(Long movieId);
+    void deleteMovieById(Long movieId);
 }

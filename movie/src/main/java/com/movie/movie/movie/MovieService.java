@@ -154,4 +154,12 @@ public class MovieService {
         return true;
     }
 
+    public void deleteUserById(Long userId) {
+        if (!movieDAO.existMovieWithId(userId)) {
+            throw new ResourceNotFoundException(
+                    "Movie with id [%s] not found".
+                            formatted(userId));
+        }
+        movieDAO.deleteMovieById(userId);
+    }
 }

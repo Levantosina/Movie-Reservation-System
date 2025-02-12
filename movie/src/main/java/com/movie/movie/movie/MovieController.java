@@ -81,4 +81,10 @@ public class MovieController {
         movieService.existsById(movieId);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(true);
     }
+    @DeleteMapping("/{movieId}")
+    public ResponseEntity<?> deleteMovie(@PathVariable Long movieId) {
+        log.info("Delete movie: {}",movieId);
+        movieService.deleteUserById(movieId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
