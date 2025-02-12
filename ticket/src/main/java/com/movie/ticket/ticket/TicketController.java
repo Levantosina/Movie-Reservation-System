@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author DMITRII LEVKIN on 24/12/2024
@@ -28,8 +29,16 @@ public class TicketController {
 
     @GetMapping
     public ResponseEntity<?> getAllTickets(){
-        List<TicketDTO> scheduleDTO = ticketService.getAllTickets();
-        return ResponseEntity.ok(scheduleDTO);
+        List<TicketDTO> ticketDTO = ticketService.getAllTickets();
+        return ResponseEntity.ok(ticketDTO);
+    }
+    @GetMapping("/myTickets")
+    public ResponseEntity<?> getTicketsForAuthenticatedUser(){
+        List<TicketDTO> ticketDTO = ticketService.getTicketsForAuthenticatedUser();
+        if (ticketDTO.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "You don't have any tickets."));
+        }
+        return ResponseEntity.ok(ticketDTO);
     }
 
     @PostMapping
