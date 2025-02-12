@@ -11,18 +11,22 @@ spring:
           uri: lb://USER
           predicates:
             - Path=/api/v1/users/**
-        - id: seat
-          uri: lb://SEAT
+        - id: auth
+          uri: lb://USER
           predicates:
-            - Path=/api/v1/seats/**
-        - id: cinema
-          uri: lb://CINEMA
-          predicates:
-            - Path=/api/v1/cinemas/**
+            - Path=/api/v1/auth/**
         - id: movie
           uri: lb://MOVIE
           predicates:
             - Path=/api/v1/movies/**
+        - id: cinema
+          uri: lb://CINEMA
+          predicates:
+            - Path=/api/v1/cinemas/**
+        - id: seat
+          uri: lb://SEAT
+          predicates:
+            - Path=/api/v1/seats/**
         - id: schedule
           uri: lb://SCHEDULE
           predicates:
@@ -40,7 +44,7 @@ management:
       probability: 1.0
   zipkin:
     tracing:
-      endpoint: http://zipkin:9411/
+      endpoint: http://zipkin:9411/api/v2/spans
 
 eureka:
   client:
