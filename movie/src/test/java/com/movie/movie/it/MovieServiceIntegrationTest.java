@@ -160,4 +160,71 @@ public class MovieServiceIntegrationTest {
 
         assertThat(movieUpdate).isEqualTo(expectedMovie);
     }
+    @Test
+    void canDeleteMovie() {
+
+        Faker faker = new Faker();
+        String name = faker.funnyName().name();
+
+
+        MovieRegistrationRequest newMovieRequest = new MovieRegistrationRequest(
+                name,
+                2024,
+                "TestCountry",
+                "Drama",
+                "testingTest"
+        );
+
+
+        webTestClient.post()
+                .uri("/api/v1/movies")
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .bodyValue(newMovieRequest)
+                .exchange()
+                .expectStatus().isCreated();
+
+
+        List<MovieDTO> allMovies = webTestClient.get()
+                .uri(MOVIE_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(new ParameterizedTypeReference<MovieDTO>() {
+                }).returnResult()
+                .getResponseBody();
+
+
+        long movieId = allMovies.stream()
+                .filter(user -> user.movieName().equals(name))
+                .map(MovieDTO::movieId)
+                .findFirst()
+                .orElseThrow();
+
+
+
+        webTestClient.delete()
+                .uri(MOVIE_PATH + "/{movieId}", movieId)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+
+        MovieDTO movieUpdate = webTestClient.get()
+                .uri(MOVIE_PATH + "/{movieId}", movieId)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .exchange()
+                .expectStatus()
+                .isForbidden()
+                .expectBody(MovieDTO.class)
+                .returnResult()
+                .getResponseBody();
+
+
+        assertThat(movieUpdate).isEqualTo(null);
+    }
 }
