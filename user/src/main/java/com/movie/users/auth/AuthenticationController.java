@@ -27,7 +27,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequest request){
 
         log.info("Request: {}", request);
