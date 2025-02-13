@@ -17,8 +17,9 @@ public interface CinemaDAO {
     Optional<Cinema> selectCinemaById(Long CinemaId);
 
     Optional<Cinema>selectCinemaByCinemaName(String CinemaName);
-
+    void deleteCinemaById(Long CinemaId);
 
     void insertCinema(Cinema cinema);
     boolean existsById(Long cinemaId);
+    void updateCinema(Cinema cinema);
 }
