@@ -59,6 +59,14 @@ public class CinemaAccessService implements CinemaDAO{
                 .findFirst();
     }
 
+    @Override
+    public void deleteCinemaById(Long CinemaId) {
+        var sql = """
+                DELETE from cinemas where cinema_id=?
+                """;
+       int res =  jdbcTemplate.update(sql,CinemaId);
+        System.out.println("Delete cinema id: "+CinemaId);
+    }
 
     @Override
     public void insertCinema(Cinema cinema) {
@@ -77,16 +85,21 @@ public class CinemaAccessService implements CinemaDAO{
         return count != null && count > 0;
     }
 
+    @Override
+    public void updateCinema(Cinema cinema) {
 
-//    @Override
-//    public boolean existCinemaWithName(String name) {
-//        return false;
-//    }
+        if(cinema.getCinemaId() != null){
+            var sql = """
+                    UPDATE cinemas SET cinema_name=? where cinema_id=?
+                    """;
+            jdbcTemplate.update(sql, cinema.getCinemaName(), cinema.getCinemaId());
+        }
 
-//    @Override
-//    public void updateCinema(Cinema updateCinema) {
-//
-//    }
-
-
+        if(cinema.getCinemaLocation() != null){
+            var sql = """
+                    UPDATE cinemas SET cinema_location=? where cinema_id=?
+                    """;
+            jdbcTemplate.update(sql, cinema.getCinemaLocation(), cinema.getCinemaId());
+        }
+    }
 }
