@@ -50,12 +50,8 @@ public class UserController {
         log.info("New user registration: {}", userRegistrationRequest);
 
         try {
-
             userService.registerUser(userRegistrationRequest);
-
             String jwtToken = jwtUtil.issueToken(userRegistrationRequest.email(), "ROLE_USER");
-
-
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtToken)
                     .body("User registered successfully");
@@ -67,16 +63,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
     }
-    @PutMapping("{userId}")
-    public void updateUser(@PathVariable("userId") Long userId,@RequestBody UserUpdateRequest userUpdateRequest){
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable("userId") Long userId,@RequestBody UserUpdateRequest userUpdateRequest){
         log.info(" Updated user: {}",userUpdateRequest);
         userService.updateUser(userId,userUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{userId}")
-    public  void  deleteUser(@PathVariable("userId")Long userId){
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
         log.info("Deleted user: {}", userId);
         userService.deleteUserById(userId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/userName/{username}")
