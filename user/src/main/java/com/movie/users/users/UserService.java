@@ -1,17 +1,17 @@
 package com.movie.users.users;
 
 import com.movie.amqp.RabbitMqMessageProducer;
-
-
 import com.movie.client.notification.NotificationRequest;
 import com.movie.common.UserDTO;
-
-
+import com.movie.exceptions.AccessDeniedException;
 import com.movie.exceptions.DuplicateResourceException;
 import com.movie.exceptions.RequestValidationException;
 import com.movie.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -30,14 +30,13 @@ public class UserService {
     private final UserDTOMapper userDTOMapper;
 
 
-
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
     private final PasswordEncoder passwordEncoder;
 
 
     public UserService(@Qualifier("userJdbc") UserDAO userDAO, UserDTOMapper userDTOMapper,
-                        RabbitMqMessageProducer rabbitMqMessageProducer, PasswordEncoder passwordEncoder) {
+                       RabbitMqMessageProducer rabbitMqMessageProducer, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
         this.userDTOMapper = userDTOMapper;
         this.rabbitMqMessageProducer = rabbitMqMessageProducer;
@@ -104,6 +103,7 @@ public class UserService {
 
 
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+        checkIfAuthenticatedUser(userId);
         User user = userDAO.selectUserById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User with [%s] not found"
@@ -146,11 +146,32 @@ public class UserService {
     }
 
     public void deleteUserById(Long userId) {
+        checkIfAuthenticatedUser(userId);
         if (!userDAO.existUserWithId(userId)) {
             throw new ResourceNotFoundException(
                     "User with id [%s] not found".
                             formatted(userId));
         }
         userDAO.deleteUserById(userId);
+    }
+
+    public void checkIfAuthenticatedUser(Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+            throw new AccessDeniedException("No authenticated user found");
+        }
+
+        String authenticatedEmail = ((UserDetails) authentication.getPrincipal()).getUsername();
+        log.info("Authenticated user: " + authenticatedEmail);
+
+        User authenticatedUser = userDAO.selectUserByEmail(authenticatedEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+
+        log.info("Authenticated user ID: " + authenticatedUser.getUserId());
+
+        if (!authenticatedUser.getUserId().equals(userId)) {
+            throw new AccessDeniedException("You can only delete your own account");
+        }
     }
 }
