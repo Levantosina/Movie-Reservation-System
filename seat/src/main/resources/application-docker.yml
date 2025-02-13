@@ -65,6 +65,9 @@ eureka:
     enabled: true
   instance:
     prefer-ip-address: true
+seats:
+  load:
+    enabled: true
 
 
 

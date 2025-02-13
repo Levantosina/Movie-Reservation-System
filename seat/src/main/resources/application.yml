@@ -60,7 +60,7 @@ eureka:
     prefer-ip-address: true
 seats:
   load:
-    enabled: false
+    enabled: true
 
 
 
