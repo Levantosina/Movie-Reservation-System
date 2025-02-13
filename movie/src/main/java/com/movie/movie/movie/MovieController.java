@@ -73,7 +73,7 @@ public class MovieController {
     public ResponseEntity<?> updateMovieInfo(@PathVariable("movieId") Long movieId,@RequestBody MovieUpdateRequest movieUpdateRequest){
         log.info("Update movie: {}",movieUpdateRequest);
         movieService.updateMovie(movieId,movieUpdateRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/{movieId}/exists")
@@ -84,7 +84,7 @@ public class MovieController {
     @DeleteMapping("/{movieId}")
     public ResponseEntity<?> deleteMovie(@PathVariable Long movieId) {
         log.info("Delete movie: {}",movieId);
-        movieService.deleteUserById(movieId);
+        movieService.deleteMovieById(movieId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

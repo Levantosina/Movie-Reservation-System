@@ -154,7 +154,7 @@ public class MovieService {
         return true;
     }
 
-    public void deleteUserById(Long userId) {
+    public void deleteMovieById(Long userId) {
         if (!movieDAO.existMovieWithId(userId)) {
             throw new ResourceNotFoundException(
                     "Movie with id [%s] not found".
