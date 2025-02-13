@@ -134,7 +134,7 @@ public class MovieServiceIntegrationTest {
                 .body(Mono.just(movieUpdateRequest), MovieUpdateRequest.class)
                 .exchange()
                 .expectStatus()
-                .isCreated();
+                .isOk();
 
 
         MovieDTO movieUpdate = webTestClient.get()
