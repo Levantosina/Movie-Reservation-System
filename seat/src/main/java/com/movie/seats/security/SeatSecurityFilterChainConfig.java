@@ -34,8 +34,9 @@ public class SeatSecurityFilterChainConfig {
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/seats/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/seats/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/seats/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/seats/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/seats/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/seats/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest().
                 authenticated())
