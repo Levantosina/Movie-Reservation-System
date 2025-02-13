@@ -4,6 +4,7 @@ import com.movie.amqp.RabbitMqMessageProducer;
 import com.movie.client.notification.NotificationRequest;
 import com.movie.client.seatClient.SeatClient;
 import com.movie.exceptions.DuplicateResourceException;
+import com.movie.exceptions.RequestValidationException;
 import com.movie.exceptions.ResourceNotFoundException;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -118,7 +119,51 @@ public class CinemaService {
         }
     }
 
+    public void updateCinema(Long cinemaId,CinemaUpdateRequest cinemaUpdateRequest) {
+        Cinema cinema = cinemaDAO.selectCinemaById(cinemaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cinema with id [%s] not found"
+                        .formatted(cinemaId)));
+        cinema.setCinemaId(cinemaId);
+        boolean changes = false;;
+
+        if(cinemaUpdateRequest.cinemaName() != null) {
+            cinema.setCinemaName(cinemaUpdateRequest.cinemaName());
+            changes = true;
+        }
+        if(cinemaUpdateRequest.cinemaLocation() != null) {
+            cinema.setCinemaLocation(cinemaUpdateRequest.cinemaLocation());
+            changes = true;
+        }
+        if(!changes) {
+            throw  new RequestValidationException("Cinema with id [%s] not found");
+        }
+
+        cinemaDAO.updateCinema(cinema);
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                cinema.getCinemaId(),
+                "Cinema was updated Successfully",
+                String.format(" Cinema  with id '%s' and name '%s' has been successfully updated.", cinema.getCinemaId(),cinema.getCinemaName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
+
+    }
+
     public boolean existsById(long cinemaId) {
         return cinemaDAO.existsById(cinemaId);
+    }
+
+    public void  deleteCinemaById(long cinemaId) {
+        if(!cinemaDAO.existsById(cinemaId)){
+            throw new ResourceNotFoundException(
+                    "Cinema with id [%s] not found".formatted(cinemaId)
+            );
+        }
+        cinemaDAO.deleteCinemaById(cinemaId);
     }
 }

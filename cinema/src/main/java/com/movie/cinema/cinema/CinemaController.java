@@ -64,6 +64,13 @@ public class CinemaController {
         Long cinemaId = cinemaService.getCinemaIdByName(cinemaName);
         return ResponseEntity.ok(cinemaId);
     }
+    @PutMapping("/{cinemaId}")
+    public ResponseEntity<?> updateCinema(@PathVariable("cinemaId") Long cinemaId,@RequestBody CinemaUpdateRequest cinemaUpdateRequest) {
+        log.info("Updating cinema with id: {}", cinemaId);
+        cinemaService.updateCinema(cinemaId,cinemaUpdateRequest);
+        return ResponseEntity.ok(cinemaService.getCinemaById(cinemaId));
+    }
+
 
 
     @GetMapping("/{cinemaId}/exists")
@@ -74,5 +81,10 @@ public class CinemaController {
         }
         return ResponseEntity.ok(true);
     }
-
+    @DeleteMapping("/{cinemaId}")
+    public ResponseEntity<?> deleteMovie(@PathVariable Long cinemaId) {
+        log.info("Delete cinema: {}",cinemaId);
+        cinemaService.deleteCinemaById(cinemaId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
