@@ -33,6 +33,8 @@ public class CinemaSecurityFilterChainConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/cinemas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/cinemas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/cinemas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/cinemas/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest().
                 authenticated())
