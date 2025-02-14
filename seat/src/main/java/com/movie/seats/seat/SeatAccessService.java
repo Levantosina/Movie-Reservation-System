@@ -107,7 +107,24 @@ public class SeatAccessService implements SeatDAO{
 
     }
 
+    @Override
+    public void deleteSeatsById(Long movieId) {
+        var sql = """
+                    DELETE FROM seats where seat_id = ?
+                    """;
+        int res = jdbcTemplate.update(sql,movieId);
+        System.out.println("Delete seat: " + res);
+    }
 
+    @Override
+    public boolean existSeatWithId(Long movieId) {
+        var sql= """
+                SELECT count(seat_id)FROM seats
+               where seat_id=?
+               """;
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,movieId);
+        return count!=null && count>0;
+    }
 
 
     @Override

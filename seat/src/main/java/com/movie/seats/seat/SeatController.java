@@ -5,6 +5,7 @@ import com.movie.common.CinemaDTO;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -107,5 +108,10 @@ public class SeatController {
         seatService.loadSeatsFromCSV();
         return ResponseEntity.ok("Seats loaded successfully.");
     }
-
+    @DeleteMapping("/{seatId}")
+    public ResponseEntity<?> deleteSeat(@PathVariable Long seatId) {
+        log.info("Delete seat: {}",seatId);
+        seatService.deleteSeatById(seatId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
