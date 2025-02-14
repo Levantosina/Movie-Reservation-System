@@ -37,7 +37,9 @@ public class ScheduleSecurityFilterChainConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/schedules/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/schedules/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/schedules/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/schedules/{scheduleId}/decrease").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/schedules/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/schedules/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
