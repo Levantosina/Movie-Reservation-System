@@ -51,7 +51,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
         String password = "password";
 
         AdminRegistrationRequest adminRegistrationRequest = new AdminRegistrationRequest(
-                firstName, lastName, email, password, role
+                firstName, lastName, email, password
         );
 
         User currentAdmin = new User();
@@ -88,7 +88,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
 
         String email1 = faker.name().lastName() + "-" + UUID.randomUUID() + "@gmail.com";
         AdminRegistrationRequest adminRegistrationRequest1 = new AdminRegistrationRequest(
-                "Admin", "Admin", email1, "password", "ROLE_ADMIN"
+                "Admin", "Admin", email1, "password"
         );
 
         // Register the new admin
@@ -123,7 +123,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
 
         UserDTO expectedAdmin = new UserDTO(adminId, adminRegistrationRequest1.firstName(),
                 adminRegistrationRequest1.lastName(), adminRegistrationRequest1.email(),
-                adminRegistrationRequest1.roleName());
+                role);
 
 
         assertThat(allUsers).contains(expectedAdmin);
@@ -145,7 +145,7 @@ public class AdminServiceIntegrationTest extends AbstractDaoUnitTest {
         String email = "admin@gmail.com";
         String password = "password";
         AdminRegistrationRequest adminRegistrationRequest = new AdminRegistrationRequest(
-                "Admin", "Test", email, "password", "ROLE_ADMIN"
+                "Admin", "Test", email, "password"
         );
 
         User currentAdmin = new User();

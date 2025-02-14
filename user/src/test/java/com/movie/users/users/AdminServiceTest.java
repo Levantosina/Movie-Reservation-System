@@ -75,8 +75,8 @@ class AdminServiceTest {
                 "Abra",
                 "Kadabra",
                 email,
-                "password",
-                "ROLE_ADMIN"
+                "password"
+
         );
 
         String passwordHash = "2331234355";
@@ -131,7 +131,7 @@ class AdminServiceTest {
         when(userDAO.selectUserByEmail(email)).thenReturn(Optional.of(admin));
         String newPlainPassword ="expelliarmus";
 
-        AdminRegistrationRequest adminRegistrationRequest = new AdminRegistrationRequest (firstName,lastName,email,newPlainPassword,"ROLE_ADMIN");
+        AdminRegistrationRequest adminRegistrationRequest = new AdminRegistrationRequest (firstName,lastName,email,newPlainPassword);
 
         when(passwordEncoder.encode(adminRegistrationRequest.password())).thenReturn(newPlainPassword);
         underTest.resetAdminPassword(email,newPlainPassword);
