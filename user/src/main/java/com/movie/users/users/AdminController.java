@@ -127,4 +127,11 @@ public class AdminController { ///only admin
         log.info(" Updated user: {}",userUpdateRequest);
         adminService.updateUser(userId,userUpdateRequest);
     }
+
+    @DeleteMapping("user/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
+        log.info("Deleted user: {}", userId);
+        adminService.deleteUserById(userId);
+        return ResponseEntity.ok().build();
+    }
 }

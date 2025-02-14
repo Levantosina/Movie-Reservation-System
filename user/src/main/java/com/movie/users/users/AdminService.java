@@ -210,6 +210,14 @@ public class AdminService {
                 "internal.notification.routing-key"
         );
     }
+    public void deleteUserById(Long userId) {
 
+        if (!userDAO.existUserWithId(userId)) {
+            throw new ResourceNotFoundException(
+                    "User with id [%s] not found".
+                            formatted(userId));
+        }
+        userDAO.deleteUserById(userId);
+    }
 }
 
