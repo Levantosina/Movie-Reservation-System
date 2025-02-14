@@ -10,7 +10,7 @@ import com.movie.client.cinemaClient.CinemaClient;
 import com.movie.client.notification.NotificationRequest;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,6 +35,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@Transactional
 public class SeatService {
 
     private final SeatDAO seatDAO;
@@ -166,9 +167,9 @@ public class SeatService {
 
     }
 
-    @PostConstruct
-    public void loadSeatsFromCSV() {
 
+    public void loadSeatsFromCSV() {
+        log.info("Loading seats from csv...Started");
         if (!loadSeatsEnabled) {
             log.info("Skipping seat loading during initialization.");
             return;
@@ -190,9 +191,12 @@ public class SeatService {
 
                 log.info("Processing cinema: {}", cinemaName);
                 Long cinemaId = getCinema(cinemaName);
+                log.info("Fetched cinema ID: {}", cinemaId);
+
                 if (cinemaId != null) {
                     for (String row : rows) {
                         String seatDetails = details.getString(row);
+                        log.info("Processing seats for row: {}", row);
                         processSeats(row, seatDetails, cinemaId);
                     }
                 } else {
@@ -200,10 +204,10 @@ public class SeatService {
                 }
             }
         } catch (IOException | CsvValidationException e) {
-            throw new RuntimeException("Failed to load seats from CSV: " + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred while loading seats: " + e.getMessage(), e);
+            log.error("Failed to load seats from CSV: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to load seats from CSV", e);
         }
+
     }
 
     private List<String> parseRows(String rowsString) {
@@ -303,5 +307,14 @@ public class SeatService {
                     "internal.notification.routing-key"
             );
         }
+    }
+
+    public void deleteSeatById(Long seatId) {
+        if (!seatDAO.existSeatWithId(seatId)) {
+            throw new ResourceNotFoundException(
+                    "Seat with id [%s] not found".
+                            formatted(seatId));
+        }
+        seatDAO.deleteSeatsById(seatId);
     }
 }
