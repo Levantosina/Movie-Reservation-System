@@ -37,7 +37,8 @@ public class TicketSecurityFilterChainConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/v1/ticket/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ticket").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/ticket/myTickets").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/ticket/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/ticket/**").authenticated()
                         .requestMatchers("/api/v1/auth/**").permitAll()
