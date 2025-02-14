@@ -110,8 +110,9 @@ public class MovieScheduleController {
     }
 
     @DeleteMapping("{scheduleId}")
-    public void deleteSchedule(@PathVariable Long scheduleId) {
+    public ResponseEntity<?> deleteSchedule(@PathVariable Long scheduleId) {
+        log.info("Delete schedule: {}",scheduleId);
         movieScheduleService.deleteSchedule(scheduleId);
-
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
