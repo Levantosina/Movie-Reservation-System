@@ -231,4 +231,23 @@ public class ScheduleServiceIntegrationTest  extends ScheduleAbstractDaoUnitTest
         assertThat(validToken).isNotNull();
         log.info("Token used for the test: {}", validToken);
     }
+    @Test
+    void canDeleteSchedule() {
+        long scheduleId = 19L;
+        LocalDate date = LocalDate.parse("2024-12-03");
+        LocalTime startTime = LocalTime.parse("10:00:00");
+        LocalTime endTime = LocalTime.parse("12:00:00");
+        int availableSeats = 2;
+        long cinemaId = 1;
+        long movieId = 1;
+
+        MovieScheduleDTO scheduleDTO = new MovieScheduleDTO(scheduleId, date, startTime, endTime, availableSeats, cinemaId, movieId);
+        when(scheduleService.getScheduleById(scheduleId)).thenReturn(scheduleDTO);
+        webTestClient.delete()
+                .uri(SCHEDULE_PATH + "/{scheduleId}", 1L)
+                .header(AUTHORIZATION, "Bearer " + validToken)
+                .exchange()
+                .expectStatus().isOk();
+
+    }
 }
