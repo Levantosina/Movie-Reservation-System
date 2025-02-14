@@ -23,5 +23,7 @@ public interface SeatDAO {
 
     int countSeatsByCinemaId(Long cinemaId);
 
+    void deleteSeatsById(Long seatId);
 
+    boolean  existSeatWithId(Long seatId);
 }
