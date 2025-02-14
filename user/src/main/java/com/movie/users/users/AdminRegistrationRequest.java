@@ -21,10 +21,9 @@ public record AdminRegistrationRequest (
         @NotBlank(message = "Email is required")
         String email,
         @NotBlank(message = "Password is required")
-        String password,
+        String password
 
 
-        String roleName
 ) {
 
 
