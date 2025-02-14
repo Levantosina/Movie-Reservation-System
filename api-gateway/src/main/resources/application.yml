@@ -11,10 +11,17 @@ spring:
           uri: lb://USER
           predicates:
             - Path=/api/v1/users/**
+
+        - id: admin
+          uri: lb://USER
+          predicates:
+            - Path=/api/v1/admin/**
+
         - id: auth
           uri: lb://USER
           predicates:
             - Path=/api/v1/auth/**
+
         - id: movie
           uri: lb://MOVIE
           predicates:
