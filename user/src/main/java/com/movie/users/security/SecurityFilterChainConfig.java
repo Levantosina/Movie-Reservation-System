@@ -46,7 +46,7 @@ public class SecurityFilterChainConfig {
                 .requestMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE,"/api/v1/users/**").authenticated()
                 .requestMatchers(HttpMethod.PUT,"/api/v1/users/**").authenticated()
-                .requestMatchers(HttpMethod.POST,"api/v1/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/api/v1/admin/**").authenticated()
                 .anyRequest()
                 .authenticated()
                 .and()
