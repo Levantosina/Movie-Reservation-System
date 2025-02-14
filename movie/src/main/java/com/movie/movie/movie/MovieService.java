@@ -154,12 +154,12 @@ public class MovieService {
         return true;
     }
 
-    public void deleteMovieById(Long userId) {
-        if (!movieDAO.existMovieWithId(userId)) {
+    public void deleteMovieById(Long movie) {
+        if (!movieDAO.existMovieWithId(movie)) {
             throw new ResourceNotFoundException(
                     "Movie with id [%s] not found".
-                            formatted(userId));
+                            formatted(movie));
         }
-        movieDAO.deleteMovieById(userId);
+        movieDAO.deleteMovieById(movie);
     }
 }

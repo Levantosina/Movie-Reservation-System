@@ -105,7 +105,7 @@ public class MovieServiceIntegrationTest {
         log.info("allSchedules:{}",allMovies);
 
     long movieId = allMovies.stream()
-            .filter(user -> user.movieName().equals(name))
+            .filter(movie -> movie.movieName().equals(name))
             .map(MovieDTO::movieId)
             .findFirst()
             .orElseThrow();
@@ -177,7 +177,7 @@ public class MovieServiceIntegrationTest {
 
 
         webTestClient.post()
-                .uri("/api/v1/movies")
+                .uri(MOVIE_PATH)
                 .header(AUTHORIZATION, "Bearer " + validToken)
                 .bodyValue(newMovieRequest)
                 .exchange()
@@ -197,7 +197,7 @@ public class MovieServiceIntegrationTest {
 
 
         long movieId = allMovies.stream()
-                .filter(user -> user.movieName().equals(name))
+                .filter(movie -> movie.movieName().equals(name))
                 .map(MovieDTO::movieId)
                 .findFirst()
                 .orElseThrow();

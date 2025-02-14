@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -11,8 +10,8 @@
 	<groupId>com.movie.resrvation</groupId>
 	<artifactId>system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>Movie Reservation System</name>
+	<packaging>pom</packaging>
+	<name>Movie Reservation System</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -35,8 +34,8 @@
 		<module>cinema</module>
 		<module>seat</module>
 		<module>schedule</module>
-        <module>ticket</module>
-    </modules>
+		<module>ticket</module>
+	</modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
@@ -82,7 +81,7 @@
 			</dependency>
 
 			<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>3.6.0</version>
 				<type>pom</type>
